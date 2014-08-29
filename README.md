@@ -63,6 +63,9 @@ source das-venv/bin/activate
 
 #Instalar django 1.6 (pelo virtualenv)
 pip install Django==1.6.4
+
+#Sair do virtualenv
+deactivate
 ```
 
 Dependências
