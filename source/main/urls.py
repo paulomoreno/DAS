@@ -14,6 +14,6 @@ urlpatterns = patterns('',
         url(r'^clientes/registrar$','main.views.registrar_cliente',name='registrar_cliente'),
 
         #Retorna as informações de um salão especifico
-        url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),
+        #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),
 
 )
