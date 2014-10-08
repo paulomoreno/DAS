@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="pt-br">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+  {% block css %}{% endblock %}
+
+  {% autoescape on %}
+	<title>{% block title %}Bem vindo! {% endblock %} - DAS</title>
+</head>
+<body>
+
+  <div class="menu" style="width: 100%; height: 40px; background-color: #b1b1b1;" >Menu</div>
+
+  <div class="conteudo">
+    {% block conteudo %}
+    {% endblock %}
+  </div>
+
+  {% endautoescape %}
+
+</body>
+</html>

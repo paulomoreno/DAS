@@ -1,7 +1,13 @@
+# coding=utf8
+# -*- coding: utf8 -*-
+# vim: set fileencoding=utf8 :
+
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.core.exceptions import ObjectDoesNotExist
+from django_extensions.db.fields import UUIDField
 
 
 class UsuarioManager(BaseUserManager):
@@ -59,7 +65,7 @@ class Usuario(AbstractBaseUser):
     telefone = models.CharField(max_length=20)
     endereco = models.CharField(max_length=120)
 
-    objects = MyUserManager()
+    #objects = MyUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth']
@@ -105,51 +111,51 @@ class Usuario(AbstractBaseUser):
 
 
 class Cliente(models.Model):
-    usuario = models.OneToOneField(User, null=True)
+    usuario = models.OneToOneField(Usuario, null=True)
 
     def __unicode__(self):
         return self.usuario.email
 
 class Medico(models.Model):
-    usuario = models.OneToOneField(User, null=True)
+    usuario = models.OneToOneField(Usuario, null=True)
     crm = models.CharField(max_length=16)
-	duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
+    duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
 
     def __unicode__(self):
         return self.usuario.email
 
 class Especializacao(models.Model):
-	nome = models.CharField(max_length=60)
+    nome = models.CharField(max_length=60)
 
-	def __unicode__(self):
+    def __unicode__(self):
         return self.nome
 
 class Horario(models.Model):
-	medico = models.ForeignKey('Medico')
+    medico = models.ForeignKey('Medico')
 
     dia = models.PositiveSmallIntegerField(blank=False)
     hora_inicio = models.TimeField(blank=False)
     hora_final = models.TimeField(blank=False)
 
-	def __unicode__(self):
+    def __unicode__(self):
         return self.dia + ': ' + hora_inicio + ' - ' + hora_final
 
 class Convenio(models.Model):
-	"""docstring for Convenio"""
-	cnpj = models.CharField(max_length=16, primary_key=True)
-	razao_social = models.CharField(max_length=80)
+    """docstring for Convenio"""
+    cnpj = models.CharField(max_length=16, primary_key=True)
+    razao_social = models.CharField(max_length=80)
 
-	def __unicode__(self):
+    def __unicode__(self):
         return self.razao_social
 
 class Consulta(models.Model):
-	"""docstring for Convenio"""
+    """docstring for Convenio"""
     id = UUIDField(primary_key=True, auto=True)
 
-	cliente = models.ForeignKey('Cliente')
-	medico = models.ForeignKey('Medico')
-	data_hora = models.DateTimeField(blank=False)
-	checkin = models.BooleanField(default=False)
+    cliente = models.ForeignKey('Cliente')
+    medico = models.ForeignKey('Medico')
+    data_hora = models.DateTimeField(blank=False)
+    checkin = models.BooleanField(default=False)
 
-	def __unicode__(self):
-        return self.cliente + ' ' + self.medico	
+    def __unicode__(self):
+        return self.cliente + ' ' + self.medico 
