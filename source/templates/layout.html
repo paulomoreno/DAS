@@ -4,6 +4,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+
+  <link rel="stylesheet" href="{% static "bootstrap-3.2.0-dist/css/bootstrap.min.css"%}"/>
+
   {% block css %}{% endblock %}
 
   {% autoescape on %}
@@ -11,7 +14,45 @@
 </head>
 <body>
 
-  <div class="menu" style="width: 100%; height: 40px; background-color: #b1b1b1;" >Menu</div>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">    
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">DAS</a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Medicos</a></li>
+        <li><a href="#">Consultas</a></li>
+        
+      </ul>
+      
+
+      <ul class="nav navbar-nav navbar-right">
+        <form class="navbar-form navbar-left" role="login">
+          <div class="form-group">
+          <input type="text" class="form-control" placeholder="Usuario">
+          <input type="password" class="form-control" placeholder="Senha">
+          </div>
+          <button type="submit" class="btn btn-default">Entrar</button>
+        </form>
+        <form class="navbar-form navbar-left" role="register">
+          <button type="submit" class="btn btn-default">Registrar</button>
+        </form>
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
 
   <div class="conteudo">
     {% block conteudo %}

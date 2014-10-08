@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
 Django settings for DAS project.
 
@@ -8,10 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+from pathlib import Path
+
+# caminho completo da raiz do projeto
+PROJECT_DIR = Path(__file__).resolve().parents[2]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -79,7 +85,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+# Media URL - where to save uploaded media
+MEDIA_ROOT = PROJECT_DIR.joinpath('media').as_posix()
+MEDIA_URL = '/media/'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# Caminho que contem os arquivos estaticos
+STATIC_ROOT = PROJECT_DIR.joinpath('static').as_posix()
+# prefixo da URL para ser usada direta no template, porem nao é recomendavel usar o caminhho direto mas sim "{% static 'url' %}"
+STATIC_URL = '/static/' 
+
+# Indicates the local filesystem path for Django to get static files
+STATIC_PATH = os.path.abspath(os.path.join(BASE_DIR, 'static'))
+STATICFILES_DIRS = (
+    STATIC_PATH,
+)
 
 # Templates
 TEMPLATE_PATH = os.path.abspath(os.path.join(BASE_DIR, 'templates'))
