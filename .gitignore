@@ -1,0 +1,19 @@
+# diretorio virtualenv
+/env*
+/das-venv*
+
+# arquivos precompilados do python
+*py[co]
+
+# arquivos temporarios do gedit
+*~
+
+# arquivos de Mac OS X
+.DS_Store
+._*
+
+# Workspace do Sublime
+*.sublime-workspace
+
+# .smbdelete files from Mac OS X
+.smbdelete*
