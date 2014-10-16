@@ -73,10 +73,9 @@ Dependências
 
 Após a instalação do ambiente, deverão ser instaladas as dependências:
 
-* [Django Extensions](https://github.com/django-extensions/django-extensions): necessário para o uso do UUID Field.
+* Todas as dependencias estão descritas em requirements/base.txt
 ```shell
-#Instalar Django extensions
-pip install django-extensions
+pip install -r requirements/base.txt
 ```
 
 Gerenciando o Banco de Dados
