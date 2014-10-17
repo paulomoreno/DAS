@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load static %}
+
+	{% block javascript %}
+      <script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	        <script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+	        <script language="JavaScript" src="{% static "js/scriptcam.js"%}"></script>
+	        <script>
+	            $(document).ready(function() {
+	                $("#webcam").scriptcam({
+	                    onError:onError,
+	                    cornerRadius:0,
+	                    onWebcamReady:onWebcamReady
+	                });
+	            });
+				
+				
+				function scanAndDecode(){
+					var content = $.scriptcam.getBarCode();
+					if(content != ""){
+						alert(content);
+					}
+				}
+				
+				window.setInterval(scanAndDecode,50);	
+	 
+	            function onError(errorId,errorMsg) {
+	                alert(errorMsg);
+	            }          
+	            function changeCamera() {
+	                $.scriptcam.changeCamera($('#cameraNames').val());
+	            }
+	            function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
+	                $.each(cameraNames, function(index, text) {
+	                    $('#cameraNames').append( $('<option></option>').val(index).html(text) )
+	                });
+	                $('#cameraNames').val(camera);
+	            }
+				
+				
+				
+	        </script>
+
+{% endblock %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Bem Vindo!{% endblock %}
+
+{% block conteudo %}
+<div style="width:500px;float:left;">
+	            <div id="webcam">
+	            </div>
+	            <div style="margin:5px;">
+	                <img src="{% static "media/webcamlogo.png"%}" style="vertical-align:text-top"/>
+	                <select id="cameraNames" size="1" onChange="changeCamera()" style="width:245px;font-size:10px;height:25px;">
+	                </select>
+	            </div>
+	        </div>
+
+{%  endblock %}

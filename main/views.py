@@ -47,3 +47,9 @@ def registrar_cliente(request):
 
         return HttpResponse('Método Não Permitido',status=405)
         
+def qrCodeScan(request):
+	'''
+	 qrCode scanner
+	'''
+
+	return render_to_response('main/qrCodeScanner/index.html')
