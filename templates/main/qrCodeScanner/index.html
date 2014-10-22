@@ -7,6 +7,13 @@
 	        <script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
 	        <script language="JavaScript" src="{% static "js/scriptcam.js"%}"></script>
 	        <script>
+	        //Variable used to save intervalID in order to stop scanning
+	        //when a QrCode has been scanned
+	        var intervalID = 0;
+
+			//Scan and decode qrCode each Tms
+			startScanning();
+	 
 	            $(document).ready(function() {
 	                $("#webcam").scriptcam({
 	                    onError:onError,
@@ -14,17 +21,31 @@
 	                    onWebcamReady:onWebcamReady
 	                });
 	            });
-				
-				
-				function scanAndDecode(){
-					var content = $.scriptcam.getBarCode();
-					if(content != ""){
-						alert(content);
-					}
+
+
+        function startScanning(){
+        		intervalID = window.setInterval(scanAndDecode,500);	
+        }
+
+		function scanAndDecode(){
+				var content = $.scriptcam.getBarCode();
+					
+				//If the decoded image is a QrCode then
+				//stop scanning for a while,
+				//call django, then start scanning again
+				if(content != ""){
+					//Stop Scanning
+					clearInterval(intervalID);
+
+					//Call django
+					window.open("http://www.w3schools.com");
+
+					//Start Scanning after 1000ms
+					sleep(1000,startScanning);
 				}
+
+		}
 				
-				window.setInterval(scanAndDecode,50);	
-	 
 	            function onError(errorId,errorMsg) {
 	                alert(errorMsg);
 	            }          
