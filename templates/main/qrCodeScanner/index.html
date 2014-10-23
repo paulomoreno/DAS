@@ -18,15 +18,6 @@
 			//Scan and decode qrCode each Tms
 			//startScanning();
 
-			$(document).ready(
-				function() {
-					$("#webcam").scriptcam({
-						onError:onError,
-						cornerRadius:0,
-						onWebcamReady:onWebcamReady });
-				}
-
-			);
 
 
 			function startScanning(){
@@ -57,25 +48,54 @@
 			}
 
 		$(document).ready(function() {
+			$("#webcam").scriptcam({
+						onError:onError,
+						cornerRadius:0,
+						onWebcamReady:onWebcamReady 
+			});
+
             $("#button").click(function() {
             	
-					$.ajax({
-                        url : "/qrCodeScan/scancode", 
-                        type : "POST",
-                        dataType: "json", 
-                        data : {
-                            qrCode : "TEEEE",
-                            csrfmiddlewaretoken: '{{ csrf_token }}'
-                            },
-                            success : function(json) {
-                                alert("Success!");
-                            },
-                            error : function(xhr,errmsg,err) {
-                                alert(xhr.status + ": " + xhr.responseText);
-                            }
-                    });
-					return false;
-					  });
+				/*$.ajax({
+                    url : "/qrCodeScan/scancode", 
+                    type : "POST",
+                    dataType: "json", 
+                    data : {
+                        qrCode : "TEEEE",
+                        csrfmiddlewaretoken: '{% csrf_token %}'
+                        },
+                        success : function(json) {
+                            alert("Success!");
+                        },
+                        error : function(xhr,errmsg,err) {
+                            alert(xhr.status + ": " + xhr.responseText);
+                        }
+                });*/
+    			var post_data = {
+        			'qrCode' : "TEEEE"
+    			};
+
+                $.post( "/qrCodeScan/scancode",
+    					{'qrCode' : 'TEEEE'},
+    					function(data, textStatus, xhr){
+    						alert(xhr.status + ": " + xhr.responseText);
+    					}
+    			);    					
+				return false;
+			});
+
+			function csrfSafeMethod(method) {
+		        // these HTTP methods do not require CSRF protection
+		        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		    }
+		    var csrftoken = $.cookie('csrftoken');
+		    $.ajaxSetup({
+		        beforeSend: function(xhr, settings) {
+		            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		            }
+		        }
+		    });
         });
 
 			function onError(errorId,errorMsg) {
@@ -102,7 +122,6 @@
 
 		{% block conteudo %}
 		<form method="POST" name = "webcamForm" id = "webcamForm">
-		{% csrf_token %}
 			<div style="width:500px;float:left;">
 				<div id="webcam"> 
 
