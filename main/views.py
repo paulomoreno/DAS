@@ -4,7 +4,7 @@
 
 from django.http import Http404, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import *
-from main.models import *
+from polls.models import *
 
 # Create your views here.
 
@@ -51,5 +51,14 @@ def qrCodeScan(request):
 	'''
 	 qrCode scanner
 	'''
-
 	return render_to_response('main/qrCodeScanner/index.html')
+
+def searchCode(request):
+    if request.method == 'POST':
+        entrada = request.POST.get('qrcode')
+    print(entrada)
+    print('sdsdsdsdsdsds')
+    return 1
+        # u = Usuario.objects.get(nome=request.GET.get('code',''))
+        # print(entrada)
+        #return render_to_response('https://www.google.com.br/?q=');
