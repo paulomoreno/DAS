@@ -40,6 +40,13 @@ def registrar_cliente(request):
 
     elif request.method == 'POST':
         #obtem dados do POST
+        name = request.POST['nome']
+        last_name = request.POST['sobrenome']
+        email = request.POST['email']
+        pwd =  request['senha']
+        checkbox = request['novidades']
+        if name is None or nome =='':
+        	messages.error(request, "Campo nome obrigatorio")
 
         return render_to_response('main/cliente/cadastro.html', context)
 

@@ -6,5 +6,50 @@
 {% block title %}Bem Vindo!{% endblock %}
 
 {% block conteudo %}
-<h1>Novo usuario:</h1>
+<h1>Cadastro de novo usuario:</h1>
+<form role="form" action="{% url 'registrar_cliente' %}">
+  <div class="row">
+  	<div class="form-group">
+		<div class="col-md-2" >
+	    	<label for="firstNameInput">Primeiro Nome</label>
+	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome">
+	 	</div>
+	  	<div class="col-md-2">
+	  		<label for="lastName"> Sobrenome</label>
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome">	
+		</div>  	  		
+  	</div>
+  </div>
+
+  <div class="row">
+ 	 <div class="form-group">
+ 		<div class ="col-md-4">
+		    <label for="emailInput">E-mail</label>
+   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ form.email }}"> 		
+ 		</div>
+ 	 </div>
+  </div>
+
+  <div class="row">
+  	<div class="form-group">
+ 		<div class ="col-md-4">
+   		 	<label for="userPassword">Senha</label>
+   		 	<input type="password" class="form-control"id="passwordInput" placeholder="E-mail" name="senha">
+   			 <p class="help-block">Sua senha deve ter no minimo 6 caracteres</p> 		
+ 		</div>
+  	</div>
+  </div>
+
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" name="novidades" value="sim"> Marque para receber novidades sobre o DAS!
+    </label>
+  </div>
+
+
+  <div class="form-group">
+  	<div class="col-xs-2">
+  		<button type="submit" class="btn btn-default">Cadastrar!</button>
+  </div>
+</form>
 {%  endblock %}
