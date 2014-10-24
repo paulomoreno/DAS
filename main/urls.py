@@ -10,6 +10,14 @@ urlpatterns = patterns('',
 		#Pagina inicial
         url(r'^$','main.views.index',name='index'),
 
+		# Auth - Login
+		url(r'^login$', 'django.contrib.auth.views.login', {'template_name': 'main/login.html'}),
+		# Auth - Logout
+		url(r'^logout$', 'django.contrib.auth.views.logout', {'next_page': 'index'}),
+		# Auth - Register
+		#url(r'^register$', 'main.views.register', name='register'),
+
+
 		#URL para cadastro de novos clientes
         url(r'^clientes/registrar$','main.views.registrar_cliente',name='registrar_cliente'),
 

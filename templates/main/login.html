@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Entrar{% endblock %}
+
+{% block conteudo %}
+
+
+{% if not user.is_authenticated %}
+<h1>Bem vindo ao DAS!</h1>
+<h2>Entre para continuar</h2>
+
+
+
+      <form class="" role="form" action="{% url 'django.contrib.auth.views.login' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'index' %}{% endif %}" />
+
+          <div class="form-group row">
+ 		<div class ="col-md-4">
+		    <label for="emailInput">Usuario</label>
+              		<input type="text" name="username" placeholder="Username" class="form-control" required />
+		</div>
+          </div>
+          <div class="form-group row">
+ 		<div class ="col-md-4">
+		    <label for="emailInput">Senha</label>
+              <input type="password" name="password" placeholder="Password" class="form-control" required />
+		</div>
+          </div>
+          <button type="submit" class="btn btn-success">Entrar</button>
+      </form>
+      <form class="navbar-form navbar-left" action="{% url 'registrar_cliente' %}" role="register">
+          <button type="submit" class="btn btn-default">Registrar</button>
+        </form>
+  {% endif %}
+{%  endblock %}
+
+
