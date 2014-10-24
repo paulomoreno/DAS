@@ -2,34 +2,32 @@
 {% load static %}
 
 
-	{% block javascript %}
+{% block javascript %}
 
-	        <script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-	        <script language="JavaScript" src="{% static "js/scriptcam.js"%}"></script>
-	        <script>
+<script language="JavaScript" src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+<script language="JavaScript" src="{% static "js/scriptcam.js"%}"></script>
+<script language="JavaScript" src="{% static "js/jquery.cookie.js"%}"></script>
+<script>
+
 	        //Variable used to save intervalID in order to stop scanning
 	        //when a QrCode has been scanned
 	        var intervalID = 0;
+	        var csrftoken = " token";
+
 
 			//Scan and decode qrCode each Tms
 			startScanning();
-	 
-	            $(document).ready(function() {
-	                $("#webcam").scriptcam({
-	                    onError:onError,
-	                    cornerRadius:0,
-	                    onWebcamReady:onWebcamReady
-	                });
-	            });
 
 
-        function startScanning(){
-        		intervalID = window.setInterval(scanAndDecode,500);	
-        }
 
-		function scanAndDecode(){
-				var content = $.scriptcam.getBarCode();
-					
+			function startScanning(){
+				intervalID = window.setInterval(scanAndDecode,100);	
+			}
+
+
+			function scanAndDecode(){
+				var content =  $.scriptcam.getBarCode(); 
+
 				//If the decoded image is a QrCode then
 				//stop scanning for a while,
 				//call django, then start scanning again
@@ -37,47 +35,78 @@
 					//Stop Scanning
 					clearInterval(intervalID);
 
-					//Call django
-					window.open("http://www.w3schools.com");
+					
+					//Call send data to django via AJAX
+			
+
+                $.post( "/qrCodeScanner/scancode",
+    					{'qrCode' : content},
+    					function(data, textStatus, xhr){
+    						alert(xhr.status + ": " + xhr.responseText);
+    					}
+    			); 
 
 					//Start Scanning after 1000ms
 					sleep(1000,startScanning);
 				}
 
-		}
-				
-	            function onError(errorId,errorMsg) {
-	                alert(errorMsg);
-	            }          
-	            function changeCamera() {
-	                $.scriptcam.changeCamera($('#cameraNames').val());
-	            }
-	            function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
-	                $.each(cameraNames, function(index, text) {
-	                    $('#cameraNames').append( $('<option></option>').val(index).html(text) )
-	                });
-	                $('#cameraNames').val(camera);
-	            }
-				
-				
-				
-	        </script>
+			}
 
-{% endblock %}
+		$(document).ready(function() {
+			$("#webcam").scriptcam({
+						onError:onError,
+						cornerRadius:0,
+						onWebcamReady:onWebcamReady 
+			});
 
-{% block css %}{% endblock %}
 
-{% block title %}Bem Vindo!{% endblock %}
+			function csrfSafeMethod(method) {
+		        // these HTTP methods do not require CSRF protection
+		        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		    }
+		    var csrftoken = $.cookie('csrftoken');
+		    $.ajaxSetup({
+		        beforeSend: function(xhr, settings) {
+		            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		            }
+		        }
+		    });
+        });
 
-{% block conteudo %}
-<div style="width:500px;float:left;">
-	            <div id="webcam">
-	            </div>
-	            <div style="margin:5px;">
-	                <img src="{% static "media/webcamlogo.png"%}" style="vertical-align:text-top"/>
-	                <select id="cameraNames" size="1" onChange="changeCamera()" style="width:245px;font-size:10px;height:25px;">
-	                </select>
-	            </div>
-	        </div>
+			function onError(errorId,errorMsg) {
+				alert(errorMsg);
+			}          
+			function changeCamera() {
+				$.scriptcam.changeCamera($('#cameraNames').val());
+			}
+			function onWebcamReady(cameraNames,camera,microphoneNames,microphone,volume) {
+				$.each(cameraNames, function(index, text) {
+					$('#cameraNames').append( $('<option></option>').val(index).html(text) )
+				});
+				$('#cameraNames').val(camera);
+			}
 
-{%  endblock %}
+
+		</script>
+
+		{% endblock %}
+
+		{% block css %}{% endblock %}
+
+		{% block title %}Bem Vindo!{% endblock %}
+
+		{% block conteudo %}
+
+			<div style="width:500px;float:left;">
+				<div id="webcam"> 
+
+				</div>
+				<div style="margin:5px;">
+					<img src="{% static "media/webcamlogo.png"%}" style="vertical-align:text-top"/>
+					<select id="cameraNames" size="1" onChange="changeCamera()" style="width:245px;font-size:10px;height:25px;">
+					</select>
+				</div>
+			</div>
+
+		{%  endblock %}

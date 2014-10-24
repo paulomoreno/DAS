@@ -13,7 +13,12 @@ urlpatterns = patterns('',
 		#URL para cadastro de novos clientes
         url(r'^clientes/registrar$','main.views.registrar_cliente',name='registrar_cliente'),
 
-		url(r'qrCodeScan','main.views.qrCodeScan',name='qrCodeScan'),
+     	#URL para leitura de QRCode
+		url(r'^qrCodeScanner$','main.views.qrCodeScan',name='qrCodeScan'),
+
+		#URL para leitura de QRcode decodificado no banco
+		url(r'^qrCodeScanner/scancode$','main.views.searchCode',name='scancode'),
+
 
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),

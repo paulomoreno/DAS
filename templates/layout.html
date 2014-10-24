@@ -12,6 +12,25 @@
             setTimeout(function()
                    { callback(); }, millis);
         }
+
+$('body').click(function(){
+    $('.msg_padding').slideUp(500, function() { $(this).remove(); });
+    $('.msg_bg_error').fadeOut(10, function() { $(this).remove(); });
+    $('.msg_bg_success').fadeOut(10, function() { $(this).remove(); });
+    $('.msg_bg_info').fadeOut(10, function() { $(this).remove(); });
+});
+
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = 0, len = this.length; i < len; i++) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+
   </script>
 
   {% block javascript %}
@@ -20,6 +39,7 @@
 
 
   <link rel="stylesheet" href="{% static "bootstrap-3.2.0-dist/css/bootstrap.min.css"%}"/>
+  <link rel="stylesheet" href="{% static "css/style.css"%}"/>
 
   {% block css %}{% endblock %}
 
@@ -78,6 +98,14 @@
 
 
   <div class="conteudo">
+    {% for message in messages %}
+    <div class="msg_bg_{{ message.tags }}">
+      <h3>{{ message }}</h3>
+    </div>
+
+    <div class="msg_padding"></div>
+    {% endfor %}
+
     {% block conteudo %}
     {% endblock %}
   </div>
