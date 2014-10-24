@@ -1,0 +1,65 @@
+.conteudo{
+	height: auto;
+	width: 100%;
+	padding-top: 70px;
+	padding-left: 10%;
+	padding-right: 10%;
+	overflow: visible;
+}
+
+.msg_bg_error a, .msg_bg_success a, .msg_bg_info a, .msg_bg_40 a, .msg_bg_25 a, .msg_bg_20 a{
+	right: 15px;
+	position: fixed;
+	color: white;
+	font-weight: 300;
+	text-decoration: none;
+}
+
+.msg_bg_error a:hover, .msg_bg_success a:hover, .msg_bg_info a:hover, .msg_bg_40 a:hover, .msg_bg_25 a:hover, .msg_bg_20 a:hover{
+	color: #dfdfdf;
+	text-decoration: none;
+}
+
+.msg_padding{
+	width: 100%;
+	height: 30px;
+	background-color: transparent;
+}
+
+.msg_bg_error, .msg_bg_40{
+	position: fixed;
+	color: white;
+	background-color: #f25880;
+	width: 100%;
+	padding: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+}
+
+.msg_bg_success, .msg_bg_25{
+	position: fixed;
+	color: white;
+	background-color: #14c176;
+	width: 100%;
+	padding: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+}
+
+.msg_bg_info, .msg_bg_20{
+	position: fixed;
+	color: white;
+	background-color: #4bd1ee;
+	width: 100%;
+	padding: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+}
+
+.msg_bg_success h3, .msg_bg_error h3, .msg_bg_info h3, .msg_bg_40 h3, .msg_bg_25 h3, .msg_bg_20 h3{
+	font-weight: 300;
+	font-size: 12pt;
+}
