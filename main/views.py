@@ -4,7 +4,7 @@
 
 from django.http import Http404, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import *
-from polls.models import *
+from models import *
 import json
 
 def api_monta_json(obj_json):
