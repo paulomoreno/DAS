@@ -76,8 +76,11 @@ def searchCode(request):
     if request.method == 'POST':
         entrada = request.POST['qrCode']
 
+    #Testar entrada
     print(entrada)
-    print('\n\nsdsdsdsdsdsds\n\n\n')
+    u = Usuario.objects.get(nome=entrada)
 
-    return api_monta_json({'response':entrada})
+    #Buscar no banco
+
+    return api_monta_json({'response':u.get_full_name()})
 

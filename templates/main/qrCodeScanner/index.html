@@ -16,7 +16,7 @@
 
 
 			//Scan and decode qrCode each Tms
-			//startScanning();
+			startScanning();
 
 
 
@@ -37,9 +37,14 @@
 
 					
 					//Call send data to django via AJAX
-					//alert(content);
-					//alert('{{ csrf_token }}');
+			
 
+                $.post( "/qrCodeScanner/scancode",
+    					{'qrCode' : content},
+    					function(data, textStatus, xhr){
+    						alert(xhr.status + ": " + xhr.responseText);
+    					}
+    			); 
 
 					//Start Scanning after 1000ms
 					sleep(1000,startScanning);
@@ -54,35 +59,6 @@
 						onWebcamReady:onWebcamReady 
 			});
 
-            $("#button").click(function() {
-            	
-				/*$.ajax({
-                    url : "/qrCodeScan/scancode", 
-                    type : "POST",
-                    dataType: "json", 
-                    data : {
-                        qrCode : "TEEEE",
-                        csrfmiddlewaretoken: '{% csrf_token %}'
-                        },
-                        success : function(json) {
-                            alert("Success!");
-                        },
-                        error : function(xhr,errmsg,err) {
-                            alert(xhr.status + ": " + xhr.responseText);
-                        }
-                });*/
-    			var post_data = {
-        			'qrCode' : "TEEEE"
-    			};
-
-                $.post( "/qrCodeScan/scancode",
-    					{'qrCode' : 'TEEEE'},
-    					function(data, textStatus, xhr){
-    						alert(xhr.status + ": " + xhr.responseText);
-    					}
-    			);    					
-				return false;
-			});
 
 			function csrfSafeMethod(method) {
 		        // these HTTP methods do not require CSRF protection
@@ -121,7 +97,7 @@
 		{% block title %}Bem Vindo!{% endblock %}
 
 		{% block conteudo %}
-		<form method="POST" name = "webcamForm" id = "webcamForm">
+
 			<div style="width:500px;float:left;">
 				<div id="webcam"> 
 
@@ -132,6 +108,5 @@
 					</select>
 				</div>
 			</div>
-			<input id="button" type="button" value="send to server"></input>
-		</form>
+
 		{%  endblock %}
