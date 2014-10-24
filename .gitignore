@@ -17,3 +17,6 @@
 
 # .smbdelete files from Mac OS X
 .smbdelete*
+
+# BD
+db.sqlite3
