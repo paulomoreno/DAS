@@ -11,7 +11,7 @@ O Sistema DAS é dividido em duas partes. O Backend é a parte que fica no servi
 Backend
 -------
 
-O desenolvimento do Backend é realizado através da framework Django 1.6 com as dependencias citadas abaixo, em Python 2.7.3.
+O desenolvimento do Backend é realizado através da framework Django 1.7 com as dependencias citadas abaixo, em Python 2.7.3.
 
 O Projeto em Django possui apenas um aplicativo, chamado de *main* ([source/main/](https://github.com/paulomoreno/DAS/tree/master/source/main)). Dentor dele, existem 4 arquivos principais:
 
@@ -61,9 +61,6 @@ virtualenv das-venv
 #Acessar o virtualenv
 source das-venv/bin/activate
 
-#Instalar django 1.6 (pelo virtualenv)
-pip install Django==1.6.4
-
 #Sair do virtualenv
 deactivate
 ```
@@ -85,7 +82,12 @@ Estamos utilizando o SQLite, mas ele será trocado por um SGBD mais poderoso par
 
 *Para iniciar o banco de dados do zero, basta entrar na pasta source/ e executar o seguinte comando:
 ```shell
-python manage.py syncdb
+python manage.py makemigrations main
+
+python manage.py migrate
+
+# Criação do usuário admin
+python manage.py createsuperuser
 ```
 
 Executando o Sistema
