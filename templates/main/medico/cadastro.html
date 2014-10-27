@@ -3,11 +3,11 @@
 
 {% block css %}{% endblock %}
 
-{% block title %}Cadastro{% endblock %}
+{% block title %}Novo médico{% endblock %}
 
 {% block conteudo %}
-<h1>Cadastro de novo usuario:</h1>
-<form role="form" action="{% url 'registrar_cliente' %}" method="post">
+<h1>Cadastro de novo Médico:</h1>
+<form role="form" action="{% url 'registrar_medico' %}" method="post">
   {% csrf_token %}
   <div class="row">
   	<div class="form-group">
@@ -89,6 +89,23 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">CRM</label>
+        <input type="text" class="form-control"id="" placeholder="CRM" name="crm">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Duração da Consulta</label>
+        <input type="text" class="form-control"id="" placeholder="Duração da Consulta" name="duracao_consulta">
+    </div>
+    </div>
+  </div>
 
   <div class="checkbox">
     <label>

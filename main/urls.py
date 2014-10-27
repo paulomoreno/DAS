@@ -19,7 +19,15 @@ urlpatterns = patterns('',
 
 
 		#URL para cadastro de novos clientes
-        url(r'^clientes/registrar$','main.views.registrar_cliente',name='registrar_cliente'),
+        url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
+
+
+        #Todos os medicos
+        url(r'^medicos$','main.views.medicos',name='medicos'),        
+		#URL para cadastro de novos médicos
+        url(r'^medicos/novo$','main.views.registrar_medico',name='registrar_medico'),
+
+
 
      	#URL para leitura de QRCode
 		url(r'^qrCodeScanner$','main.views.qrCodeScan',name='qrCodeScan'),
@@ -27,8 +35,10 @@ urlpatterns = patterns('',
 		#URL para leitura de QRcode decodificado no banco
 		url(r'^qrCodeScanner/scancode$','main.views.searchCode',name='scancode'),
 
+		#URL para todas as especializações
+		url(r'^especializacoes$','main.views.especializacoes',name='especializacoes'),
 		#URL para cadastro de novas especializações
-		url(r'^especializacao/registrar$','main.views.registrar_especializacao',name='registrar_especializacao'),
+		url(r'^especializacoes/nova$','main.views.registrar_especializacao',name='registrar_especializacao'),
 
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),

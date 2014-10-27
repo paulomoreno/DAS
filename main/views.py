@@ -164,6 +164,165 @@ def registrar_cliente(request):
 
 @login_required        
 @user_passes_test(is_admin)
+def medicos(request):
+    '''
+    Esta função é responsável retornar uma lista com todos os medicos registrados.
+    
+    Esta função aceita apenas pedidos GET 
+
+    '''
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Obtem todos os medicos do bd
+        medicos = [m.json() for m in Medico.objects.all()]
+
+        #Retorna a página de todos os medicos
+        return render_to_response('main/medico/todos.html', { 'medicos' : medicos }, context)
+    else:
+
+        return HttpResponse('Método Não Permitido',status=405)
+
+@login_required        
+@user_passes_test(is_admin)
+def registrar_medico(request):
+    '''
+    Esta função é responsável por registrar um novo médico.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza o cadastro de um novo médico
+
+    '''
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Retorna a página de cadastro de cliente
+        return render_to_response('main/medico/cadastro.html', context)
+
+    elif request.method == 'POST':
+        #obtem dados do POST
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        senha =  request.POST['senha']
+        confirmar_senha =  request.POST['confirmar_senha']
+        email = request.POST['email']
+        telefone = request.POST['telefone']
+        endereco = request.POST['endereco']
+        cpf = request.POST['cpf']
+        rg = request.POST['rg']
+        crm = request.POST['crm']
+        duracao_consulta = request.POST['duracao_consulta']
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if senha is None or senha == '':
+            # Define erro
+            messages.error(request, 'Senha é obrigatória.')
+            erro = True
+
+        elif confirmar_senha is None or confirmar_senha == '':
+            # Define erro
+            messages.error(request, 'Confirmar Senha é obrigatório.')
+            erro = True
+
+        elif senha != confirmar_senha:
+            # Define erro
+            messages.error(request, 'Senhas diferentes.')
+            erro = True
+
+        elif len(senha) < TAMANHO_MINIMO_SENHA:
+            # Define erro
+            messages.error(request, 'A senha deve ter no mínimo 6 caracteres.')
+            erro = True
+
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+
+        if cpf is None or cpf =='':
+            messages.error(request, "CPF é obrigatório!")
+
+        if crm is None or crm =='':
+            messages.error(request, "CRM é obrigatório!")
+
+        if duracao_consulta is None or duracao_consulta =='':
+            messages.error(request, "Duração da Consulta é obrigatório!")
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    #Cria usuario
+                    medico = Medico.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, duracao_consulta=duracao_consulta)
+                  
+                    #Insere os campos obrigatorios
+                    medico.rg = rg
+                    medico.cpf = cpf
+                    medico.crm = crm
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        medico.telefone = telefone
+
+                    if endereco and endereco != '':
+                        medico.endereco = endereco
+   
+                    #Da um commit no bd
+                    medico.save()
+
+                messages.info(request, "Cadastro realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o medico.')
+
+
+        return render_to_response('main/medico/cadastro.html', context)
+
+    else:
+
+        return HttpResponse('Método Não Permitido',status=405)
+
+@login_required        
+@user_passes_test(is_admin)
+def especializacoes(request):
+    '''
+    Esta função é responsável mostrar todas as especializacoes.
+    
+    Esta função aceita apenas pedidos GET
+
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Obtem todas as especialozacoes
+        especializacoes =  [e.json() for e in Especializacao.objects.all()]
+        #Retorna a página de tdas as espocializacoes
+        return render_to_response('main/especializacao/todas.html',{'especializacoes' : especializacoes}, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
+
+@login_required        
+@user_passes_test(is_admin)
 def registrar_especializacao(request):
     '''
     Esta função é responsável por registrar uma nova especialização.

@@ -41,15 +41,30 @@ class Medico(Usuario):
     crm = models.CharField(max_length=16)
     duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
 
+    def json(self):
+        medico = {}
+        medico['nome'] = self.first_name
+        medico['sobrenome'] = self.last_name
+        medico['email'] = self.email
+
+        return medico
+
+
     class Meta:
         verbose_name = "Medico"
         verbose_name_plural = "Medicos"
+
 
 class Especializacao(models.Model):
     nome = models.CharField(max_length=60, unique=True)
 
     def __unicode__(self):
         return self.nome
+
+    def json(self):
+        e = {}
+        e['nome'] = self.nome
+        return e
 
 class Horario(models.Model):
     medico = models.ForeignKey('Medico')

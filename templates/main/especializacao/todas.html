@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Especializações{% endblock %}
+
+{% block conteudo %}
+
+	<li><a href="{% url 'registrar_especializacao' %}"><span class="glyphicon glyphicon-plus"></span> Nova</a></li>
+
+	{% for e in especializacoes %}
+	<p>
+		<h1>{{ e.nome }}</h1>
+	</p>
+	{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Médicos{% endblock %}
+
+{% block conteudo %}
+
+	<li><a href="{% url 'registrar_medico' %}"><span class="glyphicon glyphicon-plus"></span> Novo</a></li>
+
+	{% for m in medicos %}
+	<p>
+		<h1>{{ m.nome }} {{ m.sobrenome }}</h1>
+	</p>
+	{% endfor %}
+
+{% endblock %}

@@ -102,6 +102,8 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     {% else %}
         
           {% if user.is_staff %}
+              <li><a href="{% url 'medicos' %}"><span class="glyphicon glyphicon-user"></span> Medicos</a></li>
+              <li><a href="{% url 'especializacoes' %}"><span class="glyphicon glyphicon-tags"></span> Especializações</a></li>
               <li><a href="{% url 'admin:index' %}"><span class="glyphicon glyphicon-flash"></span> Admin</a></li>
           {% endif %}
 
