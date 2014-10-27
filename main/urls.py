@@ -27,6 +27,8 @@ urlpatterns = patterns('',
 		#URL para leitura de QRcode decodificado no banco
 		url(r'^qrCodeScanner/scancode$','main.views.searchCode',name='scancode'),
 
+		#URL para cadastro de novas especializações
+		url(r'^especializacao/registrar$','main.views.registrar_especializacao',name='registrar_especializacao'),
 
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),

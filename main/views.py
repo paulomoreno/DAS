@@ -57,11 +57,11 @@ def registrar_cliente(request):
 
     elif request.method == 'POST':
         #obtem dados do POST
-        name = request.POST['nome']
-        last_name = request.POST['sobrenome']
-        email = request.POST['email']
-        pwd =  request['senha']
-        checkbox = request['novidades']
+        name        = request.POST['nome']
+        last_name   = request.POST['sobrenome']
+        email       = request.POST['email']
+        pwd         =  request['senha']
+        checkbox    = request['novidades']
         if name is None or nome =='':
         	messages.error(request, "Campo nome obrigatorio")
 
@@ -71,6 +71,34 @@ def registrar_cliente(request):
 
         return HttpResponse('Método Não Permitido',status=405)
         
+def registrar_especializacao(request):
+    '''
+    Esta função é responsável por registrar uma nova especialização.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza o cadastro de uma nova especialização
+
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Retorna a página de cadastro de cliente
+        return render_to_response('main/especializacao/cadastro.html', context)
+    elif request.method == 'POST':
+        espec = Especializacao(nome=request.POST['especializacao'] )
+        espec.save()
+
+        return render_to_response('main/especializacao/cadastro.html', context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
+
+
 def qrCodeScan(request):
     '''
     qrCode scanner

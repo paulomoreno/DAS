@@ -12,13 +12,11 @@
 	        //Variable used to save intervalID in order to stop scanning
 	        //when a QrCode has been scanned
 	        var intervalID = 0;
-	        var csrftoken = " token";
+	        var csrftoken = "token";
 
 
 			//Scan and decode qrCode each Tms
 			startScanning();
-
-
 
 			function startScanning(){
 				intervalID = window.setInterval(scanAndDecode,100);	
