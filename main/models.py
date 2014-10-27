@@ -125,7 +125,7 @@ class Medico(models.Model):
         return self.usuario.email
 
 class Especializacao(models.Model):
-    nome = models.CharField(max_length=60)
+    nome = models.CharField(max_length=60, unique=True)
 
     def __unicode__(self):
         return self.nome

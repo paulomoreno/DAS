@@ -3,8 +3,13 @@
 # vim: set fileencoding=utf8 :
 
 from django.http import Http404, HttpResponseBadRequest, HttpResponse
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.db import IntegrityError, transaction
 from django.shortcuts import *
 from models import *
+import linecache
+import sys
 import json
 
 def api_monta_json(obj_json):
@@ -71,6 +76,7 @@ def registrar_cliente(request):
 
         return HttpResponse('Método Não Permitido',status=405)
         
+@staff_member_required
 def registrar_especializacao(request):
     '''
     Esta função é responsável por registrar uma nova especialização.
@@ -90,9 +96,35 @@ def registrar_especializacao(request):
     if request.method == 'GET':
         #Retorna a página de cadastro de cliente
         return render_to_response('main/especializacao/cadastro.html', context)
+
     elif request.method == 'POST':
-        espec = Especializacao(nome=request.POST['especializacao'] )
-        espec.save()
+
+        #Obtem o parametro do POST
+        espec_nome = request.POST['especializacao']
+
+        erro = False
+
+        if espec_nome is None or espec_nome == '':
+            # Define erro
+            messages.error(request, 'Nome da especialização inválido.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    espec = Especializacao(nome=espec_nome)
+                    espec.save()
+
+                messages.info(request, "Cadastro da especialização '{}' realizado com sucesso!".format(espec_nome))
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'unique' in e.message:
+                    messages.error(request, 'Especialização já existente.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar a especialização.')
 
         return render_to_response('main/especializacao/cadastro.html', context)
     else:
