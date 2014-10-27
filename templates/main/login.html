@@ -16,7 +16,9 @@
 
       <form class="" role="form" action="{% url 'django.contrib.auth.views.login' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="next" value="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'index' %}{% endif %}" />
+          <input type="hidden" name="next" value="{{ next }}" />
+
+          <p>{{ next}}</p>
 
           <div class="form-group row">
  		<div class ="col-md-4">

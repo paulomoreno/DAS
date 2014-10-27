@@ -4,6 +4,7 @@
 
 from django.http import Http404, HttpResponseBadRequest, HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import *
@@ -130,7 +131,7 @@ def registrar_especializacao(request):
     else:
         return HttpResponse('Método Não Permitido',status=405)
 
-
+@login_required
 def qrCodeScan(request):
     '''
     qrCode scanner

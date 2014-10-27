@@ -5,6 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
+  <script src="{% static "bootstrap-3.2.0-dist/js/bootstrap.min.js"%}" ></script>
+
+
 
   <script>
               
@@ -52,7 +55,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -64,7 +67,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
       </button>
 
       <a class="navbar-brand" style="padding:8px;" href="{% url 'index' %}">
-	<img height="34" width="34"  src="{% static "media/icon_white.png"%}">
+	<img height="34" width="34"  src="{% static "media/favicon.png"%}">
       </a>
       <a class="navbar-brand" href="{% url 'index' %}">
 	DAS
@@ -73,15 +76,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-
-      <!--
-        <li class="active"><a href="#">Medicos</a></li>
-        <li><a href="#">Consultas</a></li>
-        -->
-      </ul>
       
-
       <ul class="nav navbar-nav navbar-right">
 
         
@@ -90,7 +85,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 
 
     {% if not user.is_authenticated %}
-      <form class="navbar-form navbar-right" role="form" action="{% url 'django.contrib.auth.views.login' %}" method="post">
+      <form class="navbar-form navbar-left" role="form" action="{% url 'django.contrib.auth.views.login' %}" method="post">
           {% csrf_token %}
           <input type="hidden" name="next" value="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'index' %}{% endif %}" />
           <div class="form-group">
@@ -99,19 +94,20 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
           <div class="form-group">
               <input type="password" name="password" placeholder="Password" class="form-control" required />
           </div>
-          <button type="submit" class="btn btn-success">Entrar</button>
+          <button type="submit" class="btn btn-primary">Entrar</button>
       </form>
       <form class="navbar-form navbar-left" action="{% url 'registrar_cliente' %}" role="register">
-          <button type="submit" class="btn btn-default">Registrar</button>
-        </form>
-  {% else %}
-          
+          <button type="submit" class="btn btn-default">Cadastrar</button>
+      </form>
+    {% else %}
+        
           {% if user.is_staff %}
               <li><a href="{% url 'admin:index' %}"><span class="glyphicon glyphicon-flash"></span> Admin</a></li>
           {% endif %}
 
           <li><a href="{% url 'django.contrib.auth.views.logout' %}"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
   {% endif %}
+
       </ul>
 
 
