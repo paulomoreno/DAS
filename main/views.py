@@ -5,6 +5,7 @@
 from django.http import Http404, HttpResponseBadRequest, HttpResponse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import *
@@ -12,6 +13,15 @@ from models import *
 import linecache
 import sys
 import json
+
+def is_admin(user):
+    return user.is_admin or user.is_staff
+
+def is_cliente(user):
+    return user.is_cliente
+
+def is_medico(user):
+    return user.is_medico
 
 def api_monta_json(obj_json):
     '''
@@ -76,8 +86,9 @@ def registrar_cliente(request):
     else:
 
         return HttpResponse('Método Não Permitido',status=405)
-        
-@staff_member_required
+
+@login_required        
+@user_passes_test(is_admin)
 def registrar_especializacao(request):
     '''
     Esta função é responsável por registrar uma nova especialização.
@@ -132,6 +143,7 @@ def registrar_especializacao(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
+@user_passes_test(is_admin)
 def qrCodeScan(request):
     '''
     qrCode scanner
