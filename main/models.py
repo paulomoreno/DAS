@@ -21,6 +21,9 @@ class Usuario(AbstractUser):
     telefone = models.CharField(max_length=20)
     endereco = models.CharField(max_length=120)
 
+    def __unicode__(self):
+        return self.username + ' - ' + self.email
+
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
@@ -28,9 +31,6 @@ class Usuario(AbstractUser):
 
 class Cliente(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
-
-    def __unicode__(self):
-        return self.usuario.email
 
     class Meta:
         verbose_name = "Cliente"
@@ -40,9 +40,6 @@ class Medico(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
     crm = models.CharField(max_length=16)
     duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
-
-    def __unicode__(self):
-        return self.usuario.email
 
     class Meta:
         verbose_name = "Medico"

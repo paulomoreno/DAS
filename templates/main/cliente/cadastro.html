@@ -7,7 +7,8 @@
 
 {% block conteudo %}
 <h1>Cadastro de novo usuario:</h1>
-<form role="form" action="{% url 'registrar_cliente' %}">
+<form role="form" action="{% url 'registrar_cliente' %}" method="post">
+  {% csrf_token %}
   <div class="row">
   	<div class="form-group">
 		<div class="col-md-2" >
@@ -39,6 +40,55 @@
  		</div>
   	</div>
   </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Confirmar Senha</label>
+        <input type="password" class="form-control"id="passwordInput" placeholder="Confirmar Senha" name="confirmar_senha">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Endereço</label>
+        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Telefone</label>
+        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">RG</label>
+        <input type="text" class="form-control"id="" placeholder="RG" name="rg">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">CPF</label>
+        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf">
+    </div>
+    </div>
+  </div>
+
 
   <div class="checkbox">
     <label>

@@ -14,6 +14,9 @@ import linecache
 import sys
 import json
 
+
+TAMANHO_MINIMO_SENHA = 6
+
 def is_admin(user):
     return user.is_admin or user.is_staff
 
@@ -73,13 +76,85 @@ def registrar_cliente(request):
 
     elif request.method == 'POST':
         #obtem dados do POST
-        name        = request.POST['nome']
-        last_name   = request.POST['sobrenome']
-        email       = request.POST['email']
-        pwd         =  request['senha']
-        checkbox    = request['novidades']
-        if name is None or nome =='':
-        	messages.error(request, "Campo nome obrigatorio")
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        senha =  request.POST['senha']
+        confirmar_senha =  request.POST['confirmar_senha']
+        email = request.POST['email']
+        telefone = request.POST['telefone']
+        endereco = request.POST['endereco']
+        cpf = request.POST['cpf']
+        rg = request.POST['rg']
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if senha is None or senha == '':
+            # Define erro
+            messages.error(request, 'Senha é obrigatória.')
+            erro = True
+
+        elif confirmar_senha is None or confirmar_senha == '':
+            # Define erro
+            messages.error(request, 'Confirmar Senha é obrigatório.')
+            erro = True
+
+        elif senha != confirmar_senha:
+            # Define erro
+            messages.error(request, 'Senhas diferentes.')
+            erro = True
+
+        elif len(senha) < TAMANHO_MINIMO_SENHA:
+            # Define erro
+            messages.error(request, 'A senha deve ter no mínimo 6 caracteres.')
+            erro = True
+
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+
+        if cpf is None or cpf =='':
+            messages.error(request, "CPF é obrigatório!")
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    #Cria usuario
+                    cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha)
+                  
+                    #Insere os campos obrigatorios
+                    cliente.rg = rg
+                    cliente.cpf = cpf
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        cliente.telefone = telefone
+
+                    if endereco and endereco != '':
+                        cliente.endereco = endereco
+   
+                    #Da um commit no bd
+                    cliente.save()
+
+                messages.info(request, "Cadastro realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar a especialização.')
+
 
         return render_to_response('main/cliente/cadastro.html', context)
 
