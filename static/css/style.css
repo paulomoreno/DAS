@@ -27,6 +27,7 @@
 }
 
 .msg_bg_error, .msg_bg_40{
+	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #f25880;
@@ -38,6 +39,7 @@
 }
 
 .msg_bg_success, .msg_bg_25{
+	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #14c176;
@@ -49,6 +51,7 @@
 }
 
 .msg_bg_info, .msg_bg_20{
+	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #4bd1ee;
