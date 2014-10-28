@@ -17,6 +17,8 @@ urlpatterns = patterns('',
 		# Auth - Register
 		#url(r'^register$', 'main.views.register', name='register'),
 
+		#URL para cadastro visualizar/alterar informacoes de conta
+        url(r'^conta$','main.views.conta',name='conta'),
 
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
@@ -27,6 +29,23 @@ urlpatterns = patterns('',
 		#URL para cadastro de novos médicos
         url(r'^medicos/novo$','main.views.registrar_medico',name='registrar_medico'),
 
+        #Todos os convenios
+        url(r'^convenios$','main.views.convenios',name='convenios'),        
+		#URL para cadastro de novos convenios
+        url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
+
+
+
+  		#Todos os horarios de um medico
+        url(r'^horarios$','main.views.horarios',name='horarios'),        
+		#URL para cadastro de novos horarios
+        url(r'^horarios/novo$','main.views.registrar_horario',name='registrar_horario'),
+
+
+  		#Todos as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
+        url(r'^consultas$','main.views.consultas',name='consultas'),        
+		#URL para cadastro de novas consultas
+        url(r'^consultas/nova$','main.views.registrar_consulta',name='registrar_consulta'),
 
 
      	#URL para leitura de QRCode

@@ -26,6 +26,9 @@ def is_cliente(user):
 def is_medico(user):
     return user.is_medico
 
+def is_medico_or_cliente(user):
+    return (user.is_medico or user.is_cliente)
+
 def api_monta_json(obj_json):
     '''
     Função que retorna um objeto JSON
@@ -135,6 +138,7 @@ def registrar_cliente(request):
                     #Insere os campos obrigatorios
                     cliente.rg = rg
                     cliente.cpf = cpf
+                    cliente.is_cliente = True
 
                     #Caso existentes, insere os campos nao obrigatorios
                     if telefone and telefone != '':
@@ -161,6 +165,25 @@ def registrar_cliente(request):
     else:
 
         return HttpResponse('Método Não Permitido',status=405)
+
+
+@login_required        
+def conta(request):
+    '''
+    Esta função é responsável por gerenciar as informacoes de conta.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página com informacoes da conta do usuario autenticado.
+
+    POST:
+        Salva as alteracoes na conta.
+
+    '''
+    # TODO !!!
+
+    return HttpResponse('Não Implementado',status=501)
 
 @login_required        
 @user_passes_test(is_admin)
@@ -274,6 +297,7 @@ def registrar_medico(request):
                     medico.rg = rg
                     medico.cpf = cpf
                     medico.crm = crm
+                    medico.is_medico = True
 
                     #Caso existentes, insere os campos nao obrigatorios
                     if telefone and telefone != '':
@@ -458,8 +482,69 @@ def registrar_convenio(request):
     else:
         return HttpResponse('Método Não Permitido',status=405)
 
+@login_required        
+@user_passes_test(is_medico)
+def horarios(request):
+    '''
+    Esta função é responsável mostrar todos os horarios do medico autenticado.
+    
+    Esta função aceita apenas pedidos GET
+
+    '''
+    # TODO !!!
+    return HttpResponse('Não Implementado',status=501)
+
+@login_required        
+@user_passes_test(is_medico)
+def registrar_horario(request):
+    '''
+    Esta função é responsável por registrar um novo horario.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza o cadastro de um novo horario.
+
+    '''
+    # TODO !!!
+
+    return HttpResponse('Não Implementado',status=501)
 
 
+@login_required        
+@user_passes_test(is_medico_or_cliente)
+def consultas(request):
+    '''
+    Esta função é responsável mostrar todos as consultas do medico ou cliente autenticado.
+    
+    Esta função aceita apenas pedidos GET
+
+    '''
+    # TODO !!!
+
+    return HttpResponse('Não Implementado',status=501)
+
+@login_required        
+@user_passes_test(is_cliente)
+def registrar_consulta(request):
+    '''
+    Esta função é responsável por registrar uma nova consulta.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza o cadastro de uma nova consulta.
+
+    '''
+    # TODO !!!
+
+    return HttpResponse('Não Implementado',status=501)
 
 @login_required
 @user_passes_test(is_admin)
