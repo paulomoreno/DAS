@@ -84,6 +84,12 @@ class Convenio(models.Model):
     def __unicode__(self):
         return self.razao_social
 
+    def json(self):
+        convenio = {}
+        convenio['cnpj'] = self.cnpj
+        convenio['razao_social'] = self.razao_social
+        return convenio
+
 class Consulta(models.Model):
     """docstring for Convenio"""
     id = UUIDField(primary_key=True, auto=True)

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Convênios{% endblock %}
+
+{% block conteudo %}
+
+	<li><a href="{% url 'registrar_convenio' %}"><span class="glyphicon glyphicon-plus"></span> Novo</a></li>
+
+	{% for c in convenios %}
+	<p>
+		<h1>{{ c.razao_social }}</h1> - <h2>{{ c.cnpj }}</h2>
+	</p>
+	{% endfor %}
+
+{% endblock %}

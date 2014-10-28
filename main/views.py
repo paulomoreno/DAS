@@ -376,6 +376,91 @@ def registrar_especializacao(request):
     else:
         return HttpResponse('Método Não Permitido',status=405)
 
+
+@login_required        
+@user_passes_test(is_admin)
+def convenios(request):
+    '''
+    Esta função é responsável mostrar todos os convenios.
+    
+    Esta função aceita apenas pedidos GET
+
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Obtem todas as especialozacoes
+        convenios =  [c.json() for c in Convenio.objects.all()]
+        #Retorna a página de tdas as espocializacoes
+        return render_to_response('main/convenio/todos.html',{'convenios' : convenios}, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
+
+@login_required        
+@user_passes_test(is_admin)
+def registrar_convenio(request):
+    '''
+    Esta função é responsável por registrar uma nova especialização.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza o cadastro de um novo convenio
+
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Retorna a página de cadastro de cliente
+        return render_to_response('main/convenio/cadastro.html', context)
+
+    elif request.method == 'POST':
+
+        #Obtem o parametro do POST
+        cnpj = request.POST['cnpj']
+        razao_social = request.POST['razao_social']
+
+        erro = False
+
+        if razao_social is None or razao_social == '':
+            # Define erro
+            messages.error(request, 'Razão social é obrigatório.')
+            erro = True
+
+        if cnpj is None or cnpj == '':
+            # Define erro
+            messages.error(request, 'CNPJ é obrigatório.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    convenio = Convenio(cnpj=cnpj, razao_social=razao_social)
+                    convenio.save()
+
+                messages.info(request, "Cadastro do convênio '{}' realizado com sucesso!".format(razao_social))
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'unique' in e.message:
+                    messages.error(request, 'Convênio já existente.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o convênio.')
+
+        return render_to_response('main/convenio/cadastro.html', context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
+
+
+
+
 @login_required
 @user_passes_test(is_admin)
 def qrCodeScan(request):
