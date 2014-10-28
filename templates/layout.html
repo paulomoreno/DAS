@@ -120,7 +120,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
               <li><a href="{% url 'consultas' %}"><span class="glyphicon glyphicon-list-alt"></span> Consultas</a></li>
           {% endif %}
 
-          <li><a href="{% url 'conta' %}"><span class="glyphicon glyphicon-user"></span> Conta</a></li>
+          <li><a href="{% url 'conta' %}"><span class="glyphicon glyphicon-user"></span> {{ user.first_name }} {{ user.last_name }}</a></li>
           <li><a href="{% url 'django.contrib.auth.views.logout' %}"><span class="glyphicon glyphicon-log-out"></span> Sair</a></li>
   {% endif %}
 
