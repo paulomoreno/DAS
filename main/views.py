@@ -132,12 +132,15 @@ def registrar_cliente(request):
 
         if email is None or email =='':
             messages.error(request, "Email é obrigatório!")
+            erro = True
 
         if rg is None or rg =='':
             messages.error(request, "RG é obrigatório!")
+            erro = True
 
         if cpf is None or cpf =='':
             messages.error(request, "CPF é obrigatório!")
+            erro = True
 
         if not erro:
             #Tenta salvar o novo cliente no banco
