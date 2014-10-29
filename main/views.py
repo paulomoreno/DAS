@@ -240,6 +240,9 @@ def remover_medico(request, crm):
 @user_passes_test(is_admin_or_medico)
 def alterar_medico(request, id):
 
+    if request.user.is_medico and request.user.id != id:
+        return HttpResponse('<h1>Proibido</h1>',status=403)
+
     medico = Medico.objects.get(id=id)
 
     parametros = {}
