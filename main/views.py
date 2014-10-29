@@ -178,25 +178,6 @@ def registrar_cliente(request):
 
         return HttpResponse('Método Não Permitido',status=405)
 
-
-@login_required        
-def conta(request):
-    '''
-    Esta função é responsável por gerenciar as informacoes de conta.
-    
-    Esta função aceita pedidos GET e POST
-
-    GET:
-        Retorna a página com informacoes da conta do usuario autenticado.
-
-    POST:
-        Salva as alteracoes na conta.
-
-    '''
-    # TODO !!!
-
-    return HttpResponse('Não Implementado',status=501)
-
 @login_required        
 @user_passes_test(is_admin)
 def medicos(request):

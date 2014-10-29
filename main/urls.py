@@ -18,9 +18,6 @@ urlpatterns = patterns('',
 		# Auth - Register
 		#url(r'^register$', 'main.views.register', name='register'),
 
-		#URL para cadastro visualizar/alterar informacoes de conta
-        url(r'^conta$','main.views.conta',name='conta'),
-
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
 		#URL para alterar clientes
