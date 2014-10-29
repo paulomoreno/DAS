@@ -12,9 +12,9 @@
 					  $.post( "/consultas/listarMedicosEspec",
     					{'especId' : this.value},
     					function(data, textStatus, xhr){
-						    //alert(xhr);
-						    var jsonData = JSON.parse(data.response);
-							alert(jsonData.counters.length);
+						  	alert(data.response);
+						  // var jsonData = JSON.parse(data.response);
+							//alert(jsonData.counters.length);
 						}
     				); 
 
