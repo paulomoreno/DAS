@@ -7,7 +7,7 @@
 
 {% block conteudo %}
 <h1>Cadastro de novo Médico:</h1>
-<form role="form" action="{% url 'adicionar_horario' %}" method="post">
+<form role="form" action="{% url 'registrar_horario' %}" method="post">
   {% csrf_token %}
   <div class="row">
   	<div class="form-group">
@@ -23,9 +23,14 @@
             <option value="7">Domingo</option>
         </select>
 	 	</div>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="form-group">
 	  	<div class="col-md-2">
-	  		<label for="lastName"> Sobrenome</label>
-	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">	
+	  		<label for="lastName">Horario Inicial</label>
+	  		<input type="text" class="timepicker" id="lastNameInput" placeholder="h:mm PM" name="data_inicio" data-default-time="false">	
 		</div>  	  		
   	</div>
   </div>
@@ -33,101 +38,12 @@
   <div class="row">
  	 <div class="form-group">
  		<div class ="col-md-4">
-		    <label for="emailInput">E-mail</label>
-   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}"> 		
+		    <label for="emailInput">Horario Final</label>
+   		    <input type="text" class="timepicker" id="lastNameInput" placeholder="h:mm PM" name="data_final" data-default-time="false">		
  		</div>
  	 </div>
   </div>
 
-  <div class="row">
-   <div class="form-group">
-    <div class ="col-md-4">
-        <label for="espec">Especializacao</label>
-        <select id="espec" class="form-control" name="especializacao">
-          {% for e in especializacoes %}
-            <option value="{{ e.id }}" {% if e.id == especializacao %}selected{% endif %}>{{ e.nome }}<option>
-          {% endfor %}
-        </select>
-    </div>
-   </div>
-  </div>
-
-  <div class="row">
-  	<div class="form-group">
- 		<div class ="col-md-4">
-   		 	<label for="userPassword">Senha</label>
-   		 	<input type="password" class="form-control"id="passwordInput" placeholder="Senha" name="senha">
-   			 <p class="help-block">Sua senha deve ter no minimo 6 caracteres</p> 		
- 		</div>
-  	</div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Confirmar Senha</label>
-        <input type="password" class="form-control"id="passwordInput" placeholder="Confirmar Senha" name="confirmar_senha">
-    </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Endereço</label>
-        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
-    </div>
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Telefone</label>
-        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
-    </div>
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">RG</label>
-        <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
-    </div>
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">CPF</label>
-        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" value="{{ cpf }}">
-    </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">CRM</label>
-        <input type="text" class="form-control"id="" placeholder="CRM" name="crm" value="{{ crm }}">
-    </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Duração da Consulta</label>
-        <input type="text" class="form-control"id="" placeholder="Duração da Consulta" name="duracao_consulta" value="{{ duracao_consulta }}">
-    </div>
-    </div>
-  </div>
-  
   <div class="form-group">
       <div class="row">
         <div class="col-xs-2">
@@ -136,4 +52,10 @@
       </div>  	
   </div>
 </form>
+
+<script>
+$( document ).ready(function() {
+$('.timepicker').timepicker();
+});
+</script>
 {%  endblock %}
