@@ -13,11 +13,11 @@
   	<div class="form-group">
 		<div class="col-md-2" >
 	    	<label for="firstNameInput">Primeiro Nome</label>
-	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome">
+	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome" value="{{ nome }}">
 	 	</div>
 	  	<div class="col-md-2">
 	  		<label for="lastName"> Sobrenome</label>
-	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome">	
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">	
 		</div>  	  		
   	</div>
   </div>
@@ -26,7 +26,7 @@
  	 <div class="form-group">
  		<div class ="col-md-4">
 		    <label for="emailInput">E-mail</label>
-   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ form.email }}"> 		
+   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}"> 		
  		</div>
  	 </div>
   </div>
@@ -35,7 +35,7 @@
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">Endereço</label>
-        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco">
+        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
     </div>
     </div>
   </div>
@@ -45,7 +45,7 @@
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">Telefone</label>
-        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone">
+        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
     </div>
     </div>
   </div>
@@ -55,7 +55,7 @@
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">RG</label>
-        <input type="text" class="form-control"id="" placeholder="RG" name="rg">
+        <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
     </div>
     </div>
   </div>
@@ -65,7 +65,7 @@
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">CPF</label>
-        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf">
+        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" value="{{ cpf }}" disabled="true">
     </div>
     </div>
   </div>
