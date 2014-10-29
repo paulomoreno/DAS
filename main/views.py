@@ -251,9 +251,13 @@ def registrar_medico(request):
     '''
     context = RequestContext(request)
 
+    #Obtem as especializacoes
+    parametros = {'especializacoes' : Especializacao.objects.all()}
+
+
     if request.method == 'GET':
         #Retorna a página de cadastro de cliente
-        return render_to_response('main/medico/cadastro.html', context)
+        return render_to_response('main/medico/cadastro.html',parametros, context)
 
     elif request.method == 'POST':
         #obtem dados do POST
@@ -268,6 +272,9 @@ def registrar_medico(request):
         rg = request.POST['rg']
         crm = request.POST['crm']
         duracao_consulta = request.POST['duracao_consulta']
+        especializacao = request.POST['especializacao']
+
+        print especializacao
 
         erro = False
 
@@ -300,18 +307,34 @@ def registrar_medico(request):
 
         if email is None or email =='':
             messages.error(request, "Email é obrigatório!")
+            erro = True
 
         if rg is None or rg =='':
             messages.error(request, "RG é obrigatório!")
+            erro = True
 
         if cpf is None or cpf =='':
             messages.error(request, "CPF é obrigatório!")
+            erro = True
 
         if crm is None or crm =='':
             messages.error(request, "CRM é obrigatório!")
+            erro = True
 
-        if duracao_consulta is None or duracao_consulta =='':
+        if duracao_consulta is None or duracao_consulta == '':
             messages.error(request, "Duração da Consulta é obrigatório!")
+            erro = True
+
+        if especializacao is None or especializacao == '':
+            messages.error(request, "Especialização é obrigatório!")
+            erro = True
+        else:
+            #Tenta obter a especializacao
+            try:
+                espec = Especializacao.objects.get(id=especializacao)
+            except:
+                messages.error(request, "Especialização invalida!")
+                erro = True
 
         if not erro:
             #Tenta salvar o novo cliente no banco
@@ -319,7 +342,7 @@ def registrar_medico(request):
                 #A operacao deve ser atomica
                 with transaction.atomic():
                     #Cria usuario
-                    medico = Medico.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, duracao_consulta=duracao_consulta)
+                    medico = Medico.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, duracao_consulta=duracao_consulta, especializacao=espec)
                   
                     #Insere os campos obrigatorios
                     medico.rg = rg
@@ -347,7 +370,7 @@ def registrar_medico(request):
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
 
-        return render_to_response('main/medico/cadastro.html', context)
+        return render_to_response('main/medico/cadastro.html',parametros, context)
 
     else:
 
