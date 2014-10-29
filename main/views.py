@@ -86,15 +86,19 @@ def registrar_cliente(request):
 
     elif request.method == 'POST':
         #obtem dados do POST
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        senha =  request.POST['senha']
-        confirmar_senha =  request.POST['confirmar_senha']
-        email = request.POST['email']
-        telefone = request.POST['telefone']
-        endereco = request.POST['endereco']
-        cpf = request.POST['cpf']
-        rg = request.POST['rg']
+        try:
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            senha =  request.POST['senha']
+            confirmar_senha =  request.POST['confirmar_senha']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            cpf = request.POST['cpf']
+            rg = request.POST['rg']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
+
 
         erro = False
 
@@ -263,13 +267,16 @@ def alterar_medico(request, id):
         return render_to_response('main/medico/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        email = request.POST['email']
-        telefone = request.POST['telefone']
-        endereco = request.POST['endereco']
-        rg = request.POST['rg']
-        duracao_consulta = request.POST['duracao_consulta']
+        try:
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            rg = request.POST['rg']
+            duracao_consulta = request.POST['duracao_consulta']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         erro = False
 
@@ -359,7 +366,8 @@ def alterar_cliente(request, id):
             endereco = request.POST['endereco']
             rg = request.POST['rg']
         except:
-            return HttpResponseBadRequest
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
+
 
         erro = False
 
@@ -453,7 +461,7 @@ def registrar_medico(request):
             duracao_consulta = request.POST['duracao_consulta']
             especializacao = request.POST['especializacao']
         except:
-            return HttpResponseBadRequest
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         parametros['nome'] = nome
         parametros['sobrenome'] = sobrenome
