@@ -910,7 +910,7 @@ def registrar_horario(request):
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
-                messages.error(request, 'Erro desconhecido ao salvar o convênio.')
+                messages.error(request, 'Erro desconhecido ao salvar o horario.')
 
         return render_to_response('main/medico/adiciona_horario.html', context)
     else:
@@ -934,8 +934,45 @@ def alterar_horario(request):
 
     '''
     # TODO !!!
-
     return HttpResponse('Não Implementado',status=501)
+
+@login_required        
+@user_passes_test(is_medico)
+def remover_horario(request, id):
+    '''
+    Esta função é responsável por remover um horario.
+    
+    Esta função aceita pedidos POST
+
+    POST:
+        Realiza a alteracao de um horario.
+
+    '''
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        try:
+            horario = Horario.objects.get(id = id)
+        except:
+            messages.error(request, 'Horário inexistente')
+            return redirect('/horarios')
+
+        if horario.medico.id != request.user.id:
+            messages.error(request, 'Acesso negado.')
+            return redirect('/horarios')
+
+        try:
+            horario.delete()
+        except:
+            messages.error(request, 'Acesso negado.')
+
+        messages.success(request, 'Remocao realizada com sucesso!')
+        
+        return redirect('/horarios')
+
+    else: 
+        return HttpResponse('Método Não Permitido',status=405)
+
 
 @login_required        
 @user_passes_test(is_medico_or_cliente)
