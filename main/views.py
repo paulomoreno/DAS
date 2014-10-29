@@ -198,7 +198,7 @@ def medicos(request):
 
     if request.method == 'GET':
         #Obtem todos os medicos do bd
-        medicos = [m.json() for m in Medico.objects.all()]
+        medicos = [m for m in Medico.objects.all()]
 
         #Retorna a página de todos os medicos
         return render_to_response('main/medico/todos.html', { 'medicos' : medicos }, context)

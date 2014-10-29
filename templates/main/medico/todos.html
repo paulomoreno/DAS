@@ -14,7 +14,8 @@
 	</li>
 
 	<h2 class="lead">  Medicos cadastrados no sistema</h2>
-	<table class="table table-striped table-hover table-bordered">
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
         <thead  id="cabecalho">
             <tr>
                 <th style="text-align:center"> Nome</th>
@@ -31,11 +32,11 @@
         <tbody>
         {% for m in medicos %}
             <tr>
-                <td>{{m.nome}} {{m.sobrenome}}</td>
-                <td>{{m.crm}}</td>
-                <td>{{m.username}}</td>
-                <td>{{m.crm}}</td>
+                <td>{{ m.first_name }} {{ m.last_name }}</td>                
                 <td></td>
+                <td>{{ m.username }}</td>
+                <td>{{ m.crm }}</td>
+                <td>{{ m.duracao_consulta }}</td>
                 <td></td>
                 <td></td>
                 <td> 
@@ -46,6 +47,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 	
 
 {% endblock %}

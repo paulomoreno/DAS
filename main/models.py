@@ -31,7 +31,7 @@ class Usuario(AbstractUser):
 
 class Cliente(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
-
+    
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
@@ -45,10 +45,11 @@ class Medico(Usuario):
         medico = {}
         medico['nome'] = self.first_name
         medico['sobrenome'] = self.last_name
-        medico['email'] = self.email
+        medico['email'] = self.username
+        medico['crm'] = self.crm
+        medico['duracao_consulta'] = self.duracao_consulta
 
         return medico
-
 
     class Meta:
         verbose_name = "Medico"
