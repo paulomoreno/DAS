@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
                 ('usuario_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('crm', models.CharField(max_length=16)),
                 ('duracao_consulta', models.PositiveSmallIntegerField(max_length=15)),
-                ('medico', models.ForeignKey(to='main.Especializacao')),
+                ('especializacao', models.ForeignKey(to='main.Especializacao')),
             ],
             options={
                 'verbose_name': 'Medico',

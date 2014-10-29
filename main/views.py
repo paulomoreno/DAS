@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from django.db import IntegrityError, transaction
+from django.db import *
 from django.shortcuts import *
 from models import *
 from django.shortcuts import redirect
@@ -609,17 +609,25 @@ def qrCodeScan(request):
     '''
     context = RequestContext(request)
     return render_to_response('main/qrCodeScanner/index.html', context)
-
+@login_required
+@user_passes_test(is_admin)
 def searchCode(request):
+    context = RequestContext(request)
 
     if request.method == 'POST':
         entrada = request.POST['qrCode']
+        try:
 
-    #Testar entrada
-    print(entrada)
-    u = Usuario.objects.get(nome=entrada)
-
-    #Buscar no banco
-
-    return api_monta_json({'response':u.get_full_name()})
+            #Testar entrada
+            print(entrada)
+            
+            #Buscar no banco
+            #u = Usuario.objects.get(nome=entrada)    
+            return api_monta_json({'response':entrada})
+          
+        except Exception, e:
+            return api_monta_json({'response':'Erro na leitura'})
+    else:
+        messages.error(request,'Método Não Permitido');
+        return render_to_response('main/qrCodeScanner/index.html');
 

@@ -19,7 +19,7 @@
 			startScanning();
 
 			function startScanning(){
-				intervalID = window.setInterval(scanAndDecode,100);	
+				intervalID = window.setInterval(scanAndDecode,50);	
 			}
 
 
@@ -40,8 +40,13 @@
                 $.post( "/qrCodeScanner/scancode",
     					{'qrCode' : content},
     					function(data, textStatus, xhr){
-    						alert(xhr.status + ": " + xhr.responseText);
-    					}
+						    var div = document.createElement("DIV");
+						 	div.className = 'msg_bg_success';
+						    var text = document.createTextNode("Usuario: "+data.response);
+						    div.appendChild(text);
+						    document.body.appendChild(div);
+
+					}
     			); 
 
 					//Start Scanning after 1000ms
@@ -56,13 +61,13 @@
 						cornerRadius:0,
 						onWebcamReady:onWebcamReady 
 			});
-
+			var csrftoken = $.cookie('csrftoken');
 
 			function csrfSafeMethod(method) {
 		        // these HTTP methods do not require CSRF protection
 		        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 		    }
-		    var csrftoken = $.cookie('csrftoken');
+		    
 		    $.ajaxSetup({
 		        beforeSend: function(xhr, settings) {
 		            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {

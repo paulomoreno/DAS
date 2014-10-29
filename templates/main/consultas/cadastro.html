@@ -3,11 +3,17 @@
 
 {% block javascript %}
 	<script>
-		$(document).ready(
-			function(){
-				$('espec_item').click(function(){
+		$(document).ready(function(){
+				$('#especializacao').on('change', function() {
+					//alert( this.value );
+					  $.post( "/consultas/listarMedicosEspec",
+    					{'especId' : this.value},
+    					function(data, textStatus, xhr){
+						    
+						}
+    				); 
 
-				})
+				});
 			}
 		);
 	</script>
@@ -24,12 +30,14 @@
 	<div class="row">
 		<div class="form-group">
 			<div class="col-md-4">
-				<label for="especializacao">Selecione uma especialização</label>
-				<select  class="selectpicker">
-					{% for esp in especializacoes %}
-						<option> {{ esp.nome }} </option>
-					{% endfor %}
-				</select>
+				<label for="lespec">Selecione uma especialização</label>
+				
+					<select class="form-control" name="especializacao" id="especializacao">
+						{% for esp in especializacoes %}
+							<option name="espec_item" id="espec_item" value="{{ esp.id }}"> {{ esp.nome }} </option>
+						{% endfor %}
+					</select>
+				
 			</div>
 		</div>
 	</div>

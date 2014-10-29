@@ -38,7 +38,6 @@ urlpatterns = patterns('',
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
 
 
-
   		#Todos os horarios de um medico
         url(r'^horarios$','main.views.horarios',name='horarios'),        
 		#URL para cadastro de novos horarios
@@ -49,6 +48,8 @@ urlpatterns = patterns('',
         url(r'^consultas$','main.views.consultas',name='consultas'),        
 		#URL para cadastro de novas consultas
         url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
+        #URL para lista médicos de uma dada especialização
+        #url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
 
 
      	#URL para leitura de QRCode
