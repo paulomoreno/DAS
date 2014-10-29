@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block javascript %}
+	<script>
+		$(document).ready(function(){
+				$('#especializacao').on('change', function() {
+					//alert( this.value );
+					  $.post( "/consultas/listarMedicosEspec",
+    					{'especId' : this.value},
+    					function(data, textStatus, xhr){
+						    
+						}
+    				); 
+
+				});
+			}
+		);
+	</script>
+
+{% endblock%}
+
+{% block css %}{% endblock %}
+
+{% block title %}DAS - Cadastro de Consulta{% endblock %}
+
+{% block conteudo %}
+<h1>Marcar consulta</h1>
+<form role="form" action="{% url 'registrar_consulta' %}" method="post">
+	<div class="row">
+		<div class="form-group">
+			<div class="col-md-4">
+				<label for="lespec">Selecione uma especialização</label>
+				
+					<select class="form-control" name="especializacao" id="especializacao">
+						{% for esp in especializacoes %}
+							<option name="espec_item" id="espec_item" value="{{ esp.id }}"> {{ esp.nome }} </option>
+						{% endfor %}
+					</select>
+				
+			</div>
+		</div>
+	</div>
+</form>
+
+{%  endblock %}
