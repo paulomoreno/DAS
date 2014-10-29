@@ -99,7 +99,7 @@ def registrar_cliente(request):
         erro = False
 
         if nome is None or nome =='':
-            messages.error(request, "Nome é obrigatrio!")
+            messages.error(request, "Nome é obrigatório!")
             erro = True
         
         if sobrenome is None or sobrenome =='':
@@ -216,24 +216,37 @@ def medicos(request):
 @login_required
 @user_passes_test(is_admin)
 def remover_medico(request, crm):
+    '''
+    Esta função é responsável por remover as informacoes de conta.
+    
+    Esta função aceita pedidos  POST
 
-    try:
-        context = RequestContext(request)
+    POST:
+        Remove as alteracoes na conta.
 
-        print crm
+    '''    
 
-        if request.method == 'POST':
-            Medico.objects.filter(crm=crm).delete()
-            #Retorna a página de todos os medicos
-            messages.info(request, 'Medico removido com sucesso')
-            return redirect('/medicos')
+    context = RequestContext(request)
+    print crm
 
-            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
-    except Exception, e:
-        #Para qualquer problema, retorna um erro interno                
-        PrintException()
+    erro = False
+    if request.method == 'POST':
+        if crm is None or crm == '':
+            messages.error(request, 'Erro na remocao')
+            erro = True
 
-    return HttpResponse('Método Não Permitido',status=405)
+        if not erro:
+            try:
+                with transaction.atomic():
+                    Medico.objects.filter(crm=crm).delete()
+                    #Retorna a página de todos os medicos
+                    messages.info(request, 'Medico removido com sucesso')
+                    #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
+                return redirect('/medicos')
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+        return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
 @user_passes_test(is_admin_or_medico)
@@ -598,7 +611,13 @@ def remover_especializacao(request, id):
     context = RequestContext(request)
 
     if request.method == 'POST':
-        Especializacao.objects.filter(id=id).delete()
+        try:
+            with transaction.atomic():
+                Especializacao.objects.filter(id=id).delete()
+        except Exception, e:
+            messages.error(request, 'Erro ao remover especializacao')
+            #Para qualquer problema, retorna um erro interno                
+            PrintException()
 
         messages.info(request, 'Especializacao removida com sucesso')
         return redirect('/especializacoes')
@@ -628,14 +647,35 @@ def alterar_especializacao(request, id):
     if request.method == 'GET':
         return render_to_response('main/especializacao/alterar.html', parametros, context)
     elif request.method == 'POST':
+        
+        error = False
+        if especializacao.id is None or especializacao.id == '':
+            messages.error(request, 'Erro ID')
+            error = True
+
+        if especializacao.nome is None or especializacao.nome == '':
+            messages.error(request, 'Nome digitado invalido')
+            error = True
+
         novo_nome = request.POST['nome']
 
-        especializacao.nome = novo_nome
-        especializacao.save()
+        if novo_nome is None or novo_nome =='':
+            messages.error(request, 'Novo nome invalido')
+            error = True
 
-        messages.info(request, 'Especializacao alterada com sucesso')
+        if not error:   
+            try:
+                with transaction.atomic():
+                    especializacao.nome = novo_nome
+                    especializacao.save()
+                    messages.info(request, 'Especializacao alterada com sucesso')
+            except Exception, e:
+                messages.error(request, 'Erro ao alterar especializacao')
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
         return redirect('/especializacoes')
-
+    else:
+        return HttpResponse('Metodo nao permitido', status=405)
 @login_required        
 @user_passes_test(is_admin)
 def registrar_especializacao(request):
@@ -662,7 +702,6 @@ def registrar_especializacao(request):
 
         #Obtem o parametro do POST
         espec_nome = request.POST['especializacao']
-
         erro = False
 
         if espec_nome is None or espec_nome == '':
@@ -824,7 +863,7 @@ def registrar_convenio(request):
                     convenio = Convenio(cnpj=cnpj, razao_social=razao_social)
                     convenio.save()
 
-                messages.info(request, "Cadastro do convênio '{}' realizado com sucesso!".format(razao_social))
+                messages.info(request, "Cadastro do convênio realizado com sucesso!")
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
