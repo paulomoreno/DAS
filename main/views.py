@@ -936,7 +936,7 @@ def listar_medico_espec(request):
         espec = request.POST['especId']
         especializacao = Especializacao.objects.get(id=espec)
         #print(especializacao.nome)
-        medicos = [m.first_name for m in Medico.objects.filter(especializacao=especializacao)]
+        medicos = [m.json() for m in Medico.objects.filter(especializacao=especializacao)]
         #med_response = serializers.serialize("json", medicos)
         return HttpResponse(json.dumps({'response': medicos}), content_type="application/json")
     else:        

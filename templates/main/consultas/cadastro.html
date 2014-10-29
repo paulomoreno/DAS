@@ -8,17 +8,39 @@
 
 		$(document).ready(function(){
 				$('#especializacao').on('change', function() {
-					//alert( this.value );
+					//Limpar lista de médicos
+					var select_medico = document.getElementById("select_medico");
+					while (select_medico.firstChild) {
+					    select_medico.removeChild(select_medico.firstChild);
+					}
+
+					//Carregar médicos
+					if(this.value != "Selecione"){
 					  $.post( "/consultas/listarMedicosEspec",
-    					{'especId' : this.value},
-    					function(data, textStatus, xhr){
-						  	alert(data.response);
-						  // var jsonData = JSON.parse(data.response);
-							//alert(jsonData.counters.length);
-						}
-    				); 
+	    					{'especId' : this.value},
+	    					function(data, textStatus, xhr){
+							  	//listar médicos
+							  		var med_nome_option = document.createElement("option");
+									var med_nome_label = document.createTextNode("Selecione");
+									med_nome_option.appendChild(med_nome_label);
+									var med_select = document.getElementById("select_medico");
+									med_select.appendChild(med_nome_option);
+
+								for(var i = 0; i <   data.response.length; i++){
+									//alert(data.response[i].nome);
+									var med_nome_option = document.createElement("option");
+									var med_nome_label = document.createTextNode(data.response[i].nome+" "+data.response[i].sobrenome+" - CRM "+data.response[i].crm);
+									med_nome_option.appendChild(med_nome_label);
+									med_nome_option.setAttribute("value",data.response[i].id);
+									var med_select = document.getElementById("select_medico");
+									med_select.appendChild(med_nome_option);
+								}
+							}
+	    				); 
+					}
 
 				});
+			
 			
 
 				csrftoken = $.cookie('csrftoken');
@@ -54,11 +76,21 @@
 				<label for="lespec">Selecione uma especialização</label>
 				
 					<select class="form-control" name="especializacao" id="especializacao">
+							<option>Selecione</option>
 						{% for esp in especializacoes %}
 							<option name="espec_item" id="espec_item" value="{{ esp.id }}"> {{ esp.nome }} </option>
 						{% endfor %}
 					</select>
 				
+			</div>
+		</div>
+	</div>
+	&nbsp;
+	<div class="row">
+		<div class="form-group">
+			<div class = "col-md-4">
+				<label for="lespec">Selecione um médico</label>
+				<select class="form-control" name="select_medico" id="select_medico"></select>
 			</div>
 		</div>
 	</div>
