@@ -35,7 +35,7 @@
                 <td>{{ m.duracao_consulta }}</td>
                 <td></td>
                 <td></td>
-                <td> <button type="button" class="btn btn-success">Editar</button> </td>
+                <td> <a href="{% url 'alterar_medico' m.crm %}" class="btn btn-success">Editar</a> </td>
                 <td>
                     <form role="form" action="/medicos/{{ m.crm }}/remover" method="post">
                         {% csrf_token %}
