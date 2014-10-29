@@ -7,7 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from django.db import IntegrityError, transaction
+from django.db import *
 from django.shortcuts import *
 from models import *
 from django.shortcuts import redirect
@@ -891,7 +891,7 @@ def consultas(request):
     return HttpResponse('Não Implementado',status=501)
 
 @login_required        
-@user_passes_test(is_cliente)
+#@user_passes_test(is_cliente)
 def registrar_consulta(request):
     '''
     Esta função é responsável por registrar uma nova consulta.
@@ -908,7 +908,10 @@ def registrar_consulta(request):
     # TODO !!!
     context = RequestContext(request)
     if request.method == 'GET':
-        return render_to_response('main/consultas/nova.html', context)
+        #Obter todos as especializações do bd
+        especializacoes = [espec for espec in Especializacao.objects.all()]
+
+        return render_to_response('main/consultas/cadastro.html',{'especializacoes':especializacoes}, context)
 
 @login_required
 @user_passes_test(is_admin)
@@ -918,17 +921,25 @@ def qrCodeScan(request):
     '''
     context = RequestContext(request)
     return render_to_response('main/qrCodeScanner/index.html', context)
-
+@login_required
+@user_passes_test(is_admin)
 def searchCode(request):
+    context = RequestContext(request)
 
     if request.method == 'POST':
         entrada = request.POST['qrCode']
+        try:
 
-    #Testar entrada
-    print(entrada)
-    u = Usuario.objects.get(nome=entrada)
-
-    #Buscar no banco
-
-    return api_monta_json({'response':u.get_full_name()})
+            #Testar entrada
+            print(entrada)
+            
+            #Buscar no banco
+            #u = Usuario.objects.get(nome=entrada)    
+            return api_monta_json({'response':entrada})
+          
+        except Exception, e:
+            return api_monta_json({'response':'Erro na leitura'})
+    else:
+        messages.error(request,'Método Não Permitido');
+        return render_to_response('main/qrCodeScanner/index.html');
 

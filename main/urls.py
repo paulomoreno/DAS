@@ -42,6 +42,7 @@ urlpatterns = patterns('',
         #Todos os convenios
 		#URL para cadastro de novos convenios
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
+
         #URL para remover convenio
         url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/remover$','main.views.remover_convenio',name='remover_convenio'),
         #URL para editar convenio
@@ -56,7 +57,9 @@ urlpatterns = patterns('',
   		#Todos as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
         url(r'^consultas$','main.views.consultas',name='consultas'),        
 		#URL para cadastro de novas consultas
-        url(r'^consultas/nova$','main.views.registrar_consulta',name='registrar_consulta'),
+        url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
+        #URL para lista médicos de uma dada especialização
+        #url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
 
 
      	#URL para leitura de QRCode
