@@ -146,8 +146,10 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     {% endfor %}
 
     <div class="conteudo_in">
+      <div class="panel panel-default conteudo_in_in">
       {% block conteudo %}
       {% endblock %}
+      </div>
     </div>
   </div>
 

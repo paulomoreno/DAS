@@ -18,9 +18,6 @@ urlpatterns = patterns('',
 		# Auth - Register
 		#url(r'^register$', 'main.views.register', name='register'),
 
-		#URL para cadastro visualizar/alterar informacoes de conta
-        url(r'^conta$','main.views.conta',name='conta'),
-
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
 		#URL para alterar clientes
@@ -51,7 +48,9 @@ urlpatterns = patterns('',
   		#Todos os horarios de um medico
         url(r'^horarios$','main.views.horarios',name='horarios'),        
 		#URL para cadastro de novos horarios
-        url(r'^horarios/novo$','main.views.registrar_horario',name='registrar_horario'),
+        url(r'^horarios/novo$','main.views.registrar_horario',name='registrar_horario'),   
+        #URL para cadastro de novos horarios
+        url(r'^horarios/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_horario',name='remover_horario'),
 
 
   		#Todos as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)

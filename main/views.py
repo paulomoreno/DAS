@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db import IntegrityError, transaction
-from django.db import *
 from django.shortcuts import *
+from django.core import serializers
 from models import *
 from django.shortcuts import redirect
 import linecache
@@ -104,7 +104,7 @@ def registrar_cliente(request):
         erro = False
 
         if nome is None or nome =='':
-            messages.error(request, "Nome é obrigatório!")
+            messages.error(request, "Nome é obrigatrio!")
             erro = True
         
         if sobrenome is None or sobrenome =='':
@@ -181,25 +181,6 @@ def registrar_cliente(request):
 
         return HttpResponse('Método Não Permitido',status=405)
 
-
-@login_required        
-def conta(request):
-    '''
-    Esta função é responsável por gerenciar as informacoes de conta.
-    
-    Esta função aceita pedidos GET e POST
-
-    GET:
-        Retorna a página com informacoes da conta do usuario autenticado.
-
-    POST:
-        Salva as alteracoes na conta.
-
-    '''
-    # TODO !!!
-
-    return HttpResponse('Não Implementado',status=501)
-
 @login_required        
 @user_passes_test(is_admin)
 def medicos(request):
@@ -224,37 +205,24 @@ def medicos(request):
 @login_required
 @user_passes_test(is_admin)
 def remover_medico(request, crm):
-    '''
-    Esta função é responsável por remover as informacoes de conta.
-    
-    Esta função aceita pedidos  POST
 
-    POST:
-        Remove as alteracoes na conta.
+    try:
+        context = RequestContext(request)
 
-    '''    
+        print crm
 
-    context = RequestContext(request)
-    print crm
+        if request.method == 'POST':
+            Medico.objects.filter(crm=crm).delete()
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Medico removido com sucesso')
+            return redirect('/medicos')
 
-    erro = False
-    if request.method == 'POST':
-        if crm is None or crm == '':
-            messages.error(request, 'Erro na remocao')
-            erro = True
+            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
 
-        if not erro:
-            try:
-                with transaction.atomic():
-                    Medico.objects.filter(crm=crm).delete()
-                    #Retorna a página de todos os medicos
-                    messages.info(request, 'Medico removido com sucesso')
-                    #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
-                return redirect('/medicos')
-            except Exception, e:
-                #Para qualquer problema, retorna um erro interno                
-                PrintException()
-        return HttpResponse('Método Não Permitido',status=405)
+    return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
 @user_passes_test(is_admin_or_medico)
@@ -623,13 +591,7 @@ def remover_especializacao(request, id):
     context = RequestContext(request)
 
     if request.method == 'POST':
-        try:
-            with transaction.atomic():
-                Especializacao.objects.filter(id=id).delete()
-        except Exception, e:
-            messages.error(request, 'Erro ao remover especializacao')
-            #Para qualquer problema, retorna um erro interno                
-            PrintException()
+        Especializacao.objects.filter(id=id).delete()
 
         messages.info(request, 'Especializacao removida com sucesso')
         return redirect('/especializacoes')
@@ -659,35 +621,14 @@ def alterar_especializacao(request, id):
     if request.method == 'GET':
         return render_to_response('main/especializacao/alterar.html', parametros, context)
     elif request.method == 'POST':
-        
-        error = False
-        if especializacao.id is None or especializacao.id == '':
-            messages.error(request, 'Erro ID')
-            error = True
-
-        if especializacao.nome is None or especializacao.nome == '':
-            messages.error(request, 'Nome digitado invalido')
-            error = True
-
         novo_nome = request.POST['nome']
 
-        if novo_nome is None or novo_nome =='':
-            messages.error(request, 'Novo nome invalido')
-            error = True
+        especializacao.nome = novo_nome
+        especializacao.save()
 
-        if not error:   
-            try:
-                with transaction.atomic():
-                    especializacao.nome = novo_nome
-                    especializacao.save()
-                    messages.info(request, 'Especializacao alterada com sucesso')
-            except Exception, e:
-                messages.error(request, 'Erro ao alterar especializacao')
-                #Para qualquer problema, retorna um erro interno                
-                PrintException()
+        messages.info(request, 'Especializacao alterada com sucesso')
         return redirect('/especializacoes')
-    else:
-        return HttpResponse('Metodo nao permitido', status=405)
+
 @login_required        
 @user_passes_test(is_admin)
 def registrar_especializacao(request):
@@ -714,6 +655,7 @@ def registrar_especializacao(request):
 
         #Obtem o parametro do POST
         espec_nome = request.POST['especializacao']
+
         erro = False
 
         if espec_nome is None or espec_nome == '':
@@ -778,7 +720,7 @@ def remover_convenio(request, cnpj):
         print cnpj
 
         if request.method == 'POST':
-            Convenio.objects.filter(cnpj=cnpj).delete()
+            Convenio.objects.filter(cnpj=cnpj)
             #Obtem todos os medicos do bd
             #medicos = [m.json() for m in Medico.objects.all()]
 
@@ -808,33 +750,23 @@ def alterar_convenio(request, cnpj):
 
     convenio = Convenio.objects.get(cnpj=cnpj)
 
+    parametros = {}
+    parametros['cnpj'] = convenio.cnpj
+    parametros['razao_social'] = convenio.razao_social
+
     if request.method == 'GET':
-        parametros = {}
-        parametros['cnpj'] = convenio.cnpj
-        parametros['razao_social'] = convenio.razao_social
         return render_to_response('main/convenio/alterar.html', parametros, context)
-    elif request.method == 'POST': 
+    elif request.method == 'POST':
+        novo_cnpj = request.POST['cnpj']   
         novo_razao_social = request.POST['razao_social']
 
-        error = False
-        if novo_razao_social is None or novo_razao_social == '':
-            messages.error(request, 'Nova razao social invalida')
-            error = True
+        convenio.cnpj = novo_cnpj
+        convenio.razao_social = novo_razao_social
 
-        if not error:
-            try:
-                with transaction.atomic():
-                    convenio.razao_social = novo_razao_social
-                    convenio.save()
-                    messages.info(request, 'Convenio alterado com sucesso!')
-            except Exception, e:
-                messages.error(request, 'Erro ao alterar convenio')
-                #Para qualquer problema, retorna um erro interno                
-                PrintException()
-
+        convenio.save()
+            
+        messages.info(request, 'Convenio alterado com sucesso')
         return redirect('/convenios')
-    else:
-        return HttpResponse('Método Não Permitido',status=405)
 
 
 @login_required        
@@ -885,7 +817,7 @@ def registrar_convenio(request):
                     convenio = Convenio(cnpj=cnpj, razao_social=razao_social)
                     convenio.save()
 
-                messages.info(request, "Cadastro do convênio realizado com sucesso!")
+                messages.info(request, "Cadastro do convênio '{}' realizado com sucesso!".format(razao_social))
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -907,8 +839,17 @@ def horarios(request):
     Esta função aceita apenas pedidos GET
 
     '''
-    # TODO !!!
-    return HttpResponse('Não Implementado',status=501)
+    context = RequestContext(request)
+    medico = Medico.objects.get(id=request.user.id)
+
+
+    if request.method == 'GET':
+        #Obtem todas as especialozacoes
+        horarios =  [h for h in Horario.objects.filter(medico=medico)]
+        #Retorna a página de tdas as espocializacoes
+        return render_to_response('main/medico/horarios.html',{'horarios' : horarios}, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 @login_required        
 @user_passes_test(is_medico)
@@ -925,9 +866,112 @@ def registrar_horario(request):
         Realiza o cadastro de um novo horario.
 
     '''
-    # TODO !!!
+    medico = Medico.objects.get(id=request.user.id)
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Retorna a página de cadastro de horario
+        return render_to_response('main/medico/adiciona_horario.html', context)
+
+    elif request.method == 'POST':
+
+        #Obtem o parametro do POST
+        dia = request.POST['dia']
+        hora_inicio = request.POST['hora_inicio']
+        hora_final = request.POST['hora_final']
+
+        erro = False
+
+        if dia is None or dia == '':
+            # Define erro
+            messages.error(request, 'Dia é obrigatório.')
+            erro = True
+
+        if hora_inicio is None or hora_inicio == '':
+            # Define erro
+            messages.error(request, 'Horario de inicio é obrigatório.')
+            erro = True
+
+        if hora_final is None or hora_final == '':
+            # Define erro
+            messages.error(request, 'Horario de termino é obrigatório.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    horario = Horario(medico=medico, dia=dia, hora_inicio=hora_inicio, hora_final=hora_final)
+                    horario.save()
+
+                messages.info(request, "Cadastro de horario realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                messages.error(request, 'Erro desconhecido ao salvar o horario.')
+
+        return render_to_response('main/medico/adiciona_horario.html', context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
     return HttpResponse('Não Implementado',status=501)
+
+@login_required        
+@user_passes_test(is_medico)
+def alterar_horario(request):
+    '''
+    Esta função é responsável por alterar um horario.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza a alteracao de um horario.
+
+    '''
+    # TODO !!!
+    return HttpResponse('Não Implementado',status=501)
+
+@login_required        
+@user_passes_test(is_medico)
+def remover_horario(request, id):
+    '''
+    Esta função é responsável por remover um horario.
+    
+    Esta função aceita pedidos POST
+
+    POST:
+        Realiza a alteracao de um horario.
+
+    '''
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        try:
+            horario = Horario.objects.get(id = id)
+        except:
+            messages.error(request, 'Horário inexistente')
+            return redirect('/horarios')
+
+        if horario.medico.id != request.user.id:
+            messages.error(request, 'Acesso negado.')
+            return redirect('/horarios')
+
+        try:
+            horario.delete()
+        except:
+            messages.error(request, 'Acesso negado.')
+
+        messages.success(request, 'Remocao realizada com sucesso!')
+        
+        return redirect('/horarios')
+
+    else: 
+        return HttpResponse('Método Não Permitido',status=405)
 
 
 @login_required        
@@ -1005,6 +1049,7 @@ def listar_medico_espec(request):
         especializacao = Especializacao.objects.get(id=espec)
         #print(especializacao.nome)
         medicos = [m.first_name for m in Medico.objects.filter(especializacao=especializacao)]
+        #med_response = serializers.serialize("json", medicos)
         return HttpResponse(json.dumps({'response': medicos}), content_type="application/json")
     else:        
         return api_monta_json({'response':'Método não permitido'})

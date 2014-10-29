@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+.table, .tabela_cabecalho th{
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block javascript%}
+<script src="{% static "js/jquery.mask.js"%}" ></script>
+{%endblock%}
+
+{% block title %}Médicos{% endblock %}
+
+{% block conteudo %}
+
+	<a href="{% url 'registrar_horario' %}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Inserir horario</a>
+
+	<h1 class="lead">Horarios</h1>
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
+        <thead  class="tabela_cabecalho">
+            <tr>
+                <th>Dia</th>
+                <th>Hora Inicio</th>
+                <th>Hora Final</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for h in horarios %}
+            <tr>
+                <td id="dia_semana">{{ h.dia }}</td>                
+                <td>{{ h.hora_inicio }}</td>
+                <td>{{ h.hora_fim }}</td>
+                <td> <a href="" class="btn btn-success">Editar</a> </td>
+                <td>
+                    <form role="form" action="{% url 'remover_horario' h.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="remover">Remover</button>    
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <script>
+    $( document ).ready(function() {
+        $('#dia_semana').each(function(){
+            if ($(this).html() == '1'){
+                $(this).html('Segunda');
+            }else if ($(this).html() == '2'){
+                $(this).html('Terca');
+            }else if ($(this).html() == '3'){
+                $(this).html('Quarta');
+            }else if ($(this).html() == '4'){
+                $(this).html('Quinta');
+            }else if ($(this).html() == '5'){
+                $(this).html('Sexta');
+            }else if ($(this).html == '6'){
+                $(this).html('Sabado');
+            }else if ($(this).html == '7'){
+                $(this).html('Domingo');
+            };
+        });
+    });
+    </script>
+	
+
+{% endblock %}
