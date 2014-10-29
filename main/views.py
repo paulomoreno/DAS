@@ -243,7 +243,7 @@ def remover_medico(request, crm):
 @user_passes_test(is_admin_or_medico)
 def alterar_medico(request, id):
 
-    if request.user.is_medico and request.user.id != id:
+    if request.user.is_medico and (request.user.id != int(id)):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     medico = Medico.objects.get(id=id)
@@ -337,7 +337,7 @@ def alterar_medico(request, id):
 @user_passes_test(is_admin_or_cliente)
 def alterar_cliente(request, id):
 
-    if request.user.is_cliente and request.user.id != id:
+    if request.user.is_cliente and request.user.id int(id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     cliente = Cliente.objects.get(id=id)
