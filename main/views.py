@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 # vim: set fileencoding=utf8 :
 
-from django.http import Http404, HttpResponseBadRequest, HttpResponse
+from django.http import Http404, HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
@@ -26,6 +26,12 @@ def is_cliente(user):
 
 def is_medico(user):
     return user.is_medico
+
+def is_admin_or_medico(user):
+    return (user.is_medico or user.is_admin or user.is_staff)
+
+def is_admin_or_cliente(user):
+    return (user.is_cliente or user.is_admin or user.is_staff)
 
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
@@ -217,11 +223,7 @@ def remover_medico(request, crm):
         print crm
 
         if request.method == 'POST':
-            crm_to_be_removed = request.POST['remover']
-            Medico.objects.filter(crm=crm_to_be_removed).delete()
-            #Obtem todos os medicos do bd
-            medicos = [m.json() for m in Medico.objects.all()]
-
+            Medico.objects.filter(crm=crm).delete()
             #Retorna a página de todos os medicos
             messages.info(request, 'Medico removido com sucesso')
             return redirect('/medicos')
@@ -232,6 +234,182 @@ def remover_medico(request, crm):
         PrintException()
 
     return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin_or_medico)
+def alterar_medico(request, id):
+
+    if request.user.is_medico and request.user.id != id:
+        return HttpResponse('<h1>Proibido</h1>',status=403)
+
+    medico = Medico.objects.get(id=id)
+
+    parametros = {}
+
+    parametros['nome'] = medico.first_name
+    parametros['sobrenome'] = medico.last_name
+    parametros['email'] = medico.username
+    parametros['telefone'] = medico.telefone
+    parametros['cpf'] = medico.cpf
+    parametros['crm'] = medico.crm
+    parametros['rg'] = medico.rg
+    parametros['duracao_consulta'] = medico.duracao_consulta       
+    parametros['especializacao'] = medico.especializacao.nome
+    parametros['id'] = medico.id
+    
+    # Pegando seu pedido
+    context = RequestContext(request)
+    if request.method == 'GET':
+        return render_to_response('main/medico/editar.html', parametros, context)
+    elif request.method == 'POST':
+        #obtem dados do POST
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        email = request.POST['email']
+        telefone = request.POST['telefone']
+        endereco = request.POST['endereco']
+        rg = request.POST['rg']
+        duracao_consulta = request.POST['duracao_consulta']
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+            erro = True
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+            erro = True
+
+        if duracao_consulta is None or duracao_consulta == '':
+            messages.error(request, "Duração da Consulta é obrigatório!")
+            erro = True
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():                  
+                    medico.first_name = nome
+                    medico.last_name = sobrenome
+                    medico.username = email
+                    medico.duracao_consulta = duracao_consulta
+
+                    #Insere os campos obrigatorios
+                    medico.rg = rg
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        medico.telefone = telefone
+
+                    if endereco and endereco != '':
+                        medico.endereco = endereco
+   
+                    #Da um commit no bd
+                    medico.save()
+
+                messages.info(request, "Atualização realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o medico.')
+
+        return render_to_response('main/medico/editar.html', parametros, context)
+
+@login_required
+@user_passes_test(is_admin_or_cliente)
+def alterar_cliente(request, id):
+
+    if request.user.is_cliente and request.user.id != id:
+        return HttpResponse('<h1>Proibido</h1>',status=403)
+
+    cliente = Cliente.objects.get(id=id)
+
+    parametros = {}
+
+    parametros['nome'] = cliente.first_name
+    parametros['sobrenome'] = cliente.last_name
+    parametros['email'] = cliente.username
+    parametros['telefone'] = cliente.telefone
+    parametros['endereco'] = cliente.endereco
+    parametros['rg'] = cliente.rg
+    parametros['cpf'] = cliente.cpf
+    
+    # Pegando seu pedido
+    context = RequestContext(request)
+    if request.method == 'GET':
+        return render_to_response('main/cliente/editar.html', parametros, context)
+    elif request.method == 'POST':
+        #obtem dados do POST
+        try:
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            rg = request.POST['rg']
+        except:
+            return HttpResponseBadRequest
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+            erro = True
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+            erro = True
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():                  
+                    cliente.first_name = nome
+                    cliente.last_name = sobrenome
+                    cliente.username = email
+
+                    #Insere os campos obrigatorios
+                    cliente.rg = rg
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        cliente.telefone = telefone
+
+                    if endereco and endereco != '':
+                        cliente.endereco = endereco
+   
+                    #Da um commit no bd
+                    cliente.save()
+
+                messages.info(request, "Atualização realizada com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o cliente.')
+
+        return render_to_response('main/cliente/editar.html', parametros, context)
 
 
 @login_required        
@@ -254,27 +432,38 @@ def registrar_medico(request):
     #Obtem as especializacoes
     parametros = {'especializacoes' : Especializacao.objects.all()}
 
-
     if request.method == 'GET':
         #Retorna a página de cadastro de cliente
         return render_to_response('main/medico/cadastro.html',parametros, context)
 
     elif request.method == 'POST':
-        #obtem dados do POST
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        senha =  request.POST['senha']
-        confirmar_senha =  request.POST['confirmar_senha']
-        email = request.POST['email']
-        telefone = request.POST['telefone']
-        endereco = request.POST['endereco']
-        cpf = request.POST['cpf']
-        rg = request.POST['rg']
-        crm = request.POST['crm']
-        duracao_consulta = request.POST['duracao_consulta']
-        especializacao = request.POST['especializacao']
 
-        print especializacao
+        try:
+            #obtem dados do POST
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            senha =  request.POST['senha']
+            confirmar_senha =  request.POST['confirmar_senha']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            cpf = request.POST['cpf']
+            rg = request.POST['rg']
+            crm = request.POST['crm']
+            duracao_consulta = request.POST['duracao_consulta']
+            especializacao = request.POST['especializacao']
+        except:
+            return HttpResponseBadRequest
+
+        parametros['nome'] = nome
+        parametros['sobrenome'] = sobrenome
+        parametros['email'] = email
+        parametros['telefone'] = telefone
+        parametros['cpf'] = cpf
+        parametros['crm'] = crm
+        parametros['rg'] = rg
+        parametros['duracao_consulta'] = duracao_consulta     
+        parametros['especializacao'] = especializacao
 
         erro = False
 
@@ -390,11 +579,62 @@ def especializacoes(request):
 
     if request.method == 'GET':
         #Obtem todas as especialozacoes
-        especializacoes =  [e.json() for e in Especializacao.objects.all()]
+        especializacoes =  [e for e in Especializacao.objects.all()]
         #Retorna a página de tdas as espocializacoes
         return render_to_response('main/especializacao/todas.html',{'especializacoes' : especializacoes}, context)
     else:
         return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def remover_especializacao(request, id):
+    '''
+    Esta função é responsável mostrar todas as especializacoes.
+    
+    Esta função aceita apenas pedidos POST
+
+    '''
+    
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        Especializacao.objects.filter(id=id).delete()
+
+        messages.info(request, 'Especializacao removida com sucesso')
+        return redirect('/especializacoes')
+    else:
+        return HttpResponse('Metodo nao permitido', status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def alterar_especializacao(request, id):
+    '''
+    Esta função é responsável mostrar todas as especializacoes.
+    
+    Esta função aceita apenas pedidos GET e POST
+
+    '''
+    
+    context = RequestContext(request)
+    try:
+        especializacao = Especializacao.objects.get(id=id)
+    except:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+
+    parametros = {}
+    parametros['id'] = especializacao.id
+    parametros['nome'] = especializacao.nome
+
+    if request.method == 'GET':
+        return render_to_response('main/especializacao/alterar.html', parametros, context)
+    elif request.method == 'POST':
+        novo_nome = request.POST['nome']
+
+        especializacao.nome = novo_nome
+        especializacao.save()
+
+        messages.info(request, 'Especializacao alterada com sucesso')
+        return redirect('/especializacoes')
 
 @login_required        
 @user_passes_test(is_admin)
@@ -471,6 +711,70 @@ def convenios(request):
         return render_to_response('main/convenio/todos.html',{'convenios' : convenios}, context)
     else:
         return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def remover_convenio(request, cnpj):
+    '''
+    Esta função e responsável remover um convenio
+
+    Esta funcao aceita apenas pedidos POST
+
+    '''
+    try:
+        context = RequestContext(request)
+
+        print cnpj
+
+        if request.method == 'POST':
+            Convenio.objects.filter(cnpj=cnpj)
+            #Obtem todos os medicos do bd
+            #medicos = [m.json() for m in Medico.objects.all()]
+
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Convenio removido com sucesso')
+            return redirect('/convenios')
+
+            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
+
+    return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def alterar_convenio(request, cnpj):
+    '''
+    Esta funcao e responsavel por editar um convenio
+
+    Esta funcao aceita pedidos GET e POST
+    '''
+
+    context = RequestContext(request)
+
+    print cnpj
+
+    convenio = Convenio.objects.get(cnpj=cnpj)
+
+    parametros = {}
+    parametros['cnpj'] = convenio.cnpj
+    parametros['razao_social'] = convenio.razao_social
+
+    if request.method == 'GET':
+        return render_to_response('main/convenio/alterar.html', parametros, context)
+    elif request.method == 'POST':
+        novo_cnpj = request.POST['cnpj']   
+        novo_razao_social = request.POST['razao_social']
+
+        convenio.cnpj = novo_cnpj
+        convenio.razao_social = novo_razao_social
+
+        convenio.save()
+            
+        messages.info(request, 'Convenio alterado com sucesso')
+        return redirect('/convenios')
+
 
 @login_required        
 @user_passes_test(is_admin)

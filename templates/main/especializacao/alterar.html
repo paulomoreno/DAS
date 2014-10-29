@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Nova especialização{% endblock %}
+
+{% block conteudo %}
+<h1>Cadastro de nova especialização:</h1>
+<form role="form" action="{% url 'alterar_especializacao' id %}" method="POST">
+{% csrf_token %}
+  <div class="row">
+  	<div class="form-group">
+		<div class="col-md-4" >
+	    	<label for="especializacao">Especialização</label>
+	 	    <input type="text" class="form-control" id="especializacao" placeholder="Especialiação" name="nome" value="{{ nome }}" >
+	 	</div>
+  	</div>
+  </div>
+  &nbsp;
+  <div class="row">
+    <div class="form-group">
+    	<div class="col-xs-2">
+    		<button type="submit" class="btn btn-default">Alterar</button>
+    </div>
+  </div>
+</form>
+{%  endblock %}

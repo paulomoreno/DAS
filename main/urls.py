@@ -23,7 +23,11 @@ urlpatterns = patterns('',
 
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
+		#URL para alterar clientes
+        url(r'^clientes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_cliente',name='alterar_cliente'),
 
+
+		
 
         #Todos os medicos
         url(r'^medicos$','main.views.medicos',name='medicos'),        
@@ -31,12 +35,18 @@ urlpatterns = patterns('',
         url(r'^medicos/novo$','main.views.registrar_medico',name='registrar_medico'),
         #URL para remover medico
         url(r'^medicos/(?P<crm>[a-zA-Z0-9\-]+)/remover$','main.views.remover_medico',name='remover_medico'),
+        #URL para alterar medicos
+        url(r'^medicos/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_medico',name='alterar_medico'),
+
 
         #Todos os convenios
-        url(r'^convenios$','main.views.convenios',name='convenios'),        
 		#URL para cadastro de novos convenios
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
 
+        #URL para remover convenio
+        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/remover$','main.views.remover_convenio',name='remover_convenio'),
+        #URL para editar convenio
+        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_convenio',name='alterar_convenio'),
 
   		#Todos os horarios de um medico
         url(r'^horarios$','main.views.horarios',name='horarios'),        
@@ -62,8 +72,15 @@ urlpatterns = patterns('',
 		url(r'^especializacoes$','main.views.especializacoes',name='especializacoes'),
 		#URL para cadastro de novas especializações
 		url(r'^especializacoes/nova$','main.views.registrar_especializacao',name='registrar_especializacao'),
+		#URL para remover determinada especilizacao
+		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_especializacao',name='remover_especializacao'),
+		#URL para alterar determinada especilizacao
+		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_especializacao',name='alterar_especializacao'),
+
+
 
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),
 
+        url(r'^convenios$','main.views.convenios',name='convenios'),        
 )
