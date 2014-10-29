@@ -1,3 +1,8 @@
+body{
+	background-image: url('/static/media/fabric_plaid.png');
+	background-repeat: repeat;
+}
+
 .conteudo{
 	height: auto;
 	width: 100%;
@@ -8,8 +13,13 @@
 .conteudo_in{
 	width: 100%;
 	padding-top: 50px;
-	padding-left: 5%;
-	padding-right: 5%;
+	padding-left: 4%;
+	padding-right: 4%;
+}
+
+.conteudo_in_in{
+	padding: 2%;
+	background-color: rgba(255,255,255,0.8);
 }
 
 .msg_bg_error a, .msg_bg_success a, .msg_bg_info a, .msg_bg_40 a, .msg_bg_25 a, .msg_bg_20 a{
