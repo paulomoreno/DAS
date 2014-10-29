@@ -7,7 +7,7 @@
 
 {% block conteudo %}
 <h1>Edição de Perfil</h1>
-<form role="form" action="{% url 'alterar_medico' crm %}" method="post">
+<form role="form" action="{% url 'alterar_medico' id %}" method="post">
   {% csrf_token %}
   <div class="row">
   	<div class="form-group">
