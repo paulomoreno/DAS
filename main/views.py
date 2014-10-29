@@ -933,8 +933,8 @@ def registrar_horario(request):
 
         #Obtem o parametro do POST
         dia = request.POST['dia']
-        horario_inicio = request.POST['horario_inicio']
-        horario_fim = request.POST['horario_fim']
+        hora_inicio = request.POST['hora_inicio']
+        hora_final = request.POST['hora_final']
 
         erro = False
 
@@ -943,12 +943,12 @@ def registrar_horario(request):
             messages.error(request, 'Dia é obrigatório.')
             erro = True
 
-        if horario_inicio is None or horario_inicio == '':
+        if hora_inicio is None or hora_inicio == '':
             # Define erro
             messages.error(request, 'Horario de inicio é obrigatório.')
             erro = True
 
-        if horario_fim is None or horario_fim == '':
+        if hora_final is None or hora_final == '':
             # Define erro
             messages.error(request, 'Horario de termino é obrigatório.')
             erro = True
@@ -958,8 +958,8 @@ def registrar_horario(request):
             try:
                 #A operacao deve ser atomica
                 with transaction.atomic():
-                    horario = Horario(medico=medico, horario_inicio=horario_inicio, horario_fim=horario_fim)
-                    convenio.save()
+                    horario = Horario(medico=medico, dia=dia, hora_inicio=hora_inicio, hora_final=hora_final)
+                    horario.save()
 
                 messages.info(request, "Cadastro de horario realizado com sucesso!")
             except Exception, e:

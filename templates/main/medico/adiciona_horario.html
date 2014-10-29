@@ -1,12 +1,10 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block css %}<link rel="stylesheet" href="{% static "css/bootstrap-timepicker.min.css"%}"/>{% endblock %}
-
 {% block title %}Novo Horario{% endblock %}
 
 {% block conteudo %}
-<h1>Cadastro de novo Médico:</h1>
+<h1>Cadastro de horario de atendimento:</h1>
 <form role="form" action="{% url 'registrar_horario' %}" method="post">
   {% csrf_token %}
   <div class="row">
@@ -30,16 +28,16 @@
     <div class="form-group">
 	  	<div class="col-md-2">
 	  		<label for="lastName">Horario Inicial</label>
-	  		<input type="text" class="timepicker" id="lastNameInput" placeholder="h:mm PM" name="data_inicio" data-default-time="false">	
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="hh:mm" name="hora_inicio">	
 		</div>  	  		
   	</div>
   </div>
 
   <div class="row">
  	 <div class="form-group">
- 		<div class ="col-md-4">
+ 		<div class ="col-md-2">
 		    <label for="emailInput">Horario Final</label>
-   		    <input type="text" class="timepicker" id="lastNameInput" placeholder="h:mm PM" name="data_final" data-default-time="false">		
+   		    <input type="text" class="form-control" id="lastNameInput" placeholder="hh:mm" name="hora_final">		
  		</div>
  	 </div>
   </div>
@@ -52,10 +50,4 @@
       </div>  	
   </div>
 </form>
-
-<script>
-$( document ).ready(function() {
-$('.timepicker').timepicker();
-});
-</script>
 {%  endblock %}
