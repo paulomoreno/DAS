@@ -3,11 +3,11 @@
 
 {% block css %}{% endblock %}
 
-{% block title %}Editar Perfil{% endblock %}
+{% block title %}Edição{% endblock %}
 
 {% block conteudo %}
-<h1>Edição de Perfil</h1>
-<form role="form" action="{% url 'alterar_medico' id %}" method="post">
+<h1>Editar usuario:</h1>
+<form role="form" action="{% url 'registrar_cliente' %}" method="post">
   {% csrf_token %}
   <div class="row">
   	<div class="form-group">
@@ -32,15 +32,6 @@
   </div>
 
   <div class="row">
-   <div class="form-group">
-    <div class ="col-md-4">
-        <label for="espec">Especializacao</label>
-        <input type="espec" class="form-control"id="" placeholder="Especializacao" name="especializacao" disabled="true" value="{{ especializacao }}">
-    </div>
-   </div>
-  </div>
-
-  <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">Endereço</label>
@@ -48,6 +39,7 @@
     </div>
     </div>
   </div>
+
 
   <div class="row">
     <div class="form-group">
@@ -57,6 +49,7 @@
     </div>
     </div>
   </div>
+
 
   <div class="row">
     <div class="form-group">
@@ -72,32 +65,15 @@
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">CPF</label>
-        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
+        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" value="{{ cpf }}" disabled="true">
     </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">CRM</label>
-        <input type="text" class="form-control"id="" placeholder="CRM" name="crm" disabled="true" value="{{ crm }}">
-    </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Duração da Consulta</label>
-        <input type="text" class="form-control"id="" placeholder="Duração da Consulta" name="duracao_consulta" value="{{ duracao_consulta }}">
-    </div>
-    </div>
-  </div>
 
   <div class="form-group">
   	<div class="col-xs-2">
-  		<button type="submit" class="btn btn-default">Salvar</button>
+  		<button type="submit" class="btn btn-default">Editar!</button>
   </div>
 </form>
 {%  endblock %}
