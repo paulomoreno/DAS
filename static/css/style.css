@@ -8,6 +8,8 @@ body{
 	width: 100%;
 	padding-top: 50px;
 	overflow: visible;
+	background-image: url('../media/congruent_pentagon.png');
+
 }
 
 .conteudo_in{
