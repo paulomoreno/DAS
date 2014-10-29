@@ -913,7 +913,7 @@ def horarios(request):
 
     if request.method == 'GET':
         #Obtem todas as especialozacoes
-        horarios =  [h.json() for h in Horario.objects.filter(medico=medico)]
+        horarios =  [h for h in Horario.objects.filter(medico=medico)]
         #Retorna a página de tdas as espocializacoes
         return render_to_response('main/medico/horarios.html',{'horarios' : horarios}, context)
     else:
