@@ -574,6 +574,71 @@ def convenios(request):
     else:
         return HttpResponse('Método Não Permitido',status=405)
 
+@login_required
+@user_passes_test(is_admin)
+def remover_convenio(request, cnpj):
+    '''
+    Esta função e responsável remover um convenio
+
+    Esta funcao aceita apenas pedidos POST
+
+    '''
+    try:
+        context = RequestContext(request)
+
+        print cnpj
+
+        if request.method == 'POST':
+            cnpj_to_be_removed = request.POST['remover']
+            Convenio.objects.filter(cnpj=cnpj_to_be_removed).delete()
+            #Obtem todos os medicos do bd
+            #medicos = [m.json() for m in Medico.objects.all()]
+
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Convenio removido com sucesso')
+            return redirect('/convenios')
+
+            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
+
+    return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def alterar_convenio(request, cnpj):
+    '''
+    Esta funcao e responsavel por editar um convenio
+
+    Esta funcao aceita pedidos GET e POST
+    '''
+
+    context = RequestContext(request)
+
+    print cnpj
+
+    convenio = Convenio.objects.get(cnpj=cnpj)
+
+    parametros = {}
+    parametros['cnpj'] = convenio.cnpj
+    parametros['razao_social'] = convenio.razao_social
+
+    if request.method == 'GET':
+        return render_to_response('main/convenio/alterar.html', parametros, context)
+    elif request.method == 'POST':
+        novo_cnpj = request.POST['cnpj']   
+        novo_razao_social = request.POST['razao_social']
+
+        convenio.cnpj = novo_cnpj
+        convenio.razao_social = novo_razao_social
+
+        convenio.save()
+            
+        messages.info(request, 'Convenio alterado com sucesso')
+        return redirect('/convenios')
+
+
 @login_required        
 @user_passes_test(is_admin)
 def registrar_convenio(request):
