@@ -59,7 +59,7 @@ urlpatterns = patterns('',
 		#URL para cadastro de novas consultas
         url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
         #URL para lista médicos de uma dada especialização
-        #url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
+        url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
 
 
      	#URL para leitura de QRCode

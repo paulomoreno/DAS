@@ -61,7 +61,7 @@
 						cornerRadius:0,
 						onWebcamReady:onWebcamReady 
 			});
-			var csrftoken = $.cookie('csrftoken');
+			csrftoken = $.cookie('csrftoken');
 
 			function csrfSafeMethod(method) {
 		        // these HTTP methods do not require CSRF protection
