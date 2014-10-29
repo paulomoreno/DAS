@@ -1,10 +1,15 @@
 .conteudo{
 	height: auto;
 	width: 100%;
-	padding-top: 70px;
+	padding-top: 50px;
+	overflow: visible;
+}
+
+.conteudo_in{
+	width: 100%;
+	padding-top: 50px;
 	padding-left: 5%;
 	padding-right: 5%;
-	overflow: visible;
 }
 
 .msg_bg_error a, .msg_bg_success a, .msg_bg_info a, .msg_bg_40 a, .msg_bg_25 a, .msg_bg_20 a{
@@ -27,7 +32,6 @@
 }
 
 .msg_bg_error, .msg_bg_40{
-	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #f25880;
@@ -39,7 +43,6 @@
 }
 
 .msg_bg_success, .msg_bg_25{
-	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #14c176;
@@ -51,7 +54,6 @@
 }
 
 .msg_bg_info, .msg_bg_20{
-	margin-top: -20px;
 	position: fixed;
 	color: white;
 	background-color: #4bd1ee;
