@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block javascript %}
+	<script>
+		$(document).ready(
+			function(){
+				$('espec_item').click(function(){
+
+				})
+			}
+		);
+	</script>
+
+{% endblock%}
+
+{% block css %}{% endblock %}
+
+{% block title %}DAS - Cadastro de Consulta{% endblock %}
+
+{% block conteudo %}
+<h1>Marcar consulta</h1>
+<form role="form" action="{% url 'registrar_consulta' %}" method="post">
+	<div class="row">
+		<div class="form-group">
+			<div class="col-md-4">
+				<label for="especializacao">Selecione uma especialização</label>
+				<select  class="selectpicker">
+					{% for esp in especializacoes %}
+						<option> {{ esp.nome }} </option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+	</div>
+</form>
+
+{%  endblock %}

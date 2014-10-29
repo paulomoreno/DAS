@@ -556,7 +556,7 @@ def consultas(request):
     return HttpResponse('Não Implementado',status=501)
 
 @login_required        
-@user_passes_test(is_cliente)
+#@user_passes_test(is_cliente)
 def registrar_consulta(request):
     '''
     Esta função é responsável por registrar uma nova consulta.
@@ -573,7 +573,10 @@ def registrar_consulta(request):
     # TODO !!!
     context = RequestContext(request)
     if request.method == 'GET':
-        return render_to_response('main/consultas/nova.html', context)
+        #Obter todos as especializações do bd
+        especializacoes = [espec for espec in Especializacao.objects.all()]
+
+        return render_to_response('main/consultas/cadastro.html',{'especializacoes':especializacoes}, context)
 
 @login_required
 @user_passes_test(is_admin)
