@@ -23,7 +23,11 @@ urlpatterns = patterns('',
 
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
+		#URL para alterar clientes
+        url(r'^clientes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_cliente',name='alterar_cliente'),
 
+
+		
 
         #Todos os medicos
         url(r'^medicos$','main.views.medicos',name='medicos'),        
@@ -36,7 +40,6 @@ urlpatterns = patterns('',
 
 
         #Todos os convenios
-        url(r'^convenios$','main.views.convenios',name='convenios'),        
 		#URL para cadastro de novos convenios
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
         #URL para remover convenio
@@ -70,4 +73,5 @@ urlpatterns = patterns('',
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),
 
+        url(r'^convenios$','main.views.convenios',name='convenios'),        
 )
