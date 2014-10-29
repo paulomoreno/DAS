@@ -251,10 +251,11 @@ def registrar_medico(request):
     '''
     context = RequestContext(request)
 
-    if request.method == 'GET':
-        #Obtem as especializacoes
-        parametros = {'especializacoes' : Especializacao.objects.all()}
+    #Obtem as especializacoes
+    parametros = {'especializacoes' : Especializacao.objects.all()}
 
+
+    if request.method == 'GET':
         #Retorna a página de cadastro de cliente
         return render_to_response('main/medico/cadastro.html',parametros, context)
 
@@ -369,7 +370,7 @@ def registrar_medico(request):
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
 
-        return render_to_response('main/medico/cadastro.html', context)
+        return render_to_response('main/medico/cadastro.html',parametros, context)
 
     else:
 
