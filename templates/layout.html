@@ -135,6 +135,8 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+  <div class="conteudo">
     {% for message in messages %}
     <div class="msg_bg_{{ message.tags }}">
       <h3>{{ message }}</h3>
@@ -143,10 +145,10 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     <div class="msg_padding"></div>
     {% endfor %}
 
-
-  <div class="conteudo">
-    {% block conteudo %}
-    {% endblock %}
+    <div class="conteudo_in">
+      {% block conteudo %}
+      {% endblock %}
+    </div>
   </div>
 
   {% endautoescape %}

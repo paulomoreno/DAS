@@ -132,12 +132,15 @@ def registrar_cliente(request):
 
         if email is None or email =='':
             messages.error(request, "Email é obrigatório!")
+            erro = True
 
         if rg is None or rg =='':
             messages.error(request, "RG é obrigatório!")
+            erro = True
 
         if cpf is None or cpf =='':
             messages.error(request, "CPF é obrigatório!")
+            erro = True
 
         if not erro:
             #Tenta salvar o novo cliente no banco
@@ -775,7 +778,7 @@ def remover_convenio(request, cnpj):
         print cnpj
 
         if request.method == 'POST':
-            Convenio.objects.filter(cnpj=cnpj)
+            Convenio.objects.filter(cnpj=cnpj).delete()
             #Obtem todos os medicos do bd
             #medicos = [m.json() for m in Medico.objects.all()]
 
@@ -805,23 +808,33 @@ def alterar_convenio(request, cnpj):
 
     convenio = Convenio.objects.get(cnpj=cnpj)
 
-    parametros = {}
-    parametros['cnpj'] = convenio.cnpj
-    parametros['razao_social'] = convenio.razao_social
-
     if request.method == 'GET':
+        parametros = {}
+        parametros['cnpj'] = convenio.cnpj
+        parametros['razao_social'] = convenio.razao_social
         return render_to_response('main/convenio/alterar.html', parametros, context)
-    elif request.method == 'POST':
-        novo_cnpj = request.POST['cnpj']   
+    elif request.method == 'POST': 
         novo_razao_social = request.POST['razao_social']
 
-        convenio.cnpj = novo_cnpj
-        convenio.razao_social = novo_razao_social
+        error = False
+        if novo_razao_social is None or novo_razao_social == '':
+            messages.error(request, 'Nova razao social invalida')
+            error = True
 
-        convenio.save()
-            
-        messages.info(request, 'Convenio alterado com sucesso')
+        if not error:
+            try:
+                with transaction.atomic():
+                    convenio.razao_social = novo_razao_social
+                    convenio.save()
+                    messages.info(request, 'Convenio alterado com sucesso!')
+            except Exception, e:
+                messages.error(request, 'Erro ao alterar convenio')
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+
         return redirect('/convenios')
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 
 @login_required        
@@ -1036,6 +1049,7 @@ def qrCodeScan(request):
     '''
     context = RequestContext(request)
     return render_to_response('main/qrCodeScanner/index.html', context)
+
 @login_required
 @user_passes_test(is_admin)
 def searchCode(request):
@@ -1055,6 +1069,17 @@ def searchCode(request):
         except Exception, e:
             return api_monta_json({'response':'Erro na leitura'})
     else:
-        messages.error(request,'Método Não Permitido');
-        return render_to_response('main/qrCodeScanner/index.html');
+        return api_monta_json({'response':'Método não permitido'})
 
+@login_required
+def listar_medico_espec(request):
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        espec = request.POST['especId']
+        especializacao = Especializacao.objects.get(id=espec)
+        #print(especializacao.nome)
+        medicos = [m.first_name for m in Medico.objects.filter(especializacao=especializacao)]
+        return HttpResponse(json.dumps({'response': medicos}), content_type="application/json")
+    else:        
+        return api_monta_json({'response':'Método não permitido'})
