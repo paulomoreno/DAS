@@ -37,7 +37,7 @@
         <label for="espec">Especializacao</label>
         <select id="espec" class="form-control" name="especializacao">
           {% for e in especializacoes %}
-            <option value="{{ e.id }}" {% if e.id == especializacao %}selected{% endif %}>{{ e.nome }}<option>
+            <option value="{{ e.id }}" {% if e.id == especializacao %}selected{% endif %}>{{ e.nome }}</option>
           {% endfor %}
         </select>
     </div>
@@ -119,7 +119,7 @@
     </div>
     </div>
   </div>
-  
+  &nbsp;
   <div class="form-group">
       <div class="row">
         <div class="col-xs-2">
