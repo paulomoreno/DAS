@@ -69,6 +69,12 @@ urlpatterns = patterns('',
 		url(r'^especializacoes$','main.views.especializacoes',name='especializacoes'),
 		#URL para cadastro de novas especializações
 		url(r'^especializacoes/nova$','main.views.registrar_especializacao',name='registrar_especializacao'),
+		#URL para remover determinada especilizacao
+		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_especializacao',name='remover_especializacao'),
+		#URL para alterar determinada especilizacao
+		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_especializacao',name='alterar_especializacao'),
+
+
 
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),

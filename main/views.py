@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 # vim: set fileencoding=utf8 :
 
-from django.http import Http404, HttpResponseBadRequest, HttpResponse
+from django.http import Http404, HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
@@ -223,11 +223,7 @@ def remover_medico(request, crm):
         print crm
 
         if request.method == 'POST':
-            crm_to_be_removed = request.POST['remover']
-            Medico.objects.filter(crm=crm_to_be_removed).delete()
-            #Obtem todos os medicos do bd
-            medicos = [m.json() for m in Medico.objects.all()]
-
+            Medico.objects.filter(crm=crm).delete()
             #Retorna a página de todos os medicos
             messages.info(request, 'Medico removido com sucesso')
             return redirect('/medicos')
@@ -583,11 +579,62 @@ def especializacoes(request):
 
     if request.method == 'GET':
         #Obtem todas as especialozacoes
-        especializacoes =  [e.json() for e in Especializacao.objects.all()]
+        especializacoes =  [e for e in Especializacao.objects.all()]
         #Retorna a página de tdas as espocializacoes
         return render_to_response('main/especializacao/todas.html',{'especializacoes' : especializacoes}, context)
     else:
         return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def remover_especializacao(request, id):
+    '''
+    Esta função é responsável mostrar todas as especializacoes.
+    
+    Esta função aceita apenas pedidos POST
+
+    '''
+    
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        Especializacao.objects.filter(id=id).delete()
+
+        messages.info(request, 'Especializacao removida com sucesso')
+        return redirect('/especializacoes')
+    else:
+        return HttpResponse('Metodo nao permitido', status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def alterar_especializacao(request, id):
+    '''
+    Esta função é responsável mostrar todas as especializacoes.
+    
+    Esta função aceita apenas pedidos GET e POST
+
+    '''
+    
+    context = RequestContext(request)
+    try:
+        especializacao = Especializacao.objects.get(id=id)
+    except:
+        return HttpResponseNotFound('<h1>Page not found</h1>')
+
+    parametros = {}
+    parametros['id'] = especializacao.id
+    parametros['nome'] = especializacao.nome
+
+    if request.method == 'GET':
+        return render_to_response('main/especializacao/alterar.html', parametros, context)
+    elif request.method == 'POST':
+        novo_nome = request.POST['nome']
+
+        especializacao.nome = novo_nome
+        especializacao.save()
+
+        messages.info(request, 'Especializacao alterada com sucesso')
+        return redirect('/especializacoes')
 
 @login_required        
 @user_passes_test(is_admin)
@@ -680,8 +727,7 @@ def remover_convenio(request, cnpj):
         print cnpj
 
         if request.method == 'POST':
-            cnpj_to_be_removed = request.POST['remover']
-            Convenio.objects.filter(cnpj=cnpj_to_be_removed).delete()
+            Convenio.objects.filter(cnpj=cnpj)
             #Obtem todos os medicos do bd
             #medicos = [m.json() for m in Medico.objects.all()]
 
