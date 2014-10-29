@@ -671,7 +671,7 @@ def registrar_especializacao(request):
                     espec = Especializacao(nome=espec_nome)
                     espec.save()
 
-                messages.info(request, "Cadastro da especialização '{}' realizado com sucesso!".format(espec_nome))
+                messages.info(request, "Cadastro de especialização realizado com sucesso!")
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -817,7 +817,7 @@ def registrar_convenio(request):
                     convenio = Convenio(cnpj=cnpj, razao_social=razao_social)
                     convenio.save()
 
-                messages.info(request, "Cadastro do convênio '{}' realizado com sucesso!".format(razao_social))
+                messages.info(request, "Cadastro do convênio realizado com sucesso!")
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
