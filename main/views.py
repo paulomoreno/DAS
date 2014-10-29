@@ -921,6 +921,7 @@ def qrCodeScan(request):
     '''
     context = RequestContext(request)
     return render_to_response('main/qrCodeScanner/index.html', context)
+
 @login_required
 @user_passes_test(is_admin)
 def searchCode(request):
@@ -940,6 +941,17 @@ def searchCode(request):
         except Exception, e:
             return api_monta_json({'response':'Erro na leitura'})
     else:
-        messages.error(request,'Método Não Permitido');
-        return render_to_response('main/qrCodeScanner/index.html');
+        return api_monta_json({'response':'Método não permitido'})
 
+@login_required
+def listar_medico_espec(request):
+    context = RequestContext(request)
+
+    if request.method == 'POST':
+        espec = request.POST['especId']
+        especializacao = Especializacao.objects.get(id=espec)
+        #print(especializacao.nome)
+        medicos = [m.first_name for m in Medico.objects.filter(especializacao=especializacao)]
+        return HttpResponse(json.dumps({'response': medicos}), content_type="application/json")
+    else:        
+        return api_monta_json({'response':'Método não permitido'})
