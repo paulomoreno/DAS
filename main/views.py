@@ -839,8 +839,17 @@ def horarios(request):
     Esta função aceita apenas pedidos GET
 
     '''
-    # TODO !!!
-    return HttpResponse('Não Implementado',status=501)
+    context = RequestContext(request)
+    medico = Medico.objects.get(id=request.user.id)
+
+
+    if request.method == 'GET':
+        #Obtem todas as especialozacoes
+        horarios =  [h for h in Horario.objects.filter(medico=medico)]
+        #Retorna a página de tdas as espocializacoes
+        return render_to_response('main/medico/horarios.html',{'horarios' : horarios}, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 @login_required        
 @user_passes_test(is_medico)
@@ -857,10 +866,76 @@ def registrar_horario(request):
         Realiza o cadastro de um novo horario.
 
     '''
-    # TODO !!!
+    medico = Medico.objects.get(id=request.user.id)
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Retorna a página de cadastro de horario
+        return render_to_response('main/medico/adiciona_horario.html', context)
+
+    elif request.method == 'POST':
+
+        #Obtem o parametro do POST
+        dia = request.POST['dia']
+        hora_inicio = request.POST['hora_inicio']
+        hora_final = request.POST['hora_final']
+
+        erro = False
+
+        if dia is None or dia == '':
+            # Define erro
+            messages.error(request, 'Dia é obrigatório.')
+            erro = True
+
+        if hora_inicio is None or hora_inicio == '':
+            # Define erro
+            messages.error(request, 'Horario de inicio é obrigatório.')
+            erro = True
+
+        if hora_final is None or hora_final == '':
+            # Define erro
+            messages.error(request, 'Horario de termino é obrigatório.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    horario = Horario(medico=medico, dia=dia, hora_inicio=hora_inicio, hora_final=hora_final)
+                    horario.save()
+
+                messages.info(request, "Cadastro de horario realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                messages.error(request, 'Erro desconhecido ao salvar o convênio.')
+
+        return render_to_response('main/medico/adiciona_horario.html', context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
     return HttpResponse('Não Implementado',status=501)
 
+@login_required        
+@user_passes_test(is_medico)
+def alterar_horario(request):
+    '''
+    Esta função é responsável por alterar um horario.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página de cadastro
+
+    POST:
+        Realiza a alteracao de um horario.
+
+    '''
+    # TODO !!!
+
+    return HttpResponse('Não Implementado',status=501)
 
 @login_required        
 @user_passes_test(is_medico_or_cliente)

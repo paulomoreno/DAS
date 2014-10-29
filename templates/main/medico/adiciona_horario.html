@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Novo Horario{% endblock %}
+
+{% block conteudo %}
+<h1>Cadastro de horario de atendimento:</h1>
+<form role="form" action="{% url 'registrar_horario' %}" method="post">
+  {% csrf_token %}
+  <div class="row">
+  	<div class="form-group">
+		<div class="col-md-2" >
+	    	<label for="firstNameInput">Dia</label>
+        <select id="dia" class="form-control" name="dia">
+            <option value="1">Segunda-feira</option>
+            <option value="2">Terca-feira</option>
+            <option value="3">Quarta-feira</option>
+            <option value="4">Quinta-feira</option>
+            <option value="5">Sexta-feira</option>
+            <option value="6">Sabado</option>
+            <option value="7">Domingo</option>
+        </select>
+	 	</div>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="form-group">
+	  	<div class="col-md-2">
+	  		<label for="lastName">Horario Inicial</label>
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="hh:mm" name="hora_inicio">	
+		</div>  	  		
+  	</div>
+  </div>
+
+  <div class="row">
+ 	 <div class="form-group">
+ 		<div class ="col-md-2">
+		    <label for="emailInput">Horario Final</label>
+   		    <input type="text" class="form-control" id="lastNameInput" placeholder="hh:mm" name="hora_final">		
+ 		</div>
+ 	 </div>
+  </div>
+
+  <div class="form-group">
+      <div class="row">
+        <div class="col-xs-2">
+          <button type="submit" class="btn btn-success"  >Cadastrar!</button>
+        </div>  
+      </div>  	
+  </div>
+</form>
+{%  endblock %}

@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}
+<style>
+.table, .tabela_cabecalho th{
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block title %}Médicos{% endblock %}
+
+{% block conteudo %}
+
+	<a href="{% url 'registrar_horario' %}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Inserir horario</a>
+
+	<h1 class="lead">Horarios</h1>
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
+        <thead  class="tabela_cabecalho">
+            <tr>
+                <th>Dia</th>
+                <th>Hora Inicio</th>
+                <th>Hora Final</th>
+                <th>Editar</th>
+                <th>Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for h in horarios %}
+            <tr>
+                <td>{{ h.dia }}</td>                
+                <td>{{ h.hora_inicio }}</td>
+                <td>{{ h.hora_fim }}</td>
+                <td> <a href="" class="btn btn-success">Editar</a> </td>
+                <td>
+                    <form role="form" action="/medicos/{{ m.crm }}/remover" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="remover">Remover</button>    
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+	
+
+{% endblock %}
