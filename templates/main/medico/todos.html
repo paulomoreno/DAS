@@ -7,12 +7,12 @@
 
 {% block conteudo %}
 
-	<a href="{% url 'registrar_medico' %}"> <button type="button" class="btn btn-success"> Inserir novo medico </button> </a>
+	<a href="{% url 'registrar_medico' %}"> <button type="button" class="btn btn-primary"> Novo medico </button> </a>
 
-	<h2 class="lead">  Medicos cadastrados no sistema</h2>
+	<h1 class="lead">Medicos</h1>
     <div class="panel panel-default">
 	<table class="table table-striped table-hover">
-        <thead  id="cabecalho">
+        <thead  class="tabela_cabecalho">
             <tr>
                 <th style="text-align:center"> Nome</th>
                 <th> Especializacao</th>
@@ -29,7 +29,7 @@
         {% for m in medicos %}
             <tr>
                 <td>{{ m.first_name }} {{ m.last_name }}</td>                
-                <td></td>
+                <td>{{ m.especializacao.nome }}</td>
                 <td>{{ m.username }}</td>
                 <td>{{ m.crm }}</td>
                 <td>{{ m.duracao_consulta }}</td>

@@ -32,6 +32,19 @@
   </div>
 
   <div class="row">
+   <div class="form-group">
+    <div class ="col-md-4">
+        <label for="espec">Especializacao</label>
+        <select id="espec" class="form-control" name="especializacao">
+          {% for e in especializacoes %}
+            <option value="{{ e.id }}">{{ e.nome }}<option>
+          {% endfor %}
+        </select>
+    </div>
+   </div>
+  </div>
+
+  <div class="row">
   	<div class="form-group">
  		<div class ="col-md-4">
    		 	<label for="userPassword">Senha</label>

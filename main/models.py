@@ -40,6 +40,7 @@ class Medico(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
     crm = models.CharField(max_length=16)
     duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
+    especializacao = models.ForeignKey('Especializacao')
 
     def json(self):
         medico = {}
