@@ -2,8 +2,8 @@
 	height: auto;
 	width: 100%;
 	padding-top: 70px;
-	padding-left: 10%;
-	padding-right: 10%;
+	padding-left: 5%;
+	padding-right: 5%;
 	overflow: visible;
 }
 
@@ -69,5 +69,16 @@
 }
 
 #cabecalho {
-	background-image: linear-gradient(to bottom, #D2E7F5 0%, #44B7FA 100%);
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #EFFCF9),
+	color-stop(1, #B8FFF8)
+);
+	background-image: -o-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
+	background-image: -moz-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
+	background-image: -webkit-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
+	background-image: -ms-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
+	background-image: linear-gradient(to bottom, #EFFCF9 0%, #B8FFF8 100%);
 }
