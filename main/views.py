@@ -30,6 +30,9 @@ def is_medico(user):
 def is_admin_or_medico(user):
     return (user.is_medico or user.is_admin or user.is_staff)
 
+def is_admin_or_cliente(user):
+    return (user.is_cliente or user.is_admin or user.is_staff)
+
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
 
@@ -323,6 +326,87 @@ def alterar_medico(request, crm):
 
         return render_to_response('main/medico/editar.html', parametros, context)
 
+@login_required
+@user_passes_test(is_admin_or_cliente)
+def alterar_cliente(request, id):
+
+    cliente = Cliente.objects.get(id=id)
+
+    parametros = {}
+
+    parametros['nome'] = cliente.first_name
+    parametros['sobrenome'] = cliente.last_name
+    parametros['email'] = cliente.username
+    parametros['telefone'] = cliente.telefone
+    parametros['endereco'] = cliente.endereco
+    parametros['rg'] = cliente.rg
+    parametros['cpf'] = cliente.cpf
+    
+    # Pegando seu pedido
+    context = RequestContext(request)
+    if request.method == 'GET':
+        return render_to_response('main/cliente/editar.html', parametros, context)
+    elif request.method == 'POST':
+        #obtem dados do POST
+        try:
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            rg = request.POST['rg']
+        except:
+            return HttpResponseBadRequest
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+            erro = True
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+            erro = True
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():                  
+                    cliente.first_name = nome
+                    cliente.last_name = sobrenome
+                    cliente.username = email
+
+                    #Insere os campos obrigatorios
+                    cliente.rg = rg
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        cliente.telefone = telefone
+
+                    if endereco and endereco != '':
+                        cliente.endereco = endereco
+   
+                    #Da um commit no bd
+                    cliente.save()
+
+                messages.info(request, "Atualização realizada com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o cliente.')
+
+        return render_to_response('main/cliente/editar.html', parametros, context)
 
 
 @login_required        
