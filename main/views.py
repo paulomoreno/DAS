@@ -337,7 +337,7 @@ def alterar_medico(request, id):
 @user_passes_test(is_admin_or_cliente)
 def alterar_cliente(request, id):
 
-    if request.user.is_cliente and request.user.id int(id):
+    if request.user.is_cliente and request.user.id != int(id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     cliente = Cliente.objects.get(id=id)
