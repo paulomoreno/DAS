@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import *
 from models import *
+from django.shortcuts import redirect
 import linecache
 import sys
 import json
@@ -205,6 +206,33 @@ def medicos(request):
     else:
 
         return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin)
+def remover_medico(request, crm):
+
+    try:
+        context = RequestContext(request)
+
+        print crm
+
+        if request.method == 'POST':
+            crm_to_be_removed = request.POST['remover']
+            Medico.objects.filter(crm=crm_to_be_removed).delete()
+            #Obtem todos os medicos do bd
+            medicos = [m.json() for m in Medico.objects.all()]
+
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Medico removido com sucesso')
+            return redirect('/medicos')
+
+            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
+
+    return HttpResponse('Método Não Permitido',status=405)
+
 
 @login_required        
 @user_passes_test(is_admin)

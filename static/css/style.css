@@ -73,12 +73,12 @@ background-image: -webkit-gradient(
 	linear,
 	left top,
 	left bottom,
-	color-stop(0, #EFFCF9),
-	color-stop(1, #B8FFF8)
+	color-stop(0, #EDF7F5),
+	color-stop(1, #75EBAC)
 );
-	background-image: -o-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
-	background-image: -moz-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
-	background-image: -webkit-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
-	background-image: -ms-linear-gradient(bottom, #EFFCF9 0%, #B8FFF8 100%);
-	background-image: linear-gradient(to bottom, #EFFCF9 0%, #B8FFF8 100%);
+background-image: -o-linear-gradient(bottom, #EDF7F5 0%, #75EBAC 100%);
+background-image: -moz-linear-gradient(bottom, #EDF7F5 0%, #75EBAC 100%);
+background-image: -webkit-linear-gradient(bottom, #EDF7F5 0%, #75EBAC 100%);
+background-image: -ms-linear-gradient(bottom, #EDF7F5 0%, #75EBAC 100%);
+background-image: linear-gradient(to bottom, #EDF7F5 0%, #75EBAC 100%);
 }

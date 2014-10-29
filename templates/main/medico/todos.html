@@ -7,11 +7,7 @@
 
 {% block conteudo %}
 
-	<li>
-		<a href="{% url 'registrar_medico' %}">
-		<span class="glyphicon glyphicon-plus"></span> 
-		Novo</a>
-	</li>
+	<a href="{% url 'registrar_medico' %}"> <button type="button" class="btn btn-success"> Inserir novo medico </button> </a>
 
 	<h2 class="lead">  Medicos cadastrados no sistema</h2>
     <div class="panel panel-default">

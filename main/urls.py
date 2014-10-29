@@ -3,6 +3,7 @@
 # vim: set fileencoding=utf8 :
 
 from django.conf.urls import patterns, include, url
+from django.views.generic import RedirectView
 from main import views
 
 urlpatterns = patterns('',
@@ -28,6 +29,8 @@ urlpatterns = patterns('',
         url(r'^medicos$','main.views.medicos',name='medicos'),        
 		#URL para cadastro de novos médicos
         url(r'^medicos/novo$','main.views.registrar_medico',name='registrar_medico'),
+        #URL para remover medico
+        url(r'^medicos/(?P<crm>[a-zA-Z0-9\-]+)/remover$','main.views.remover_medico',name='remover_medico'),
 
         #Todos os convenios
         url(r'^convenios$','main.views.convenios',name='convenios'),        
