@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.db import IntegrityError, transaction
 from django.db import *
 from django.shortcuts import *
 from models import *
