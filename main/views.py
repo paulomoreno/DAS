@@ -27,6 +27,9 @@ def is_cliente(user):
 def is_medico(user):
     return user.is_medico
 
+def is_admin_or_medico(user):
+    return (user.is_medico or user.is_admin or user.is_staff)
+
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
 
@@ -233,6 +236,94 @@ def remover_medico(request, crm):
 
     return HttpResponse('Método Não Permitido',status=405)
 
+@login_required
+@user_passes_test(is_admin_or_medico)
+def alterar_medico(request, crm):
+
+    medico = Medico.objects.get(crm=crm)
+
+    parametros = {}
+
+    parametros['nome'] = medico.first_name
+    parametros['sobrenome'] = medico.last_name
+    parametros['email'] = medico.username
+    parametros['telefone'] = medico.telefone
+    parametros['cpf'] = medico.cpf
+    parametros['crm'] = medico.crm
+    parametros['rg'] = medico.rg
+    parametros['duracao_consulta'] = medico.duracao_consulta       
+    parametros['especializacao'] = medico.especializacao.nome
+    
+    # Pegando seu pedido
+    context = RequestContext(request)
+    if request.method == 'GET':
+        return render_to_response('main/medico/editar.html', parametros, context)
+    elif request.method == 'POST':
+        #obtem dados do POST
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        email = request.POST['email']
+        telefone = request.POST['telefone']
+        endereco = request.POST['endereco']
+        rg = request.POST['rg']
+        duracao_consulta = request.POST['duracao_consulta']
+
+        erro = False
+
+        if nome is None or nome =='':
+            messages.error(request, "Nome é obrigatrio!")
+            erro = True
+        
+        if sobrenome is None or sobrenome =='':
+            messages.error(request, "Sobrenome é obrigatório!")
+        
+        if email is None or email =='':
+            messages.error(request, "Email é obrigatório!")
+            erro = True
+
+        if rg is None or rg =='':
+            messages.error(request, "RG é obrigatório!")
+            erro = True
+
+        if duracao_consulta is None or duracao_consulta == '':
+            messages.error(request, "Duração da Consulta é obrigatório!")
+            erro = True
+
+        if not erro:
+            #Tenta salvar o novo cliente no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():                  
+                    medico.first_name = nome
+                    medico.last_name = sobrenome
+                    medico.username = email
+                    medico.duracao_consulta = duracao_consulta
+
+                    #Insere os campos obrigatorios
+                    medico.rg = rg
+
+                    #Caso existentes, insere os campos nao obrigatorios
+                    if telefone and telefone != '':
+                        medico.telefone = telefone
+
+                    if endereco and endereco != '':
+                        medico.endereco = endereco
+   
+                    #Da um commit no bd
+                    medico.save()
+
+                messages.info(request, "Atualização realizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'username' in e.message:
+                    messages.error(request, 'Email já cadastrado. Escolha outro email.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar o medico.')
+
+        return render_to_response('main/medico/editar.html', parametros, context)
+
+
 
 @login_required        
 @user_passes_test(is_admin)
@@ -251,10 +342,11 @@ def registrar_medico(request):
     '''
     context = RequestContext(request)
 
-    if request.method == 'GET':
-        #Obtem as especializacoes
-        parametros = {'especializacoes' : Especializacao.objects.all()}
+    #Obtem as especializacoes
+    parametros = {'especializacoes' : Especializacao.objects.all()}
 
+
+    if request.method == 'GET':
         #Retorna a página de cadastro de cliente
         return render_to_response('main/medico/cadastro.html',parametros, context)
 
@@ -369,7 +461,7 @@ def registrar_medico(request):
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
 
-        return render_to_response('main/medico/cadastro.html', context)
+        return render_to_response('main/medico/cadastro.html',parametros, context)
 
     else:
 

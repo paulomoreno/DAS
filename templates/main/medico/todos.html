@@ -7,7 +7,7 @@
 
 {% block conteudo %}
 
-	<a href="{% url 'registrar_medico' %}"> <button type="button" class="btn btn-primary"> Novo medico </button> </a>
+	<a href="{% url 'registrar_medico' %}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Novo medico </button> </a>
 
 	<h1 class="lead">Medicos</h1>
     <div class="panel panel-default">
@@ -35,7 +35,7 @@
                 <td>{{ m.duracao_consulta }}</td>
                 <td></td>
                 <td></td>
-                <td> <button type="button" class="btn btn-success">Editar</button> </td>
+                <td> <a href="{% url 'alterar_medico' m.crm %}" class="btn btn-success">Editar</a> </td>
                 <td>
                     <form role="form" action="/medicos/{{ m.crm }}/remover" method="post">
                         {% csrf_token %}
