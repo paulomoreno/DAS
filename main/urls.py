@@ -36,8 +36,10 @@ urlpatterns = patterns('',
         url(r'^convenios$','main.views.convenios',name='convenios'),        
 		#URL para cadastro de novos convenios
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
-
-
+        #URL para remover convenio
+        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/remover$','main.views.remover_convenio',name='remover_convenio'),
+        #URL para editar convenio
+        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_convenio',name='alterar_convenio'),
 
   		#Todos os horarios de um medico
         url(r'^horarios$','main.views.horarios',name='horarios'),        
