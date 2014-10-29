@@ -775,7 +775,7 @@ def remover_convenio(request, cnpj):
         print cnpj
 
         if request.method == 'POST':
-            Convenio.objects.filter(cnpj=cnpj)
+            Convenio.objects.filter(cnpj=cnpj).delete()
             #Obtem todos os medicos do bd
             #medicos = [m.json() for m in Medico.objects.all()]
 
@@ -805,23 +805,33 @@ def alterar_convenio(request, cnpj):
 
     convenio = Convenio.objects.get(cnpj=cnpj)
 
-    parametros = {}
-    parametros['cnpj'] = convenio.cnpj
-    parametros['razao_social'] = convenio.razao_social
-
     if request.method == 'GET':
+        parametros = {}
+        parametros['cnpj'] = convenio.cnpj
+        parametros['razao_social'] = convenio.razao_social
         return render_to_response('main/convenio/alterar.html', parametros, context)
-    elif request.method == 'POST':
-        novo_cnpj = request.POST['cnpj']   
+    elif request.method == 'POST': 
         novo_razao_social = request.POST['razao_social']
 
-        convenio.cnpj = novo_cnpj
-        convenio.razao_social = novo_razao_social
+        error = False
+        if novo_razao_social is None or novo_razao_social == '':
+            messages.error(request, 'Nova razao social invalida')
+            error = True
 
-        convenio.save()
-            
-        messages.info(request, 'Convenio alterado com sucesso')
+        if not error:
+            try:
+                with transaction.atomic():
+                    convenio.razao_social = novo_razao_social
+                    convenio.save()
+                    messages.info(request, 'Convenio alterado com sucesso!')
+            except Exception, e:
+                messages.error(request, 'Erro ao alterar convenio')
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+
         return redirect('/convenios')
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 
 @login_required        
