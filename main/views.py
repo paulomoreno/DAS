@@ -345,27 +345,38 @@ def registrar_medico(request):
     #Obtem as especializacoes
     parametros = {'especializacoes' : Especializacao.objects.all()}
 
-
     if request.method == 'GET':
         #Retorna a página de cadastro de cliente
         return render_to_response('main/medico/cadastro.html',parametros, context)
 
     elif request.method == 'POST':
-        #obtem dados do POST
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        senha =  request.POST['senha']
-        confirmar_senha =  request.POST['confirmar_senha']
-        email = request.POST['email']
-        telefone = request.POST['telefone']
-        endereco = request.POST['endereco']
-        cpf = request.POST['cpf']
-        rg = request.POST['rg']
-        crm = request.POST['crm']
-        duracao_consulta = request.POST['duracao_consulta']
-        especializacao = request.POST['especializacao']
 
-        print especializacao
+        try:
+            #obtem dados do POST
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            senha =  request.POST['senha']
+            confirmar_senha =  request.POST['confirmar_senha']
+            email = request.POST['email']
+            telefone = request.POST['telefone']
+            endereco = request.POST['endereco']
+            cpf = request.POST['cpf']
+            rg = request.POST['rg']
+            crm = request.POST['crm']
+            duracao_consulta = request.POST['duracao_consulta']
+            especializacao = request.POST['especializacao']
+        except:
+            return HttpResponseBadRequest
+
+        parametros['nome'] = nome
+        parametros['sobrenome'] = sobrenome
+        parametros['email'] = email
+        parametros['telefone'] = telefone
+        parametros['cpf'] = cpf
+        parametros['crm'] = crm
+        parametros['rg'] = rg
+        parametros['duracao_consulta'] = duracao_consulta     
+        parametros['especializacao'] = especializacao
 
         erro = False
 
