@@ -7,12 +7,45 @@
 
 {% block conteudo %}
 
-	<li><a href="{% url 'registrar_medico' %}"><span class="glyphicon glyphicon-plus"></span> Novo</a></li>
+	<li>
+		<a href="{% url 'registrar_medico' %}">
+		<span class="glyphicon glyphicon-plus"></span> 
+		Novo</a>
+	</li>
 
-	{% for m in medicos %}
-	<p>
-		<h1>{{ m.nome }} {{ m.sobrenome }}</h1>
-	</p>
-	{% endfor %}
+	<h2 class="lead">  Medicos cadastrados no sistema</h2>
+	<table class="table table-striped table-hover table-bordered">
+        <thead  id="cabecalho">
+            <tr>
+                <th style="text-align:center"> Nome</th>
+                <th> Especializacao</th>
+                <th> Email</th>
+                <th> CRM</th>
+                <th> Duracao da Consulta</th>
+                <th> Horario de Inicio do expediente</th>
+                <th> Horario de saida</th>
+                <th style="text-align:center"> Editar</th>
+                <th style="text-align:center"> Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in medicos %}
+            <tr>
+                <td>{{m.nome}} {{m.sobrenome}}</td>
+                <td>{{m.crm}}</td>
+                <td>{{m.username}}</td>
+                <td>{{m.crm}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> 
+                	<button type="button" class="btn btn-success">Editar</button>
+                </td>
+                <td> <button type="button" class="btn btn-danger">Remover</button></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	
 
 {% endblock %}

@@ -543,8 +543,9 @@ def registrar_consulta(request):
 
     '''
     # TODO !!!
-
-    return HttpResponse('Não Implementado',status=501)
+    context = RequestContext(request)
+    if request.method == 'GET':
+        return render_to_response('main/consultas/nova.html', context)
 
 @login_required
 @user_passes_test(is_admin)

@@ -67,3 +67,7 @@
 	font-size: 12pt;
 	margin: 0;
 }
+
+#cabecalho {
+	background-image: linear-gradient(to bottom, #D2E7F5 0%, #44B7FA 100%);
+}
