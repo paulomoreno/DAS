@@ -591,9 +591,20 @@ def remover_especializacao(request, id):
     context = RequestContext(request)
 
     if request.method == 'POST':
-        Especializacao.objects.filter(id=id).delete()
 
-        messages.info(request, 'Especializacao removida com sucesso')
+        error = False
+        if id is None or id =='':
+            messages.error(request, 'Erro ao remover especializacao')
+            error = True
+
+        try:
+            with transaction.atomic():
+                Especializacao.objects.filter(id=id).delete()
+                messages.info(request, 'Especializacao removida com sucesso')
+        except Exception, e:
+            messages.error(request, 'Especializacao nao encontrada no banco de dados')
+            PrintException()
+
         return redirect('/especializacoes')
     else:
         return HttpResponse('Metodo nao permitido', status=405)
@@ -720,15 +731,23 @@ def remover_convenio(request, cnpj):
         print cnpj
 
         if request.method == 'POST':
-            Convenio.objects.filter(cnpj=cnpj)
-            #Obtem todos os medicos do bd
-            #medicos = [m.json() for m in Medico.objects.all()]
 
-            #Retorna a página de todos os medicos
-            messages.info(request, 'Convenio removido com sucesso')
+            error = False
+            if cnpj is None or cnpj =='':
+                messages.error(request, 'Erro ao remover convenio')
+                error = True
+
+            if not error:
+                try:
+                    with transaction.atomic():
+                        Convenio.objects.filter(cnpj=cnpj).delete()
+                        messages.info(request, 'Convenio removido com sucesso')
+
+                except Exception, e:
+                    PrintException()
+
             return redirect('/convenios')
 
-            #return render_to_response('main/medico/remover.html', { 'medicos' : medicos }, context)
     except Exception, e:
         #Para qualquer problema, retorna um erro interno                
         PrintException()
@@ -755,16 +774,29 @@ def alterar_convenio(request, cnpj):
     if request.method == 'GET':
         return render_to_response('main/convenio/alterar.html', parametros, context)
     elif request.method == 'POST':
-        novo_cnpj = request.POST['cnpj']   
+
         novo_razao_social = request.POST['razao_social']
 
-        convenio.cnpj = novo_cnpj
-        convenio.razao_social = novo_razao_social
-
-        convenio.save()
+        error = False
+        if novo_razao_social is None or novo_razao_social =='':
+            messages.error(request, 'Insira um nove valido para o convenio')
+            error = True
             
-        messages.info(request, 'Convenio alterado com sucesso')
+        if not error:
+            try:
+                with transaction.atomic():
+                    convenio.razao_social = novo_razao_social
+                    convenio.save()    
+                    messages.info(request, 'Convenio alterado com sucesso')
+            
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException() 
+
         return redirect('/convenios')
+
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 
 @login_required        
