@@ -44,6 +44,7 @@ class Medico(Usuario):
 
     def json(self):
         medico = {}
+        medico['id'] = self.id
         medico['nome'] = self.first_name
         medico['sobrenome'] = self.last_name
         medico['email'] = self.username
