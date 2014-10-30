@@ -12,7 +12,7 @@ from django.shortcuts import *
 from django.core import serializers
 from models import *
 from django.shortcuts import redirect
-import linecache
+import linecache, datetime
 import sys
 import json
 
@@ -746,8 +746,6 @@ def alterar_convenio(request, cnpj):
 
     context = RequestContext(request)
 
-    print cnpj
-
     convenio = Convenio.objects.get(cnpj=cnpj)
 
     parametros = {}
@@ -898,6 +896,15 @@ def registrar_horario(request):
             messages.error(request, 'Horario de termino é obrigatório.')
             erro = True
 
+        #Tenta converter os horarios
+        try:
+            hora_inicio = datetime.datetime.strptime(hora_inicio, '%H:%M').time()
+            hora_final = datetime.datetime.strptime(hora_final, '%H:%M').time()
+        except Exception, e:
+            PrintException()
+            messages.error(request, 'Horario de inicio e fim devem estar no formato hh:mm.')
+            erro = True
+
         if not erro:
             #Tenta salvar a especializacao no banco
             try:
@@ -920,7 +927,7 @@ def registrar_horario(request):
 
 @login_required        
 @user_passes_test(is_medico)
-def alterar_horario(request):
+def alterar_horario(request, id):
     '''
     Esta função é responsável por alterar um horario.
     
@@ -933,8 +940,81 @@ def alterar_horario(request):
         Realiza a alteracao de um horario.
 
     '''
-    # TODO !!!
-    return HttpResponse('Não Implementado',status=501)
+    medico = Medico.objects.get(id=request.user.id)
+
+    context = RequestContext(request)
+
+    horario = Horario.objects.get(id=id)
+
+    parametros = {}
+    parametros['horario'] = horario
+    parametros['hora_inicio'] = horario.hora_inicio.strftime("%H:%M")
+    parametros['hora_final'] = horario.hora_final.strftime("%H:%M")
+
+    if horario.medico != medico:
+        messages.error(request, 'Acesso negado.')
+        return redirect('/horarios')
+    
+    if request.method == 'GET':
+        #Retorna a página de cadastro de horario
+        return render_to_response('main/medico/alterar_horario.html', parametros , context)
+
+    elif request.method == 'POST':
+
+        #Obtem o parametro do POST
+        dia = request.POST['dia']
+        hora_inicio = request.POST['hora_inicio']
+        hora_final = request.POST['hora_final']
+
+        erro = False
+
+        if dia is None or dia == '':
+            # Define erro
+            messages.error(request, 'Dia é obrigatório.')
+            erro = True
+
+        if hora_inicio is None or hora_inicio == '':
+            # Define erro
+            messages.error(request, 'Horario de inicio é obrigatório.')
+            erro = True
+
+        if hora_final is None or hora_final == '':
+            # Define erro
+            messages.error(request, 'Horario de termino é obrigatório.')
+            erro = True
+
+        #Tenta converter os horarios
+        try:
+            hora_inicio = datetime.datetime.strptime(hora_inicio, '%H:%M').time()
+            hora_final = datetime.datetime.strptime(hora_final, '%H:%M').time()
+        except Exception, e:
+            PrintException()
+            messages.error(request, 'Horario de inicio e fim devem estar no formato hh:mm.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    horario.dia = dia
+                    horario.hora_inicio = hora_inicio
+                    horario.hora_final = hora_final
+                    horario.save()
+
+                messages.info(request, "Horario atualizado com sucesso!")
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                messages.error(request, 'Erro desconhecido ao atualizar o horario.')
+
+        parametros['horario'] = horario
+        parametros['hora_inicio'] = horario.hora_inicio.strftime("%H:%M")
+        parametros['hora_final'] = horario.hora_final.strftime("%H:%M")
+
+        return render_to_response('main/medico/alterar_horario.html',parametros, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 @login_required        
 @user_passes_test(is_medico)

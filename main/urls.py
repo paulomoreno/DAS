@@ -51,7 +51,8 @@ urlpatterns = patterns('',
         url(r'^horarios/novo$','main.views.registrar_horario',name='registrar_horario'),   
         #URL para cadastro de novos horarios
         url(r'^horarios/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_horario',name='remover_horario'),
-
+        #URL para cadastro de novos horarios
+        url(r'^horarios/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_horario',name='alterar_horario'),
 
   		#Todos as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
         url(r'^consultas$','main.views.consultas',name='consultas'),        

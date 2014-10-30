@@ -14,20 +14,20 @@
 
 {% block conteudo %}
 <h1>Cadastro de horario de atendimento:</h1>
-<form role="form" action="{% url 'registrar_horario' %}" method="post">
+<form role="form" action="{% url 'alterar_horario' horario.id %}" method="post">
   {% csrf_token %}
   <div class="row">
   	<div class="form-group">
 		<div class="col-md-2" >
 	    	<label for="firstNameInput">Dia</label>
         <select id="dia" class="form-control" name="dia">
-            <option value="1">Segunda-feira</option>
-            <option value="2">Terca-feira</option>
-            <option value="3">Quarta-feira</option>
-            <option value="4">Quinta-feira</option>
-            <option value="5">Sexta-feira</option>
-            <option value="6">Sabado</option>
-            <option value="7">Domingo</option>
+            <option value="1" {% if horario.dia == 1 %}selected="true"{% endif %}>Segunda-feira</option>
+            <option value="2" {% if horario.dia == 2 %}selected="true"{% endif %}>Terca-feira</option>
+            <option value="3" {% if horario.dia == 3 %}selected="true"{% endif %}>Quarta-feira</option>
+            <option value="4" {% if horario.dia == 4 %}selected="true"{% endif %}>Quinta-feira</option>
+            <option value="5" {% if horario.dia == 5 %}selected="true"{% endif %}>Sexta-feira</option>
+            <option value="6" {% if horario.dia == 6 %}selected="true"{% endif %}>Sabado</option>
+            <option value="7" {% if horario.dia == 7 %}selected="true"{% endif %}>Domingo</option>
         </select>
 	 	</div>
     </div>
@@ -37,7 +37,7 @@
     <div class="form-group">
 	  	<div class="col-md-2">
 	  		<label for="lastName">Horario Inicial</label>
-	  		<input type="text" class="form-control horario" id="lastNameInput" placeholder="hh:mm (formato 24 horas)" name="hora_inicio">	
+	  		<input type="text" class="form-control horario" id="lastNameInput" placeholder="hh:mm (formato 24 horas)" name="hora_inicio" value="{{ hora_inicio }}">	
 		</div>  	  		
   	</div>
   </div>
@@ -46,7 +46,7 @@
  	 <div class="form-group">
  		<div class ="col-md-2">
 		    <label for="emailInput">Horario Final</label>
-   		    <input type="text" class="form-control horario" id="lastNameInput" placeholder="hh:mm (formato 24 horas)" name="hora_final">		
+   		    <input type="text" class="form-control horario" id="lastNameInput" placeholder="hh:mm (formato 24 horas)" name="hora_final" value="{{ hora_final }}">		
  		</div>
  	 </div>
   </div>
