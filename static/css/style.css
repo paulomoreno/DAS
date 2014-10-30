@@ -3,6 +3,10 @@ body{
 	background-repeat: repeat;
 }
 
+.table, .tabela_cabecalho th{
+    text-align: center;
+}
+
 .conteudo{
 	height: auto;
 	width: 100%;
