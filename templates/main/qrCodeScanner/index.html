@@ -27,12 +27,7 @@ function criaMensagemErro(mensagem, tipo){
     $(msg_div).prependTo('.conteudo').hide().fadeIn('fast');
 }
 
-function removeMensagemErro(){
-    $('.msg_padding').slideUp(500, function() { $(this).remove(); });
-    $('.msg_bg_error').fadeOut(10, function() { $(this).remove(); });
-    $('.msg_bg_success').fadeOut(10, function() { $(this).remove(); });
-    $('.msg_bg_info').fadeOut(10, function() { $(this).remove(); });
-}
+
 
 	        //Variable used to save intervalID in order to stop scanning
 	        //when a QrCode has been scanned
@@ -66,7 +61,7 @@ function removeMensagemErro(){
     					{'qrCode' : content},
     					function(data, textStatus, xhr){
     						criaMensagemErro("Usuario: "+data.response, "success");
-    						sleep(3000,function(){removeMensagemErro()});
+    						sleep(5000,function(){removeMensagemErro()});
 					} 
     			); 
 

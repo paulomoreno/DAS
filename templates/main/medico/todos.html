@@ -19,8 +19,6 @@
                 <th> Email</th>
                 <th> CRM</th>
                 <th> Duracao da Consulta</th>
-                <th> Horario de Inicio do expediente</th>
-                <th> Horario de saida</th>
                 <th style="text-align:center"> Editar</th>
                 <th style="text-align:center"> Excluir</th>
             </tr>
@@ -33,8 +31,6 @@
                 <td>{{ m.username }}</td>
                 <td>{{ m.crm }}</td>
                 <td>{{ m.duracao_consulta }}</td>
-                <td></td>
-                <td></td>
                 <td> <a href="{% url 'alterar_medico' m.id %}" class="btn btn-success">Editar</a> </td>
                 <td>
                     <form role="form" action="/medicos/{{ m.crm }}/remover" method="post">

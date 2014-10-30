@@ -18,14 +18,19 @@
                    { callback(); }, millis);
         }
 
-
-$( document ).ready(function() {
-$('body').click(function(){
+function removeMensagemErro(){
     $('.msg_padding').slideUp(500, function() { $(this).remove(); });
     $('.msg_bg_error').fadeOut(10, function() { $(this).remove(); });
     $('.msg_bg_success').fadeOut(10, function() { $(this).remove(); });
     $('.msg_bg_info').fadeOut(10, function() { $(this).remove(); });
+}
+
+$( document ).ready(function() {
+$('body').click(function(){
+    removeMensagemErro();
 });
+
+sleep(5000,function(){removeMensagemErro()});
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
