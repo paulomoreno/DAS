@@ -9,6 +9,31 @@
 <script language="JavaScript" src="{% static "js/jquery.cookie.js"%}"></script>
 <script>
 
+function criaMensagemErro(mensagem, tipo){
+
+    var msg_div = document.createElement('div');
+    var msg_div_h3 = document.createElement('h3');
+    var msg_div_pad = document.createElement('div');
+
+    var id = escape(mensagem);
+
+    msg_div.className = 'msg_bg_' + tipo;
+    msg_div_pad.className = 'msg_padding';
+
+    msg_div_h3.innerHTML = mensagem;
+    msg_div.appendChild(msg_div_h3);
+
+    $(msg_div_pad).prependTo('.conteudo').hide().fadeIn('fast');
+    $(msg_div).prependTo('.conteudo').hide().fadeIn('fast');
+}
+
+function removeMensagemErro(){
+    $('.msg_padding').slideUp(500, function() { $(this).remove(); });
+    $('.msg_bg_error').fadeOut(10, function() { $(this).remove(); });
+    $('.msg_bg_success').fadeOut(10, function() { $(this).remove(); });
+    $('.msg_bg_info').fadeOut(10, function() { $(this).remove(); });
+}
+
 	        //Variable used to save intervalID in order to stop scanning
 	        //when a QrCode has been scanned
 	        var intervalID = 0;
@@ -40,13 +65,9 @@
                 $.post( "/qrCodeScanner/scancode",
     					{'qrCode' : content},
     					function(data, textStatus, xhr){
-						    var div = document.createElement("DIV");
-						 	div.className = 'msg_bg_success';
-						    var text = document.createTextNode("Usuario: "+data.response);
-						    div.appendChild(text);
-						    document.body.appendChild(div);
-
-					}
+    						criaMensagemErro("Usuario: "+data.response, "success");
+    						sleep(3000,function(){removeMensagemErro()});
+					} 
     			); 
 
 					//Start Scanning after 1000ms
@@ -59,7 +80,9 @@
 			$("#webcam").scriptcam({
 						onError:onError,
 						cornerRadius:0,
-						onWebcamReady:onWebcamReady 
+						onWebcamReady:onWebcamReady,
+						width:480,
+						height:360 
 			});
 			csrftoken = $.cookie('csrftoken');
 
@@ -101,15 +124,19 @@
 
 		{% block conteudo %}
 
-			<div style="width:500px;float:left;">
-				<div id="webcam"> 
+			<div class="row">
+				<h2 class="text-center"> Posicione seu QRCode centralizado na webcam</h2>
+				<p></p>
+			<div style=" width: 480px; margin:auto;">
+				<div id="webcam" style="margin:auto;"> 
 
 				</div>
-				<div style="margin:5px;">
+				<div style="margin:5px; style:margin:auto;">
 					<img src="{% static "media/webcamlogo.png"%}" style="vertical-align:text-top"/>
 					<select id="cameraNames" size="1" onChange="changeCamera()" style="width:245px;font-size:10px;height:25px;">
 					</select>
 				</div>
+			</div>
 			</div>
 
 		{%  endblock %}
