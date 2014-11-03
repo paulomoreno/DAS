@@ -1,12 +1,19 @@
-{% extends "layout.html" %}
+{% extends "layout_base.html" %}
 {% load static %}
 
-{% block css %}{% endblock %}
+{% block css %}<link rel="stylesheet" href="{% static "css/index.css"%}"/>{% endblock %}
 
 {% block title %}Bem Vindo!{% endblock %}
 
-{% block conteudo %}
-<h1>Bem vindo ao DAS!</h1>
-<h2>O novo sistema revolucionário de consultas.</h2>
+{% block conteudo_base %}
+
+	<div class="d_azul">
+		<h1>BEM VINDO AO DAS!</h1> <br>
+		<h2>Agende consultas médicas de qualquer lugar!</h2>
+	</div>
+
+	<div class="d_branco">
+	</div>
+
 
 {%  endblock %}

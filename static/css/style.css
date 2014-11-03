@@ -1,6 +1,11 @@
 body{
-	background-image: url('/static/media/fabric_plaid.png');
+	background-image: url('/static/media/bkg-ptn.png');
 	background-repeat: repeat;
+}
+
+*{
+	font-family: 'Lato', sans-serif;
+	font-weight: 300;
 }
 
 .table, .tabela_cabecalho th{
@@ -27,7 +32,7 @@ body{
 .conteudo_in_in{
 	padding: 2%;
 	height: auto;
-	background-color: rgba(255,255,255,0.8);
+	background-color: white;
 }
 
 .msg_bg_error a, .msg_bg_success a, .msg_bg_info a, .msg_bg_40 a, .msg_bg_25 a, .msg_bg_20 a{
