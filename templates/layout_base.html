@@ -99,8 +99,6 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     {% else %}
         
           {% if user.is_staff %}
-              <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
-
               <li><a href="{% url 'secretarias' %}"><span class="glyphicon glyphicon-user"></span> Secretárias</a></li>
               <li><a href="{% url 'medicos' %}"><span class="glyphicon glyphicon-user"></span> Medicos</a></li>
               <li><a href="{% url 'especializacoes' %}"><span class="glyphicon glyphicon-tags"></span> Especializações</a></li>
@@ -111,8 +109,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
           {% if user.is_secretaria %}
               <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
               <li><a href="{% url 'convenios' %}"><span class="glyphicon glyphicon-th"></span> Convênios</a></li>
-              <li><a href="{% url 'horarios' %}"><span class="glyphicon glyphicon-time"></span> Horaários</a></li>
-              <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.first_name }} {{ user.last_name }}</a></li>
+              <li><a href="{% url 'alterar_secretaria' user.id %}"><span class="glyphicon glyphicon-user"></span> {{ user.first_name }} {{ user.last_name }}</a></li>
           {% endif %}
 
           {% if user.is_medico %}
