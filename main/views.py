@@ -433,6 +433,9 @@ def registrar_medico(request):
                     medico.save()
 
                 messages.info(request, "Cadastro realizado com sucesso!")
+                #Se o admin esta logado, retorna para a pagina de todos medicos
+                if request.user.is_admin:
+                    return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -532,6 +535,9 @@ def alterar_medico(request, id):
                     medico.save()
 
                 messages.info(request, "Atualização realizado com sucesso!")
+                #Se o admin esta logado, retorna para a pagina de todos medicos
+                if request.user.is_admin:
+                    return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -614,7 +620,10 @@ def registrar_especializacao(request):
     elif request.method == 'POST':
 
         #Obtem o parametro do POST
-        espec_nome = request.POST['especializacao']
+        try:
+            espec_nome = request.POST['especializacao']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         erro = False
 
@@ -632,6 +641,7 @@ def registrar_especializacao(request):
                     espec.save()
 
                 messages.info(request, "Cadastro de especialização realizado com sucesso!")
+                return redirect('/especializacoes')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -667,13 +677,37 @@ def alterar_especializacao(request, id):
     if request.method == 'GET':
         return render_to_response('main/especializacao/alterar.html', parametros, context)
     elif request.method == 'POST':
-        novo_nome = request.POST['nome']
+        #obtem dados do POST
+        try:
+            novo_nome = request.POST['nome']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
-        especializacao.nome = novo_nome
-        especializacao.save()
 
-        messages.info(request, 'Especializacao alterada com sucesso')
-        return redirect('/especializacoes')
+        if novo_nome is None or novo_nome == '':
+            # Define erro
+            messages.error(request, 'Nome da especialização inválido.')
+            erro = True
+
+        if not erro:
+            #Tenta salvar a especializacao no banco
+            try:
+                #A operacao deve ser atomica
+                with transaction.atomic():
+                    especializacao.nome = novo_nome
+                    especializacao.save()
+
+                messages.info(request, 'Especializacao alterada com sucesso')
+                return redirect('/especializacoes')
+            except Exception, e:
+                #Para qualquer problema, retorna um erro interno                
+                PrintException()
+                if 'unique' in e.message:
+                    messages.error(request, 'Especialização já existente.')
+                else:
+                    messages.error(request, 'Erro desconhecido ao salvar a especialização.')
+
+        return render_to_response('main/especializacao/alterar.html', parametros, context)
 
 @login_required
 @user_passes_test(is_admin)
@@ -756,8 +790,11 @@ def registrar_convenio(request):
     elif request.method == 'POST':
 
         #Obtem o parametro do POST
-        cnpj = request.POST['cnpj']
-        razao_social = request.POST['razao_social']
+        try:
+            cnpj = request.POST['cnpj']
+            razao_social = request.POST['razao_social']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         erro = False
 
@@ -780,6 +817,7 @@ def registrar_convenio(request):
                     convenio.save()
 
                 messages.info(request, "Cadastro do convênio realizado com sucesso!")
+                return redirect('/convenios')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -813,7 +851,11 @@ def alterar_convenio(request, cnpj):
         return render_to_response('main/convenio/alterar.html', parametros, context)
     elif request.method == 'POST':
 
-        novo_razao_social = request.POST['razao_social']
+        #Obtem o parametro do POST
+        try:
+            novo_razao_social = request.POST['razao_social'] 
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         error = False
         if novo_razao_social is None or novo_razao_social =='':
@@ -824,14 +866,16 @@ def alterar_convenio(request, cnpj):
             try:
                 with transaction.atomic():
                     convenio.razao_social = novo_razao_social
-                    convenio.save()    
-                    messages.info(request, 'Convenio alterado com sucesso')
+                    convenio.save()  
+
+                messages.info(request, 'Convenio alterado com sucesso')
+                return redirect('/convenios')
             
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException() 
-
-        return redirect('/convenios')
+        
+        return render_to_response('main/convenio/alterar.html', parametros, context)
 
     else:
         return HttpResponse('Método Não Permitido',status=405)
@@ -845,34 +889,29 @@ def remover_convenio(request, cnpj):
     Esta funcao aceita apenas pedidos POST
 
     '''
-    try:
-        context = RequestContext(request)
+    context = RequestContext(request)
 
-        print cnpj
+    if request.method == 'POST':
 
-        if request.method == 'POST':
+        error = False
+        if cnpj is None or cnpj =='':
+            messages.error(request, 'CNPJ Invalido!')
+            error = True
 
-            error = False
-            if cnpj is None or cnpj =='':
+        if not error:
+            try:
+                with transaction.atomic():
+                    Convenio.objects.filter(cnpj=cnpj).delete()
+
+                messages.info(request, 'Convenio removido com sucesso')
+            except Exception, e:
+                PrintException()
                 messages.error(request, 'Erro ao remover convenio')
-                error = True
 
-            if not error:
-                try:
-                    with transaction.atomic():
-                        Convenio.objects.filter(cnpj=cnpj).delete()
-                        messages.info(request, 'Convenio removido com sucesso')
+        return redirect('/convenios')
 
-                except Exception, e:
-                    PrintException()
-
-            return redirect('/convenios')
-
-    except Exception, e:
-        #Para qualquer problema, retorna um erro interno                
-        PrintException()
-
-    return HttpResponse('Método Não Permitido',status=405)
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
 
 # ----------------------------------------------------------------------------------- #
 #                                 Horarios
