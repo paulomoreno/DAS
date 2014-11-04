@@ -58,7 +58,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 <body>
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
+  <div class="container container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">    
@@ -101,10 +101,18 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
           {% if user.is_staff %}
               <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
 
+              <li><a href="{% url 'secretarias' %}"><span class="glyphicon glyphicon-user"></span> Secretárias</a></li>
               <li><a href="{% url 'medicos' %}"><span class="glyphicon glyphicon-user"></span> Medicos</a></li>
               <li><a href="{% url 'especializacoes' %}"><span class="glyphicon glyphicon-tags"></span> Especializações</a></li>
               <li><a href="{% url 'convenios' %}"><span class="glyphicon glyphicon-th"></span> Convênios</a></li>
               <li><a href="{% url 'admin:index' %}"><span class="glyphicon glyphicon-flash"></span> Admin</a></li>
+          {% endif %}
+
+          {% if user.is_secretaria %}
+              <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
+              <li><a href="{% url 'convenios' %}"><span class="glyphicon glyphicon-th"></span> Convênios</a></li>
+              <li><a href="{% url 'horarios' %}"><span class="glyphicon glyphicon-time"></span> Horaários</a></li>
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{ user.first_name }} {{ user.last_name }}</a></li>
           {% endif %}
 
           {% if user.is_medico %}

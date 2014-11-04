@@ -3,6 +3,7 @@ from main.models import *
 
 # Register your models here.
 admin.site.register(Usuario)
+admin.site.register(Secretaria)
 admin.site.register(Cliente)
 admin.site.register(Medico)
 admin.site.register(Especializacao)

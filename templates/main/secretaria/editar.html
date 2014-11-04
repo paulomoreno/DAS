@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block conteudo %}
+<h1>Edição de Perfil</h1>
+<form role="form" action="{% url 'alterar_secretaria' id %}" method="post">
+  {% csrf_token %}
+  <div class="row">
+  	<div class="form-group">
+		<div class="col-md-2" >
+	    	<label for="firstNameInput">Primeiro Nome</label>
+	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome" value="{{ nome }}">
+	 	</div>
+	  	<div class="col-md-2">
+	  		<label for="lastName"> Sobrenome</label>
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">	
+		</div>  	  		
+  	</div>
+  </div>
+
+  <div class="row">
+ 	 <div class="form-group">
+ 		<div class ="col-md-4">
+		    <label for="emailInput">E-mail</label>
+   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}"> 		
+ 		</div>
+ 	 </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Endereço</label>
+        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Telefone</label>
+        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">RG</label>
+        <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">CPF</label>
+        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <div class="col-xs-2">
+        <button type="submit" class="btn btn-success">Salvar</button>
+      </div>
+    </div>  
+  </div>
+</form>
+{%  endblock %}

@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Nova secretaria{% endblock %}
+
+{% block conteudo %}
+<h1>Cadastro de nova Secretaria:</h1>
+<form role="form" action="{% url 'registrar_secretaria' %}" method="post">
+  {% csrf_token %}
+  <div class="row">
+  	<div class="form-group">
+		<div class="col-md-2" >
+	    	<label for="firstNameInput">Primeiro Nome</label>
+	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome" value="{{ nome }}">
+	 	</div>
+	  	<div class="col-md-2">
+	  		<label for="lastName"> Sobrenome</label>
+	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">	
+		</div>  	  		
+  	</div>
+  </div>
+
+  <div class="row">
+ 	 <div class="form-group">
+ 		<div class ="col-md-4">
+		    <label for="emailInput">E-mail</label>
+   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}"> 		
+ 		</div>
+ 	 </div>
+  </div>
+
+  <div class="row">
+  	<div class="form-group">
+ 		<div class ="col-md-4">
+   		 	<label for="userPassword">Senha</label>
+   		 	<input type="password" class="form-control"id="passwordInput" placeholder="Senha" name="senha">
+   			 <p class="help-block">Sua senha deve ter no minimo 6 caracteres</p> 		
+ 		</div>
+  	</div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Confirmar Senha</label>
+        <input type="password" class="form-control"id="passwordInput" placeholder="Confirmar Senha" name="confirmar_senha">
+    </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Endereço</label>
+        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">Telefone</label>
+        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">RG</label>
+        <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
+    </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group">
+    <div class ="col-md-4">
+        <label for="userPassword">CPF</label>
+        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" value="{{ cpf }}">
+    </div>
+    </div>
+  </div>
+
+  &nbsp;
+  <div class="form-group">
+      <div class="row">
+        <div class="col-xs-2">
+          <button type="submit" class="btn btn-success"  >Cadastrar!</button>
+        </div>  
+      </div>  	
+  </div>
+</form>
+{%  endblock %}

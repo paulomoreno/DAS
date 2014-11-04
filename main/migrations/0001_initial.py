@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
                 ('is_admin', models.BooleanField(default=False)),
                 ('is_medico', models.BooleanField(default=False)),
                 ('is_cliente', models.BooleanField(default=False)),
+                ('is_secretaria', models.BooleanField(default=False)),
                 ('rg', models.CharField(max_length=15)),
                 ('cpf', models.CharField(max_length=15)),
                 ('telefone', models.CharField(max_length=20)),
@@ -109,6 +110,17 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Medico',
                 'verbose_name_plural': 'Medicos',
+            },
+            bases=('main.usuario',),
+        ),
+        migrations.CreateModel(
+            name='Secretaria',
+            fields=[
+                ('usuario_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Secretaria',
+                'verbose_name_plural': 'Secretarias',
             },
             bases=('main.usuario',),
         ),

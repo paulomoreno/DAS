@@ -13,6 +13,7 @@ class Usuario(AbstractUser):
     is_admin = models.BooleanField(default=False)
     is_medico = models.BooleanField(default=False)
     is_cliente = models.BooleanField(default=False)
+    is_secretaria = models.BooleanField(default=False)
 
     #Informacoes comuns
     rg = models.CharField(max_length=15)
@@ -35,6 +36,13 @@ class Cliente(Usuario):
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
+
+class Secretaria(Usuario):
+    #usuario = models.OneToOneField(Usuario, null=True)
+    
+    class Meta:
+        verbose_name = "Secretaria"
+        verbose_name_plural = "Secretarias"
 
 class Medico(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
