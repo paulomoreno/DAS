@@ -964,9 +964,12 @@ def registrar_horario(request):
     elif request.method == 'POST':
 
         #Obtem o parametro do POST
-        dia = request.POST['dia']
-        hora_inicio = request.POST['hora_inicio']
-        hora_final = request.POST['hora_final']
+        try:
+            dia = request.POST['dia']
+            hora_inicio = request.POST['hora_inicio']
+            hora_final = request.POST['hora_final']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         erro = False
 
@@ -1003,6 +1006,7 @@ def registrar_horario(request):
                     horario.save()
 
                 messages.info(request, "Cadastro de horario realizado com sucesso!")
+                return redirect('/horarios')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -1051,9 +1055,12 @@ def alterar_horario(request, id):
     elif request.method == 'POST':
 
         #Obtem o parametro do POST
-        dia = request.POST['dia']
-        hora_inicio = request.POST['hora_inicio']
-        hora_final = request.POST['hora_final']
+        try:
+            dia = request.POST['dia']
+            hora_inicio = request.POST['hora_inicio']
+            hora_final = request.POST['hora_final']
+        except:
+            return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         erro = False
 
@@ -1092,6 +1099,7 @@ def alterar_horario(request, id):
                     horario.save()
 
                 messages.info(request, "Horario atualizado com sucesso!")
+                return redirect('/horarios')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
