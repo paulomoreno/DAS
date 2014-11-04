@@ -434,7 +434,7 @@ def registrar_medico(request):
 
                 messages.info(request, "Cadastro realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
-                if request.user.is_admin:
+                if request.user.is_staff:
                     return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -1287,6 +1287,8 @@ def registrar_secretaria(request):
                     secretaria.save()
 
                 messages.info(request, "Cadastro realizado com sucesso!")
+                if request.user.is_staff:
+                    return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -1333,7 +1335,6 @@ def alterar_secretaria(request, id):
             telefone = request.POST['telefone']
             endereco = request.POST['endereco']
             rg = request.POST['rg']
-            duracao_consulta = request.POST['duracao_consulta']
         except:
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
@@ -1352,10 +1353,6 @@ def alterar_secretaria(request, id):
 
         if rg is None or rg =='':
             messages.error(request, "RG é obrigatório!")
-            erro = True
-
-        if duracao_consulta is None or duracao_consulta == '':
-            messages.error(request, "Duração da Consulta é obrigatório!")
             erro = True
 
         if not erro:
@@ -1381,6 +1378,8 @@ def alterar_secretaria(request, id):
                     secretaria.save()
 
                 messages.info(request, "Atualização realizado com sucesso!")
+                if request.user.is_staff:
+                    return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
@@ -1403,7 +1402,7 @@ def remover_secretaria(request, id):
             Secretaria.objects.filter(id=id).delete()
             #Retorna a página de todas as secretarias
             messages.info(request, 'Secretaria removida com sucesso')
-            return redirect('/secretaria')
+            return redirect('/secretarias')
 
     except Exception, e:
         #Para qualquer problema, retorna um erro interno                
