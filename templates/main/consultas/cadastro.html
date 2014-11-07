@@ -3,16 +3,25 @@
 
 {% block javascript %}
 <script language="JavaScript" src="{% static "js/jquery.cookie.js"%}"></script>
+<script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js" ></script>
+<link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css"/>
 	<script>
 		var csrftoken = "token";
 
+
+
 		$(document).ready(function(){
-				$('#especializacao').on('change', function() {
+
+				//Listar médicos de uma dada especialisação
+				$('#select_especializacao').on('change', function() {
 					//Limpar lista de médicos
 					var select_medico = document.getElementById("select_medico");
 					while (select_medico.firstChild) {
 					    select_medico.removeChild(select_medico.firstChild);
 					}
+
+					//Travar botão próximo
+					$('#btn_next').prop('disabled', true);
 
 					//Carregar médicos
 					if(this.value != "Selecione"){
@@ -41,8 +50,15 @@
 
 				});
 			
-			
+				
+				//Habilitar bõtão próximo caso um médico seja selecionado
+				$('#select_medico').on('change',function(){
+					if(this.value !="Selecione"){
+						$('#btn_next').prop('disabled', false);
+					}
+				});
 
+				//Recuperar cookie para evitar CSRF
 				csrftoken = $.cookie('csrftoken');
 
 				function csrfSafeMethod(method) {
@@ -57,6 +73,7 @@
 			            }
 			        }
 			    });
+
 			}
 		);
 	</script>
@@ -69,13 +86,14 @@
 
 {% block conteudo %}
 <h1>Marcar consulta</h1>
-<form role="form" action="{% url 'registrar_consulta' %}" method="post">
+<form role="form" action="{% url 'registrar_consulta_horario' %}" method="post">
+	{% csrf_token %}
 	<div class="row">
 		<div class="form-group">
 			<div class="col-md-4">
-				<label for="lespec">Selecione uma especialização</label>
+				<label for="lespec">Especialização</label>
 				
-					<select class="form-control" name="especializacao" id="especializacao">
+					<select class="form-control" name="select_especializacao" id="select_especializacao">
 							<option>Selecione</option>
 						{% for esp in especializacoes %}
 							<option name="espec_item" id="espec_item" value="{{ esp.id }}"> {{ esp.nome }} </option>
@@ -85,15 +103,65 @@
 			</div>
 		</div>
 	</div>
-	&nbsp;
+	
 	<div class="row">
 		<div class="form-group">
 			<div class = "col-md-4">
-				<label for="lespec">Selecione um médico</label>
+				<label for="lmedico">Médico</label>
 				<select class="form-control" name="select_medico" id="select_medico"></select>
 			</div>
 		</div>
 	</div>
+	
+	<div class = "row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="ldata">Data desejada</label>
+				
+				<div class="input-group date">
+	           		 <input type="text" class="form-control" id = "data_consulta" disabled><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+	        	</div>
+
+				<script>
+
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1;
+					var yyyy = today.getFullYear();
+
+					if(dd<10) {
+					    dd='0'+dd
+					} 
+
+					if(mm<10) {
+					    mm='0'+mm
+					} 
+
+					today = dd+'-'+mm+'-'+yyyy;
+	
+				    $('.input-group.date').datepicker({
+				        format: "dd/mm/yyyy",
+				        startDate: today,
+				        endDate: "31-12-2016",
+				        todayBtn: "linked",
+				        autoclose: true,
+				        todayHighlight: true
+				    });
+				</script>
+	
+			</div>
+		</div>
+	</div>
+	&nbsp;
+	<div class = "row">
+		<div class="col-md-2">
+			<div class="form-group">
+				<button class="btn btn-default" type="submit" id="btn_next" disabled>Próximo</button>
+			</div>
+		</div>
+	</div>
 </form>
+
+
 
 {%  endblock %}

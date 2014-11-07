@@ -76,14 +76,21 @@ urlpatterns = patterns('',
         # ------------------------------------------------------------ #
         #                   Consultas
         # ------------------------------------------------------------ #
-  		#Todos as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
+  		#Todas as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
         url(r'^consultas$','main.views.consultas',name='consultas'),        
-		#URL para cadastro de novas consultas
+		
+        #URL para cadastro de novas consultas
         url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
-        #URL para lista médicos de uma dada especialização
+        
+        #URL para listar médicos de uma dada especialização
         url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
 
+        #URL para agendar horario de uma consulta
+        url(r'^consultas/registrar_consulta_horario$','main.views.registrar_consulta_horario',name='registrar_consulta_horario'),
 
+        # ------------------------------------------------------------ #
+        #                   QrCode Scanner
+        # ------------------------------------------------------------ #
      	#URL para leitura de QRCode
 		url(r'^qrCodeScanner$','main.views.qrCodeScan',name='qrCodeScan'),
 
@@ -107,5 +114,9 @@ urlpatterns = patterns('',
         #Retorna as informações de um salão especifico
         #url(r'^api/saloes/(?P<nome_salao>[a-zA-Z0-9\-]+)$','main.views.api_salao',name='api_salao'),
 
-        url(r'^convenios$','main.views.convenios',name='convenios'),        
+        url(r'^convenios$','main.views.convenios',name='convenios'),       
+
+        #Caso o usuario digite qualquer coisa não prevista acima, retornar erro
+        #para evitar que ele veja este arquivo na mensagem de erro
+        url(r'.','main.views.avoid_eavesdropping',name='eavesdropping'), 
 )

@@ -1453,6 +1453,30 @@ def registrar_consulta(request):
         return render_to_response('main/consultas/cadastro.html',{'especializacoes':especializacoes}, context)
 
 @login_required
+@user_passes_test(is_cliente)
+def registrar_consulta_horario(request):
+    '''
+        Função responsável por disponibilizar os horários do médico escolhido pelo paciente
+        para um determinado dia
+
+        Esta função aceita apenas pedidos POST
+
+    '''
+    context = RequestContext(request)
+    parametros = {}
+
+    if(request.method=='POST'):
+        parametros['especializacao'] = Especializacao.objects.get(id=request.POST['select_especializacao']).json()
+        parametros['medico']         = Medico.objects.get(id=request.POST['select_medico']).json()
+        parametros['data_consulta']  = request.POST.get('data_consulta','01/01/2016')
+
+        return render_to_response('main/consultas/cadastro_horario.html',parametros,context)
+    elif(request.method=='GET'):
+        return HttpResponse('Método Não Permitido',status=405)
+
+
+
+@login_required
 @user_passes_test(is_admin)
 def qrCodeScan(request):
     '''
@@ -1495,3 +1519,6 @@ def listar_medico_espec(request):
         return HttpResponse(json.dumps({'response': medicos}), content_type="application/json")
     else:        
         return api_monta_json({'response':'Método não permitido'})
+
+def avoid_eavesdropping(request):
+    return HttpResponse('URL inválida',status=400);

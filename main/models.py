@@ -24,6 +24,9 @@ class Usuario(AbstractUser):
 
     def __unicode__(self):
         return self.username + ' - ' + self.email
+    
+    def get_full_name(self):
+        return self.first_name+" "+self.last_name
 
     class Meta:
         verbose_name = "Usuario"
@@ -74,6 +77,7 @@ class Especializacao(models.Model):
 
     def json(self):
         e = {}
+        e['id'] = self.id
         e['nome'] = self.nome
         return e
 
