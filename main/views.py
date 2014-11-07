@@ -1468,7 +1468,7 @@ def registrar_consulta_horario(request):
     if(request.method=='POST'):
         parametros['especializacao'] = Especializacao.objects.get(id=request.POST['select_especializacao']).json()
         parametros['medico']         = Medico.objects.get(id=request.POST['select_medico']).json()
-        parametros['data_consulta']  = request.POST.get('data_consulta','01/01/2016')
+        parametros['data_consulta']  = request.POST.get('data_consulta')
 
         return render_to_response('main/consultas/cadastro_horario.html',parametros,context)
     elif(request.method=='GET'):
