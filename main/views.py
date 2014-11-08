@@ -1511,7 +1511,7 @@ def registrar_consulta_horario(request):
 
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def qrCodeScan(request):
     '''
     qrCode scanner
@@ -1520,7 +1520,7 @@ def qrCodeScan(request):
     return render_to_response('main/qrCodeScanner/index.html', context)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def searchCode(request):
     context = RequestContext(request)
 
