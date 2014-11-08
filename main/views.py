@@ -702,6 +702,7 @@ def alterar_especializacao(request, id):
         except:
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
+        erro = False
 
         if novo_nome is None or novo_nome == '':
             # Define erro
@@ -877,6 +878,7 @@ def alterar_convenio(request, cnpj):
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         error = False
+        
         if novo_razao_social is None or novo_razao_social =='':
             messages.error(request, 'Insira um nove valido para o convenio')
             error = True
