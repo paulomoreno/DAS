@@ -459,19 +459,8 @@ def alterar_medico(request, id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     medico = Medico.objects.get(id=id)
+    parametros = get_medico_parametros(medico)
 
-    parametros = {}
-
-    parametros['nome'] = medico.first_name
-    parametros['sobrenome'] = medico.last_name
-    parametros['email'] = medico.username
-    parametros['telefone'] = medico.telefone
-    parametros['cpf'] = medico.cpf
-    parametros['crm'] = medico.crm
-    parametros['rg'] = medico.rg
-    parametros['duracao_consulta'] = medico.duracao_consulta       
-    parametros['especializacao'] = medico.especializacao.nome
-    parametros['id'] = medico.id
     
     # Pegando seu pedido
     context = RequestContext(request)
@@ -534,6 +523,7 @@ def alterar_medico(request, id):
                     #Da um commit no bd
                     medico.save()
 
+                parametros = get_medico_parametros(medico)
                 messages.info(request, "Atualização realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
                 if request.user.is_admin:
@@ -547,6 +537,26 @@ def alterar_medico(request, id):
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
         return render_to_response('main/medico/editar.html', parametros, context)
+
+def get_medico_parametros(medico):
+    '''
+    Obtem os parametros de um medico, e retorna um dicionario
+    '''
+    parametros = {}
+
+    parametros['nome'] = medico.first_name
+    parametros['sobrenome'] = medico.last_name
+    parametros['email'] = medico.username
+    parametros['telefone'] = medico.telefone
+    parametros['endereco'] = medico.endereco
+    parametros['cpf'] = medico.cpf
+    parametros['crm'] = medico.crm
+    parametros['rg'] = medico.rg
+    parametros['duracao_consulta'] = medico.duracao_consulta       
+    parametros['especializacao'] = medico.especializacao.nome
+    parametros['id'] = medico.id
+
+    return parametros
 
 @login_required
 @user_passes_test(is_admin)
