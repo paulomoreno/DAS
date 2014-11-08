@@ -192,20 +192,11 @@ def alterar_cliente(request, id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     cliente = Cliente.objects.get(id=id)
-
-    parametros = {}
-
-    parametros['nome'] = cliente.first_name
-    parametros['sobrenome'] = cliente.last_name
-    parametros['email'] = cliente.username
-    parametros['telefone'] = cliente.telefone
-    parametros['endereco'] = cliente.endereco
-    parametros['rg'] = cliente.rg
-    parametros['cpf'] = cliente.cpf
     
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_cliente_parametros(cliente)
         return render_to_response('main/cliente/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -268,7 +259,26 @@ def alterar_cliente(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar o cliente.')
 
+        parametros = get_cliente_parametros(cliente)
         return render_to_response('main/cliente/editar.html', parametros, context)
+
+
+def get_cliente_parametros(cliente):
+    '''
+    Obtem os parametros de um cliente dado e retorna um dicionario
+    '''
+
+    parametros = {}
+
+    parametros['nome'] = cliente.first_name
+    parametros['sobrenome'] = cliente.last_name
+    parametros['email'] = cliente.username
+    parametros['telefone'] = cliente.telefone
+    parametros['endereco'] = cliente.endereco
+    parametros['rg'] = cliente.rg
+    parametros['cpf'] = cliente.cpf
+
+    return parametros
 
 # ----------------------------------------------------------------------------------- #
 #                                 Medicos
@@ -459,12 +469,11 @@ def alterar_medico(request, id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     medico = Medico.objects.get(id=id)
-    parametros = get_medico_parametros(medico)
-
     
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_medico_parametros(medico)
         return render_to_response('main/medico/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -523,7 +532,6 @@ def alterar_medico(request, id):
                     #Da um commit no bd
                     medico.save()
 
-                parametros = get_medico_parametros(medico)
                 messages.info(request, "Atualização realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
                 if request.user.is_admin:
@@ -536,6 +544,7 @@ def alterar_medico(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
+        parametros = get_medico_parametros(medico)
         return render_to_response('main/medico/editar.html', parametros, context)
 
 def get_medico_parametros(medico):
@@ -1322,19 +1331,10 @@ def alterar_secretaria(request, id):
 
     secretaria = Secretaria.objects.get(id=id)
 
-    parametros = {}
-
-    parametros['nome'] = secretaria.first_name
-    parametros['sobrenome'] = secretaria.last_name
-    parametros['email'] = secretaria.username
-    parametros['telefone'] = secretaria.telefone
-    parametros['cpf'] = secretaria.cpf
-    parametros['rg'] = secretaria.rg
-    parametros['id'] = secretaria.id
-    
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_secretaria_parametros(secretaria)
         return render_to_response('main/secretaria/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -1398,7 +1398,24 @@ def alterar_secretaria(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar a secretaria.')
 
+        parametros = get_secretaria_parametros(secretaria)
         return render_to_response('main/secretaria/editar.html', parametros, context)
+
+def get_secretaria_parametros(secretaria):
+    '''
+    Obtem os parametros de uma dada secretaria e retorna um dicionario
+    '''
+    parametros = {}
+
+    parametros['nome'] = secretaria.first_name
+    parametros['sobrenome'] = secretaria.last_name
+    parametros['email'] = secretaria.username
+    parametros['telefone'] = secretaria.telefone
+    parametros['cpf'] = secretaria.cpf
+    parametros['rg'] = secretaria.rg
+    parametros['id'] = secretaria.id
+
+    return parametros
 
 @login_required
 @user_passes_test(is_admin)
