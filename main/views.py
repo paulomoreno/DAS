@@ -277,6 +277,7 @@ def get_cliente_parametros(cliente):
     parametros['endereco'] = cliente.endereco
     parametros['rg'] = cliente.rg
     parametros['cpf'] = cliente.cpf
+    parametros['id'] = cliente.id
 
     return parametros
 
@@ -878,7 +879,7 @@ def alterar_convenio(request, cnpj):
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         error = False
-        
+
         if novo_razao_social is None or novo_razao_social =='':
             messages.error(request, 'Insira um nove valido para o convenio')
             error = True
