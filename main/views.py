@@ -34,6 +34,9 @@ def is_admin_or_medico(user):
 def is_admin_or_cliente(user):
     return (user.is_cliente or user.is_admin or user.is_staff)
 
+def is_admin_or_secretaria(user):
+    return (user.is_secretaria or user.is_admin or user.is_staff)
+
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
 
@@ -767,7 +770,7 @@ def remover_especializacao(request, id):
 # ----------------------------------------------------------------------------------- #
 
 @login_required        
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def convenios(request):
     '''
     Esta função é responsável mostrar todos os convenios.
@@ -787,7 +790,7 @@ def convenios(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required        
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def registrar_convenio(request):
     '''
     Esta função é responsável por registrar uma nova especialização.
@@ -852,7 +855,7 @@ def registrar_convenio(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def alterar_convenio(request, cnpj):
     '''
     Esta funcao e responsavel por editar um convenio
@@ -903,7 +906,7 @@ def alterar_convenio(request, cnpj):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def remover_convenio(request, cnpj):
     '''
     Esta função e responsável remover um convenio
@@ -1326,7 +1329,7 @@ def registrar_secretaria(request):
 
         return HttpResponse('Método Não Permitido',status=405)
 @login_required
-@user_passes_test(is_admin_or_medico)
+@user_passes_test(is_admin_or_secretaria)
 def alterar_secretaria(request, id):
 
     if request.user.is_secretaria and (request.user.id != int(id)):
@@ -1414,6 +1417,7 @@ def get_secretaria_parametros(secretaria):
     parametros['sobrenome'] = secretaria.last_name
     parametros['email'] = secretaria.username
     parametros['telefone'] = secretaria.telefone
+    parametros['endereco'] = secretaria.endereco
     parametros['cpf'] = secretaria.cpf
     parametros['rg'] = secretaria.rg
     parametros['id'] = secretaria.id
