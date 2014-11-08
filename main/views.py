@@ -444,7 +444,7 @@ def registrar_medico(request):
 
                 messages.info(request, "Cadastro realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -534,7 +534,7 @@ def alterar_medico(request, id):
 
                 messages.info(request, "Atualização realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
-                if request.user.is_admin:
+                if is_admin(request.user):
                     return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -1306,7 +1306,7 @@ def registrar_secretaria(request):
                     secretaria.save()
 
                 messages.info(request, "Cadastro realizado com sucesso!")
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -1388,7 +1388,7 @@ def alterar_secretaria(request, id):
                     secretaria.save()
 
                 messages.info(request, "Atualização realizado com sucesso!")
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
