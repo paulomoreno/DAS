@@ -34,8 +34,14 @@ def is_admin_or_medico(user):
 def is_admin_or_cliente(user):
     return (user.is_cliente or user.is_admin or user.is_staff)
 
+def is_admin_or_secretaria(user):
+    return (user.is_secretaria or user.is_admin or user.is_staff)
+
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
+
+def is_admin_or_cliente_or_secretaria(user):
+    return (user.is_admin or user.is_staff or user.is_cliente or user.is_secretaria)
 
 def api_monta_json(obj_json):
     '''
@@ -69,6 +75,28 @@ def index(request):
 # ----------------------------------------------------------------------------------- #
 #                                 Clientes
 # ----------------------------------------------------------------------------------- #
+
+@login_required        
+@user_passes_test(is_admin_or_secretaria)
+def clientes(request):
+    '''
+    Esta função é responsável retornar uma lista com todos os clientes registrados.
+    
+    Esta função aceita apenas pedidos GET 
+
+    '''
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        #Obtem todos os medicos do bd
+        clientes = [c for c in Cliente.objects.all()]
+
+        #Retorna a página de todos os medicos
+        return render_to_response('main/cliente/todos.html', { 'clientes' : clientes }, context)
+    else:
+
+        return HttpResponse('Método Não Permitido',status=405)
+
 
 def registrar_cliente(request):
     '''
@@ -185,27 +213,18 @@ def registrar_cliente(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin_or_cliente)
+@user_passes_test(is_admin_or_cliente_or_secretaria)
 def alterar_cliente(request, id):
 
     if request.user.is_cliente and request.user.id != int(id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     cliente = Cliente.objects.get(id=id)
-
-    parametros = {}
-
-    parametros['nome'] = cliente.first_name
-    parametros['sobrenome'] = cliente.last_name
-    parametros['email'] = cliente.username
-    parametros['telefone'] = cliente.telefone
-    parametros['endereco'] = cliente.endereco
-    parametros['rg'] = cliente.rg
-    parametros['cpf'] = cliente.cpf
     
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_cliente_parametros(cliente)
         return render_to_response('main/cliente/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -268,7 +287,48 @@ def alterar_cliente(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar o cliente.')
 
+        parametros = get_cliente_parametros(cliente)
         return render_to_response('main/cliente/editar.html', parametros, context)
+
+
+def get_cliente_parametros(cliente):
+    '''
+    Obtem os parametros de um cliente dado e retorna um dicionario
+    '''
+
+    parametros = {}
+
+    parametros['nome'] = cliente.first_name
+    parametros['sobrenome'] = cliente.last_name
+    parametros['email'] = cliente.username
+    parametros['telefone'] = cliente.telefone
+    parametros['endereco'] = cliente.endereco
+    parametros['rg'] = cliente.rg
+    parametros['cpf'] = cliente.cpf
+    parametros['id'] = cliente.id
+
+    return parametros
+
+
+@login_required
+@user_passes_test(is_admin_or_secretaria)
+def remover_cliente(request, id):
+
+    try:
+        context = RequestContext(request)
+
+        if request.method == 'POST':
+            Cliente.objects.filter(pk=id).delete()
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Cliente removido com sucesso')
+            return redirect('/clientes')
+
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
+
+
+    return HttpResponse('Método Não Permitido',status=405)
 
 # ----------------------------------------------------------------------------------- #
 #                                 Medicos
@@ -434,7 +494,7 @@ def registrar_medico(request):
 
                 messages.info(request, "Cadastro realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -459,23 +519,11 @@ def alterar_medico(request, id):
         return HttpResponse('<h1>Proibido</h1>',status=403)
 
     medico = Medico.objects.get(id=id)
-
-    parametros = {}
-
-    parametros['nome'] = medico.first_name
-    parametros['sobrenome'] = medico.last_name
-    parametros['email'] = medico.username
-    parametros['telefone'] = medico.telefone
-    parametros['cpf'] = medico.cpf
-    parametros['crm'] = medico.crm
-    parametros['rg'] = medico.rg
-    parametros['duracao_consulta'] = medico.duracao_consulta       
-    parametros['especializacao'] = medico.especializacao.nome
-    parametros['id'] = medico.id
     
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_medico_parametros(medico)
         return render_to_response('main/medico/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -536,7 +584,7 @@ def alterar_medico(request, id):
 
                 messages.info(request, "Atualização realizado com sucesso!")
                 #Se o admin esta logado, retorna para a pagina de todos medicos
-                if request.user.is_admin:
+                if is_admin(request.user):
                     return redirect('/medicos')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -546,7 +594,28 @@ def alterar_medico(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar o medico.')
 
+        parametros = get_medico_parametros(medico)
         return render_to_response('main/medico/editar.html', parametros, context)
+
+def get_medico_parametros(medico):
+    '''
+    Obtem os parametros de um medico, e retorna um dicionario
+    '''
+    parametros = {}
+
+    parametros['nome'] = medico.first_name
+    parametros['sobrenome'] = medico.last_name
+    parametros['email'] = medico.username
+    parametros['telefone'] = medico.telefone
+    parametros['endereco'] = medico.endereco
+    parametros['cpf'] = medico.cpf
+    parametros['crm'] = medico.crm
+    parametros['rg'] = medico.rg
+    parametros['duracao_consulta'] = medico.duracao_consulta       
+    parametros['especializacao'] = medico.especializacao.nome
+    parametros['id'] = medico.id
+
+    return parametros
 
 @login_required
 @user_passes_test(is_admin)
@@ -683,6 +752,7 @@ def alterar_especializacao(request, id):
         except:
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
+        erro = False
 
         if novo_nome is None or novo_nome == '':
             # Define erro
@@ -746,7 +816,7 @@ def remover_especializacao(request, id):
 # ----------------------------------------------------------------------------------- #
 
 @login_required        
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def convenios(request):
     '''
     Esta função é responsável mostrar todos os convenios.
@@ -766,7 +836,7 @@ def convenios(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required        
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def registrar_convenio(request):
     '''
     Esta função é responsável por registrar uma nova especialização.
@@ -831,7 +901,7 @@ def registrar_convenio(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def alterar_convenio(request, cnpj):
     '''
     Esta funcao e responsavel por editar um convenio
@@ -858,6 +928,7 @@ def alterar_convenio(request, cnpj):
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
         error = False
+
         if novo_razao_social is None or novo_razao_social =='':
             messages.error(request, 'Insira um nove valido para o convenio')
             error = True
@@ -881,7 +952,7 @@ def alterar_convenio(request, cnpj):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def remover_convenio(request, cnpj):
     '''
     Esta função e responsável remover um convenio
@@ -1287,7 +1358,7 @@ def registrar_secretaria(request):
                     secretaria.save()
 
                 messages.info(request, "Cadastro realizado com sucesso!")
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -1304,7 +1375,7 @@ def registrar_secretaria(request):
 
         return HttpResponse('Método Não Permitido',status=405)
 @login_required
-@user_passes_test(is_admin_or_medico)
+@user_passes_test(is_admin_or_secretaria)
 def alterar_secretaria(request, id):
 
     if request.user.is_secretaria and (request.user.id != int(id)):
@@ -1312,19 +1383,10 @@ def alterar_secretaria(request, id):
 
     secretaria = Secretaria.objects.get(id=id)
 
-    parametros = {}
-
-    parametros['nome'] = secretaria.first_name
-    parametros['sobrenome'] = secretaria.last_name
-    parametros['email'] = secretaria.username
-    parametros['telefone'] = secretaria.telefone
-    parametros['cpf'] = secretaria.cpf
-    parametros['rg'] = secretaria.rg
-    parametros['id'] = secretaria.id
-    
     # Pegando seu pedido
     context = RequestContext(request)
     if request.method == 'GET':
+        parametros = get_secretaria_parametros(secretaria)
         return render_to_response('main/secretaria/editar.html', parametros, context)
     elif request.method == 'POST':
         #obtem dados do POST
@@ -1378,7 +1440,7 @@ def alterar_secretaria(request, id):
                     secretaria.save()
 
                 messages.info(request, "Atualização realizado com sucesso!")
-                if request.user.is_staff:
+                if is_admin(request.user):
                     return redirect('/secretarias')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -1388,7 +1450,25 @@ def alterar_secretaria(request, id):
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar a secretaria.')
 
+        parametros = get_secretaria_parametros(secretaria)
         return render_to_response('main/secretaria/editar.html', parametros, context)
+
+def get_secretaria_parametros(secretaria):
+    '''
+    Obtem os parametros de uma dada secretaria e retorna um dicionario
+    '''
+    parametros = {}
+
+    parametros['nome'] = secretaria.first_name
+    parametros['sobrenome'] = secretaria.last_name
+    parametros['email'] = secretaria.username
+    parametros['telefone'] = secretaria.telefone
+    parametros['endereco'] = secretaria.endereco
+    parametros['cpf'] = secretaria.cpf
+    parametros['rg'] = secretaria.rg
+    parametros['id'] = secretaria.id
+
+    return parametros
 
 @login_required
 @user_passes_test(is_admin)
@@ -1477,7 +1557,7 @@ def registrar_consulta_horario(request):
 
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def qrCodeScan(request):
     '''
     qrCode scanner
@@ -1486,7 +1566,7 @@ def qrCodeScan(request):
     return render_to_response('main/qrCodeScanner/index.html', context)
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def searchCode(request):
     context = RequestContext(request)
 
