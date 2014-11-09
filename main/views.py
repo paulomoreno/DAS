@@ -40,6 +40,9 @@ def is_admin_or_secretaria(user):
 def is_medico_or_cliente(user):
     return (user.is_medico or user.is_cliente)
 
+def is_admin_or_cliente_or_secretaria(user):
+    return (user.is_admin or user.is_staff or user.is_cliente or user.is_secretaria)
+
 def api_monta_json(obj_json):
     '''
     Função que retorna um objeto JSON
@@ -72,6 +75,21 @@ def index(request):
 # ----------------------------------------------------------------------------------- #
 #                                 Clientes
 # ----------------------------------------------------------------------------------- #
+def visualizar_cliente(request):
+    '''
+    Esta função é responsável por registrar um novo cliente.
+    
+    Esta função aceita pedidos GET e POST
+
+    GET:
+        Retorna a página que contem uma lista de clientes
+    '''    
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        return render_to_response('main/secretaria/todos_clientes.html', context)
+    else:
+        return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
 def registrar_cliente(request):
     '''

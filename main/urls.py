@@ -25,6 +25,10 @@ urlpatterns = patterns('',
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
 		#URL para alterar clientes
         url(r'^clientes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_cliente',name='alterar_cliente'),
+        #URL para secretataria visualizar 
+        url(r'^clientes/lista$','main.views.visualizar_cliente',name='visualizar_cliente'),
+
+
 
         # ------------------------------------------------------------ #
         #                   Medicos
