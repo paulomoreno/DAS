@@ -17,7 +17,6 @@ body{
 	width: 100%;
 	padding-top: 50px;
 	overflow: visible;
-	background-image: url('../media/congruent_pentagon.png');
 
 }
 
@@ -111,4 +110,8 @@ background-image: linear-gradient(to bottom, #EDF7F5 0%, #75EBAC 100%);
 .tabela_cabecalho{
 	background-color: black;
 	color: white;
+}
+
+.registrar{
+	background-color: #eee;
 }
