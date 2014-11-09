@@ -284,6 +284,27 @@ def get_cliente_parametros(cliente):
 
     return parametros
 
+
+@login_required
+@user_passes_test(is_admin)
+def remover_cliente(request, id):
+
+    try:
+        context = RequestContext(request)
+
+        if request.method == 'POST':
+            Medico.objects.filter(pk=id).delete()
+            #Retorna a página de todos os medicos
+            messages.info(request, 'Cliente removido com sucesso')
+            return redirect('/clientes')
+
+    except Exception, e:
+        #Para qualquer problema, retorna um erro interno                
+        PrintException()
+
+
+    return HttpResponse('Método Não Permitido',status=405)
+
 # ----------------------------------------------------------------------------------- #
 #                                 Medicos
 # ----------------------------------------------------------------------------------- #

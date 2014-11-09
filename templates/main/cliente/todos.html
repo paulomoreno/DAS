@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block conteudo %}
+
+	<a href="{% url 'registrar_cliente' %}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Novo cliente </button> </a>
+
+	<h1 class="lead">Cliente</h1>
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
+        <thead  class="tabela_cabecalho">
+            <tr>
+                <th style="text-align:center"> Nome</th>
+                <th style="text-align:center"> Editar</th>
+                <th style="text-align:center"> Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in clientes %}
+            <tr>
+                <td>{{ m.first_name }} {{ m.last_name }}</td>
+                <td> <a href="{% url 'alterar_cliente' m.id %}" class="btn btn-success">Editar</a> </td>
+                <td>
+                    <form role="form" action="/clientes/{{ m.id }}/remover" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" name="remover">Remover</button>    
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+	
+
+{% endblock %}
