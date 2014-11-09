@@ -21,14 +21,14 @@ urlpatterns = patterns('',
         # ------------------------------------------------------------ #
         #                   Clientes
         # ------------------------------------------------------------ #
+        #URL para secretataria visualizar 
+        url(r'^clientes$','main.views.clientes',name='clientes'),
 		#URL para cadastro de novos clientes
         url(r'^clientes/novo$','main.views.registrar_cliente',name='registrar_cliente'),
 		#URL para alterar clientes
         url(r'^clientes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_cliente',name='alterar_cliente'),
-        #URL para secretataria visualizar 
-        url(r'^clientes/lista$','main.views.visualizar_cliente',name='visualizar_cliente'),
-
-
+        #URL para remover clientes
+        url(r'^clientes/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_cliente',name='remover_cliente'),
 
         # ------------------------------------------------------------ #
         #                   Medicos

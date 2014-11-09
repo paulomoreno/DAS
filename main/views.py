@@ -75,21 +75,28 @@ def index(request):
 # ----------------------------------------------------------------------------------- #
 #                                 Clientes
 # ----------------------------------------------------------------------------------- #
-def visualizar_cliente(request):
-    '''
-    Esta função é responsável por registrar um novo cliente.
-    
-    Esta função aceita pedidos GET e POST
 
-    GET:
-        Retorna a página que contem uma lista de clientes
-    '''    
+@login_required        
+@user_passes_test(is_admin_or_secretaria)
+def clientes(request):
+    '''
+    Esta função é responsável retornar uma lista com todos os clientes registrados.
+    
+    Esta função aceita apenas pedidos GET 
+
+    '''
     context = RequestContext(request)
 
     if request.method == 'GET':
-        return render_to_response('main/secretaria/todos_clientes.html', context)
+        #Obtem todos os medicos do bd
+        clientes = [c for c in Cliente.objects.all()]
+
+        #Retorna a página de todos os medicos
+        return render_to_response('main/cliente/todos.html', { 'clientes' : clientes }, context)
     else:
-        return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
+
+        return HttpResponse('Método Não Permitido',status=405)
+
 
 def registrar_cliente(request):
     '''
@@ -304,14 +311,14 @@ def get_cliente_parametros(cliente):
 
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_or_secretaria)
 def remover_cliente(request, id):
 
     try:
         context = RequestContext(request)
 
         if request.method == 'POST':
-            Medico.objects.filter(pk=id).delete()
+            Cliente.objects.filter(pk=id).delete()
             #Retorna a página de todos os medicos
             messages.info(request, 'Cliente removido com sucesso')
             return redirect('/clientes')
