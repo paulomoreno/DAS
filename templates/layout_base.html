@@ -107,9 +107,12 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
           {% endif %}
 
           {% if user.is_secretaria %}
+              <li><a href="{% url 'registrar_cliente' %}"><span class="glyphicon glyphicon-qrcode"></span> Cadastrar Cliente</a>
+          <li><a href="{% url 'visualizar_cliente' %}"><span class="glyphicon glyphicon-qrcode"></span> Visualizar cliente</a></li>
               <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
               <li><a href="{% url 'convenios' %}"><span class="glyphicon glyphicon-th"></span> Convênios</a></li>
               <li><a href="{% url 'alterar_secretaria' user.id %}"><span class="glyphicon glyphicon-user"></span> {{ user.first_name }} {{ user.last_name }}</a></li>
+
           {% endif %}
 
           {% if user.is_medico %}
