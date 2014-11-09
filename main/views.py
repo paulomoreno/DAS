@@ -213,7 +213,7 @@ def registrar_cliente(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 @login_required
-@user_passes_test(is_admin_or_cliente)
+@user_passes_test(is_admin_or_cliente_or_secretaria)
 def alterar_cliente(request, id):
 
     if request.user.is_cliente and request.user.id != int(id):
