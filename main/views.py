@@ -98,8 +98,8 @@ def clientes(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 
-@login_required        
-@user_passes_test(is_admin_or_secretaria)
+#@login_required        
+#@user_passes_test(is_admin_or_secretaria)
 def registrar_cliente(request):
     '''
     Esta função é responsável por registrar um novo cliente.
@@ -208,7 +208,7 @@ def registrar_cliente(request):
                 if 'username' in e.message:
                     messages.error(request, 'Email já cadastrado. Escolha outro email.')
                 else:
-                    messages.error(request, 'Erro desconhecido ao salvar a especialização.')
+                    messages.error(request, 'Erro desconhecido ao cadastrar.')
 
 
         return render_to_response('main/cliente/cadastro.html', context)

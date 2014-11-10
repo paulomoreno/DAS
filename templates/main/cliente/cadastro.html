@@ -9,6 +9,7 @@
   <script>
       $(document).ready(function(){
         $('.rg').mask('000.000.000-00',{reverse: true} );
+        $('.rg').mask('000.000.000-00',{reverse: true} );
         $('.cpf').mask('000.000.000-00', {reverse: true});
         $('.telefone').mask('(00)00000-0000');
       });
@@ -17,6 +18,7 @@
 <script type="text/javascript" language="javascript">
 
     function showHide() {
+
         var list = document.getElementsByClassName("showHideDiv");
             for (var i = 0; i < list.length; i++) {
                 if(list[i].style.display == "block"){
@@ -26,55 +28,125 @@
                     list[i].style.display = "block";
                 }
             }
+
+        $('#inEmail').val($('#emailInput').val());
+        $('#inSenha').val($('#passwordInput').val());
+        $('#inConfirmarSenha').val($('#password2Input').val());
+
     }
 
-    $(document).ready(function(){
+    function validateForm(){
 
+        var valid = true;        
+        if(!validateField("emailInput", "Email")){
+            valid = false;
+        }
+        if(!validateField("passwordInput", "Senha")){
+            valid = false;
+        }
+        if(!validateField("password2Input", "Confirmar Senha")){
+            valid = false;
+        }
+        if($('#passwordInput').val() != $('#password2Input').val()){
+            valid = false;
+            sleep(50,function(){
+                criaMensagemErro("Senhas diferentes.", "error");
+                sleep(5000,function(){removeMensagemErro()});
+            });
+        }
 
+        if(valid){
+            showHide();
+        }
+    }
 
-    });
+    function validateField(field, name){
+        var myfield = $('#'+field);
+
+        if(myfield.val() == '' || myfield.val() == null){
+            sleep(50,function(){
+                criaMensagemErro(name+ " é obrigatório.", "error");
+                sleep(5000,function(){removeMensagemErro()});
+            });
+            return false; 
+        }
+
+        return true;
+    }
+
 
 </script>
 {% endblock %}
 {% block conteudo %}
 
 
-<form role="form" action="{% url 'registrar_cliente' %}" method="post">
-  {% csrf_token %}
 
     <div class="row">
-        <div class="col-md-4 col-md-offset-4" style="background-color: #eee;">
-            <div class="showHideDiv" style="display:block;">
-              <h2 class="form-signin-heading">Cadastro de Cliente</h2>
-              <label for="firstNameInput">Primeiro Nome</label>
-              <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome">
-              
-              <label for="lastNameInput">Sobrenome</label>
-              <input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome"> 
-              
-              <label for="endereco">Endereco</label> 
-              <input type="text" class="form-control" id="" placeholder="Endereço" name="endereco">
-              
-              <label for="telefone">Telefone</label>
-              <input type="text" class="form-control telefone" id="telefone" placeholder="Telefone" name="telefone">
-              
-              <label for="rg">RG</label>
-              <input type="text" class="form-control rg" id="rg" placeholder="RG" name="rg">
-              
-              <label for="userPassword">CPF</label>
-              <input type="text" class="form-control cpf" id="cpf" placeholder="CPF" name="cpf"> 
 
-              <label for="convenio">Convênio</label>
-              <select id="convenio" name="convenio" id = "convenio" class="form-control">
-                {% for conv in convenios %}
-                  <option value="{{conv.cnpj}}">{{conv.razao_social}}</option>
-                {% endfor %}
-              </select> 
+        <div class="col-md-4 col-md-offset-4" style="background-color: #eee;"> 
+            
+            <form role="form" action="showHide">
+                <div class="showHideDiv" style="display:block">
+                    <h2 class="form-signin-heading">Cadastrar</h2>
 
-              <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">Completar Registro!</button>
+                    <label for="emailInput">E-mail</label>
+                    <input type="email" class="form-control" id="emailInput" placeholder="email" name="email" value="{{ form.email }}"> 
+                    <label for="userPassword">Senha</label>    
+                    <input type="password" class="form-control"id="passwordInput" placeholder="******" name="senha">
+                    <label for="userPassword">Confirmar Senha</label>
+                    <input type="password" class="form-control"id="password2Input" placeholder="******" name="confirmar_senha">
+                    <div class="checkbox">
+                        <label>
+                          <input type="checkbox" name="novidades" value="sim"> Quero receber novidades sobre o DAS!
+                        </label>
+                    </div> 
+                
+                    <button id="first_button"class="btn btn-lg btn-primary btn-block" type="button" onclick="return validateForm();" style="margin-top: 20px; margin-bottom: 20px" >Continuar</button> 
+                    </div>                
+            </form>
 
-            </div>             
-        </div>     
+            <form role="form" action="{% url 'registrar_cliente' %}" method="post">
+            {% csrf_token %}
+
+                  <div class="showHideDiv" style="display:none;">
+
+
+                    <input type="hidden" id="inEmail" name="email">
+                    <input type="hidden" id="inSenha" name="senha">
+                    <input type="hidden" id="inConfirmarSenha" name="confirmar_senha">
+
+
+                    <h2 class="form-signin-heading">Quase pronto!</h2>
+                    <label for="firstNameInput">Primeiro Nome</label>
+                    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome">
+                      
+                    <label for="lastNameInput">Sobrenome</label>
+                    <input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome"> 
+                      
+                    <label for="endereco">Endereco</label> 
+                    <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco">
+                      
+                    <label for="telefone">Telefone</label>
+                    <input type="text" class="form-control telefone"id="" placeholder="Telefone" name="telefone">
+                      
+                    <label for="rg">RG</label>
+                    <input type="text" class="form-control rg"id="" placeholder="RG" name="rg">
+                      
+                    <label for="cpf">CPF</label>
+                    <input type="text" class="form-control cpf"id="" placeholder="CPF" name="cpf"> 
+
+
+                    <label for="convenio">Convênio</label>
+                        <select id="convenio" name="convenio" id = "convenio" class="form-control">
+                            {% for conv in convenios %}
+                            <option value="{{conv.cnpj}}">{{conv.razao_social}}</option>
+                            {% endfor %}
+                        </select> 
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">Completar Registro!</button>
+                </div> 
+            </form>
+                 
+        </div>
     </div>
 </form>
 {%  endblock %}

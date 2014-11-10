@@ -115,3 +115,7 @@ background-image: linear-gradient(to bottom, #EDF7F5 0%, #75EBAC 100%);
 .registrar{
 	background-color: #eee;
 }
+
+.warning{
+	border-color: red;
+}
