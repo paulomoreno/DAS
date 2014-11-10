@@ -30,7 +30,7 @@
                 <td>{{ m.especializacao.nome }}</td>
                 <td>{{ m.username }}</td>
                 <td>{{ m.crm }}</td>
-                <td>{{ m.duracao_consulta }}</td>
+                <td>{{ m.duracao_consulta }} min</td>
                 <td> <a href="{% url 'alterar_medico' m.id %}" class="btn btn-success">Editar</a> </td>
                 <td>
                     <form role="form" action="/medicos/{{ m.crm }}/remover" method="post">

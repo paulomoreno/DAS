@@ -5,6 +5,15 @@
 
 {% block title %}Novo convênio{% endblock %}
 
+{% block javascript %} 
+  <script src="{% static "js/jquery.mask.js"%}" ></script>
+  <script>
+      $(document).ready(function(){
+        $('.cnpj').mask('00.000.000/0000-00');
+      });
+  </script>
+{% endblock %}
+
 {% block conteudo %}
 <h1>Cadastro de novo convênio:</h1>
 <form role="form" action="{% url 'registrar_convenio' %}" method="POST">
@@ -13,7 +22,7 @@
   	<div class="form-group">
 		<div class="col-md-4" >
 	    	<label for="especializacao">CNPJ</label>
-	 	    <input type="text" class="form-control" id="" placeholder="CNPJ" name="cnpj">
+	 	    <input type="text" class="form-control cnpj" id="razao_social" placeholder="CNPJ" name="cnpj">
 	 	</div>
   	</div>
   </div>
@@ -22,7 +31,7 @@
     <div class="form-group">
     <div class="col-md-4" >
         <label for="especializacao">Razão Social</label>
-        <input type="text" class="form-control" id="" placeholder="Razão Social" name="razao_social">
+        <input type="text" class="form-control" id="razao_social" placeholder="Razão Social" name="razao_social">
     </div>
     </div>
   </div>

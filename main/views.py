@@ -98,6 +98,8 @@ def clientes(request):
         return HttpResponse('Método Não Permitido',status=405)
 
 
+@login_required        
+@user_passes_test(is_admin_or_secretaria)
 def registrar_cliente(request):
     '''
     Esta função é responsável por registrar um novo cliente.
@@ -115,7 +117,8 @@ def registrar_cliente(request):
 
     if request.method == 'GET':
         #Retorna a página de cadastro de cliente
-        return render_to_response('main/cliente/cadastro.html', context)
+        convenios = [conv for conv in Convenio.objects.all()]
+        return render_to_response('main/cliente/cadastro.html',{'convenios':convenios}, context)
 
     elif request.method == 'POST':
         #obtem dados do POST
@@ -129,6 +132,7 @@ def registrar_cliente(request):
             endereco = request.POST['endereco']
             cpf = request.POST['cpf']
             rg = request.POST['rg']
+            convenio = request.POST['convenio']
         except:
             return HttpResponseBadRequest('<h1>Requisição inválida</h1>')
 
@@ -180,11 +184,12 @@ def registrar_cliente(request):
                 with transaction.atomic():
                     #Cria usuario
                     cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha)
-                  
+                    
                     #Insere os campos obrigatorios
                     cliente.rg = rg
                     cliente.cpf = cpf
                     cliente.is_cliente = True
+                    #cliente.convenio = Convenio.objects.get(cnpj = convenio)
 
                     #Caso existentes, insere os campos nao obrigatorios
                     if telefone and telefone != '':
@@ -698,7 +703,7 @@ def registrar_especializacao(request):
 
         if espec_nome is None or espec_nome == '':
             # Define erro
-            messages.error(request, 'Nome da especialização inválido.')
+            messages.error(request, 'Nome de especialização inválida.')
             erro = True
 
         if not erro:
@@ -756,7 +761,7 @@ def alterar_especializacao(request, id):
 
         if novo_nome is None or novo_nome == '':
             # Define erro
-            messages.error(request, 'Nome da especialização inválido.')
+            messages.error(request, 'Nome de especialização inválida.')
             erro = True
 
         if not erro:
@@ -767,7 +772,7 @@ def alterar_especializacao(request, id):
                     especializacao.nome = novo_nome
                     especializacao.save()
 
-                messages.info(request, 'Especializacao alterada com sucesso')
+                messages.info(request, 'Especialização alterada com sucesso.')
                 return redirect('/especializacoes')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
@@ -795,15 +800,15 @@ def remover_especializacao(request, id):
 
         error = False
         if id is None or id =='':
-            messages.error(request, 'Erro ao remover especializacao')
+            messages.error(request, 'Erro ao remover especialização')
             error = True
 
         try:
             with transaction.atomic():
                 Especializacao.objects.filter(id=id).delete()
-                messages.info(request, 'Especializacao removida com sucesso')
+                messages.info(request, 'Especialização removida com sucesso')
         except Exception, e:
-            messages.error(request, 'Especializacao nao encontrada no banco de dados')
+            messages.error(request, 'Especialização não encontrada no banco de dados')
             PrintException()
 
         return redirect('/especializacoes')
@@ -930,7 +935,7 @@ def alterar_convenio(request, cnpj):
         error = False
 
         if novo_razao_social is None or novo_razao_social =='':
-            messages.error(request, 'Insira um nove valido para o convenio')
+            messages.error(request, 'Insira um nome válido para o convênio')
             error = True
             
         if not error:
@@ -939,7 +944,7 @@ def alterar_convenio(request, cnpj):
                     convenio.razao_social = novo_razao_social
                     convenio.save()  
 
-                messages.info(request, 'Convenio alterado com sucesso')
+                messages.info(request, 'Convênio alterado com sucesso')
                 return redirect('/convenios')
             
             except Exception, e:
@@ -966,7 +971,7 @@ def remover_convenio(request, cnpj):
 
         error = False
         if cnpj is None or cnpj =='':
-            messages.error(request, 'CNPJ Invalido!')
+            messages.error(request, 'CNPJ Inválido!')
             error = True
 
         if not error:
@@ -974,10 +979,10 @@ def remover_convenio(request, cnpj):
                 with transaction.atomic():
                     Convenio.objects.filter(cnpj=cnpj).delete()
 
-                messages.info(request, 'Convenio removido com sucesso')
+                messages.info(request, 'Convênio removido com sucesso')
             except Exception, e:
                 PrintException()
-                messages.error(request, 'Erro ao remover convenio')
+                messages.error(request, 'Erro ao remover convênio')
 
         return redirect('/convenios')
 
@@ -1046,17 +1051,17 @@ def registrar_horario(request):
 
         if dia is None or dia == '':
             # Define erro
-            messages.error(request, 'Dia é obrigatório.')
+            messages.error(request, 'Dia é obrigatório')
             erro = True
 
         if hora_inicio is None or hora_inicio == '':
             # Define erro
-            messages.error(request, 'Horario de inicio é obrigatório.')
+            messages.error(request, 'Horário de início é obrigatório')
             erro = True
 
         if hora_final is None or hora_final == '':
             # Define erro
-            messages.error(request, 'Horario de termino é obrigatório.')
+            messages.error(request, 'Horário de término é obrigatório')
             erro = True
 
         #Tenta converter os horarios
@@ -1065,7 +1070,7 @@ def registrar_horario(request):
             hora_final = datetime.datetime.strptime(hora_final, '%H:%M').time()
         except Exception, e:
             PrintException()
-            messages.error(request, 'Horario de inicio e fim devem estar no formato hh:mm.')
+            messages.error(request, 'Horário de início e fim devem estar no formato hh:mm')
             erro = True
 
         if not erro:
@@ -1076,12 +1081,12 @@ def registrar_horario(request):
                     horario = Horario(medico=medico, dia=dia, hora_inicio=hora_inicio, hora_final=hora_final)
                     horario.save()
 
-                messages.info(request, "Cadastro de horario realizado com sucesso!")
+                messages.info(request, "Cadastro de horário realizado com sucesso!")
                 return redirect('/horarios')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
-                messages.error(request, 'Erro desconhecido ao salvar o horario.')
+                messages.error(request, 'Erro desconhecido ao salvar o horário')
 
         return render_to_response('main/medico/adiciona_horario.html', context)
     else:
@@ -1137,17 +1142,17 @@ def alterar_horario(request, id):
 
         if dia is None or dia == '':
             # Define erro
-            messages.error(request, 'Dia é obrigatório.')
+            messages.error(request, 'Dia é obrigatório')
             erro = True
 
         if hora_inicio is None or hora_inicio == '':
             # Define erro
-            messages.error(request, 'Horario de inicio é obrigatório.')
+            messages.error(request, 'Horário de início é obrigatório')
             erro = True
 
         if hora_final is None or hora_final == '':
             # Define erro
-            messages.error(request, 'Horario de termino é obrigatório.')
+            messages.error(request, 'Horário de término é obrigatório')
             erro = True
 
         #Tenta converter os horarios
@@ -1156,7 +1161,7 @@ def alterar_horario(request, id):
             hora_final = datetime.datetime.strptime(hora_final, '%H:%M').time()
         except Exception, e:
             PrintException()
-            messages.error(request, 'Horario de inicio e fim devem estar no formato hh:mm.')
+            messages.error(request, 'Horário de início e fim devem estar no formato hh:mm')
             erro = True
 
         if not erro:
@@ -1169,12 +1174,12 @@ def alterar_horario(request, id):
                     horario.hora_final = hora_final
                     horario.save()
 
-                messages.info(request, "Horario atualizado com sucesso!")
+                messages.info(request, "Horário atualizado com sucesso!")
                 return redirect('/horarios')
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
-                messages.error(request, 'Erro desconhecido ao atualizar o horario.')
+                messages.error(request, 'Erro desconhecido ao atualizar o horário.')
 
         parametros['horario'] = horario
         parametros['hora_inicio'] = horario.hora_inicio.strftime("%H:%M")
@@ -1214,7 +1219,7 @@ def remover_horario(request, id):
         except:
             messages.error(request, 'Acesso negado.')
 
-        messages.success(request, 'Remocao realizada com sucesso!')
+        messages.success(request, 'Remoção realizada com sucesso!')
         
         return redirect('/horarios')
 
@@ -1481,7 +1486,7 @@ def remover_secretaria(request, id):
 
             Secretaria.objects.filter(id=id).delete()
             #Retorna a página de todas as secretarias
-            messages.info(request, 'Secretaria removida com sucesso')
+            messages.info(request, 'Secretária removida com sucesso')
             return redirect('/secretarias')
 
     except Exception, e:

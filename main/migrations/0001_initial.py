@@ -137,6 +137,12 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.AddField(
+            model_name='cliente',
+            name='convenio',
+            field=models.ForeignKey(to='main.Convenio'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
             model_name='usuario',
             name='groups',
             field=models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', verbose_name='groups'),

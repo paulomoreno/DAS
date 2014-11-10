@@ -5,6 +5,19 @@
 
 {% block title %}Editar Perfil{% endblock %}
 
+{% block javascript %} 
+  <script src="{% static "js/jquery.mask.js"%}" ></script>
+  <script>
+      $(document).ready(function(){
+        $('.rg').mask('000.000.000-00',{reverse: true} );
+        $('.cpf').mask('000.000.000-00', {reverse: true});
+        $('.crm').mask('0000000000/AA');
+        $('.duracao').mask('000');
+        $('.telefone').mask('(00)00000-0000');
+      });
+  </script>
+{% endblock %}
+
 {% block conteudo %}
 <h1>Edição de Perfil</h1>
 <form role="form" action="{% url 'alterar_medico' id %}" method="post">
@@ -21,7 +34,7 @@
 		</div>  	  		
   	</div>
   </div>
-
+   &nbsp;
   <div class="row">
  	 <div class="form-group">
  		<div class ="col-md-4">
@@ -30,7 +43,7 @@
  		</div>
  	 </div>
   </div>
-
+ &nbsp;
   <div class="row">
    <div class="form-group">
     <div class ="col-md-4">
@@ -39,7 +52,7 @@
     </div>
    </div>
   </div>
-
+ &nbsp;
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
@@ -48,57 +61,57 @@
     </div>
     </div>
   </div>
-
+ &nbsp;
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">Telefone</label>
-        <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
+        <input type="text" class="form-control telefone"id="telefone" placeholder="Telefone" name="telefone" value="{{ telefone }}">
     </div>
     </div>
   </div>
-
+ &nbsp;
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">RG</label>
-        <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
+        <input type="text" class="form-control rg"id="rg" placeholder="RG" name="rg" value="{{ rg }}">
     </div>
     </div>
   </div>
-
+ &nbsp;
 
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">CPF</label>
-        <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
+        <input type="text" class="form-control cpf"id="cpf" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
     </div>
     </div>
   </div>
-
+ &nbsp;
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">CRM</label>
-        <input type="text" class="form-control"id="" placeholder="CRM" name="crm" disabled="true" value="{{ crm }}">
+        <input type="text" class="form-control crm"id="crm" placeholder="CRM" name="crm" disabled="true" value="{{ crm }}">
     </div>
     </div>
   </div>
-
+ &nbsp;
   <div class="row">
     <div class="form-group">
     <div class ="col-md-4">
         <label for="userPassword">Duração da Consulta</label>
-        <input type="text" class="form-control"id="" placeholder="Duração da Consulta" name="duracao_consulta" value="{{ duracao_consulta }}">
+        <input type="text" class="form-control duracao"id="duracao_consulta" placeholder="Duração da Consulta" name="duracao_consulta" value="{{ duracao_consulta }}">
     </div>
     </div>
   </div>
-
+  &nbsp;
   <div class="row">
     <div class="form-group">
       <div class="col-xs-2">
-        <button type="submit" class="btn btn-success">Salvar</button>
+        <button type="submit" class="btn btn-success">Salvar Alterações</button>
       </div>
     </div>  
   </div>

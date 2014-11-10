@@ -4,9 +4,15 @@
 {% block css %}{% endblock %}
 
 {% block title %}Cadastro{% endblock %}
-
-{% block conteudo %}
-
+{% block javascript %} 
+  <script src="{% static "js/jquery.mask.js"%}" ></script>
+  <script>
+      $(document).ready(function(){
+        $('.rg').mask('000.000.000-00',{reverse: true} );
+        $('.cpf').mask('000.000.000-00', {reverse: true});
+        $('.telefone').mask('(00)00000-0000');
+      });
+  </script>
 
 <script type="text/javascript" language="javascript">
 
@@ -21,52 +27,50 @@
                 }
             }
     }
+
+    $(document).ready(function(){
+
+
+
+    });
+
 </script>
+{% endblock %}
+{% block conteudo %}
+
 
 <form role="form" action="{% url 'registrar_cliente' %}" method="post">
   {% csrf_token %}
 
     <div class="row">
         <div class="col-md-4 col-md-offset-4" style="background-color: #eee;">
-           
-            <div class="showHideDiv" style="display:block">
-              <h2 class="form-signin-heading">Cadastrar</h2>
-
-              <label for="emailInput">E-mail</label>
-              <input type="email" class="form-control" id="emailInput" placeholder="email" name="email" value="{{ form.email }}"> 
-              <label for="userPassword">Senha</label>    
-              <input type="password" class="form-control"id="passwordInput" placeholder="******" name="senha">
-              <label for="userPassword">Confirmar Senha</label>
-              <input type="password" class="form-control"id="passwordInput" placeholder="******" name="confirmar_senha">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="novidades" value="sim"> Quero receber novidades sobre o DAS!
-                </label>
-              </div> 
-            <form method="post" action="">
-                <button class="btn btn-lg btn-primary btn-block" type="button" onclick="return showHide();" style="margin-top: 20px; margin-bottom: 20px" >Continuar</button>
-            </form> 
-            </div>
-      
-            <div class="showHideDiv" style="display:none;">
-              <h2 class="form-signin-heading">Quase pronto!</h2>
+            <div class="showHideDiv" style="display:block;">
+              <h2 class="form-signin-heading">Cadastro de Cliente</h2>
               <label for="firstNameInput">Primeiro Nome</label>
               <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome">
               
               <label for="lastNameInput">Sobrenome</label>
               <input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome"> 
               
-              <label for="userPassword">Endereco</label> 
-              <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco">
+              <label for="endereco">Endereco</label> 
+              <input type="text" class="form-control" id="" placeholder="Endereço" name="endereco">
               
-              <label for="userPassword">Telefone</label>
-              <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone">
+              <label for="telefone">Telefone</label>
+              <input type="text" class="form-control telefone" id="telefone" placeholder="Telefone" name="telefone">
               
-              <label for="userPassword">RG</label>
-              <input type="text" class="form-control"id="" placeholder="RG" name="rg">
+              <label for="rg">RG</label>
+              <input type="text" class="form-control rg" id="rg" placeholder="RG" name="rg">
               
               <label for="userPassword">CPF</label>
-              <input type="text" class="form-control"id="" placeholder="CPF" name="cpf"> 
+              <input type="text" class="form-control cpf" id="cpf" placeholder="CPF" name="cpf"> 
+
+              <label for="convenio">Convênio</label>
+              <select id="convenio" name="convenio" id = "convenio" class="form-control">
+                {% for conv in convenios %}
+                  <option value="{{conv.cnpj}}">{{conv.razao_social}}</option>
+                {% endfor %}
+              </select> 
+
               <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">Completar Registro!</button>
 
             </div>             

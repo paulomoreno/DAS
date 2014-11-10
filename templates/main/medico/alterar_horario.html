@@ -22,17 +22,18 @@
 	    	<label for="firstNameInput">Dia</label>
         <select id="dia" class="form-control" name="dia">
             <option value="1" {% if horario.dia == 1 %}selected="true"{% endif %}>Segunda-feira</option>
-            <option value="2" {% if horario.dia == 2 %}selected="true"{% endif %}>Terca-feira</option>
+            <option value="2" {% if horario.dia == 2 %}selected="true"{% endif %}>Terça-feira</option>
             <option value="3" {% if horario.dia == 3 %}selected="true"{% endif %}>Quarta-feira</option>
             <option value="4" {% if horario.dia == 4 %}selected="true"{% endif %}>Quinta-feira</option>
             <option value="5" {% if horario.dia == 5 %}selected="true"{% endif %}>Sexta-feira</option>
-            <option value="6" {% if horario.dia == 6 %}selected="true"{% endif %}>Sabado</option>
+            <option value="6" {% if horario.dia == 6 %}selected="true"{% endif %}>Sábado</option>
             <option value="7" {% if horario.dia == 7 %}selected="true"{% endif %}>Domingo</option>
         </select>
 	 	</div>
     </div>
   </div>
 
+  &nbsp;
     <div class="row">
     <div class="form-group">
 	  	<div class="col-md-2">
@@ -42,6 +43,7 @@
   	</div>
   </div>
 
+  &nbsp;
   <div class="row">
  	 <div class="form-group">
  		<div class ="col-md-2">
@@ -50,11 +52,11 @@
  		</div>
  	 </div>
   </div>
-
+  &nbsp;
   <div class="form-group">
       <div class="row">
         <div class="col-xs-2">
-          <button type="submit" class="btn btn-success">Cadastrar</button>
+          <button type="submit" class="btn btn-success">Salvar Alterações</button>
         </div>  
       </div>  	
   </div>

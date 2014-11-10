@@ -4,7 +4,16 @@
 {% block css %}{% endblock %}
 
 {% block title %}Editar Perfil{% endblock %}
-
+{% block javascript %} 
+  <script src="{% static "js/jquery.mask.js"%}" ></script>
+  <script>
+      $(document).ready(function(){
+        $('.rg').mask('000.000.000-00',{reverse: true} );
+        $('.cpf').mask('000.000.000-00', {reverse: true});
+        $('.telefone').mask('(00)00000-0000');
+      });
+  </script>
+{% endblock %}
 {% block conteudo %}
 
 <form role="form" action="{% url 'alterar_secretaria' id %}" method="post">
@@ -32,13 +41,13 @@
             <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
 
             <label for="userPassword">Telefone</label>
-            <input type="text" class="form-control"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
+            <input type="text" class="form-control telefone"id="telefone" placeholder="Telefone" name="telefone" value="{{ telefone }}">
 
             <label for="userPassword">RG</label>
-            <input type="text" class="form-control"id="" placeholder="RG" name="rg" value="{{ rg }}">
+            <input type="text" class="form-control rg"id="rg" placeholder="RG" name="rg" value="{{ rg }}">
     
             <label for="userPassword">CPF</label>
-            <input type="text" class="form-control"id="" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
+            <input type="text" class="form-control cpf"id="cpf" placeholder="CPF" name="cpf" disabled="true" value="{{ cpf }}">
 
             <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">Salvar</button>
 

@@ -35,7 +35,7 @@ class Usuario(AbstractUser):
 
 class Cliente(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
-    
+    convenio = models.ForeignKey('Convenio')
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
