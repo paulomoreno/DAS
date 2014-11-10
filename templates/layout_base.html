@@ -17,6 +17,19 @@
                    { callback(); }, millis);
         }
 
+function criaMensagemErro(mensagem, tipo){
+    var msg_div = document.createElement('div');
+    var msg_div_h3 = document.createElement('h3');
+    var msg_div_pad = document.createElement('div');
+    var id = escape(mensagem);
+    msg_div.className = 'msg_bg_' + tipo;
+    msg_div_pad.className = 'msg_padding';
+    msg_div_h3.innerHTML = mensagem;
+    msg_div.appendChild(msg_div_h3);
+    $(msg_div_pad).prependTo('.conteudo').hide().fadeIn('fast');
+    $(msg_div).prependTo('.conteudo').hide().fadeIn('fast');
+}
+
 function removeMensagemErro(){
     $('.msg_padding').slideUp(500, function() { $(this).remove(); });
     $('.msg_bg_error').fadeOut(10, function() { $(this).remove(); });
