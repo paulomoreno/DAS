@@ -2,6 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="pt-br">
 <head>
+  <link rel="shortcut icon" type="image/png" href="{% static "media/favicon.png"%}"/>
+
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -69,10 +71,10 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
       </button>
 
       <a class="navbar-brand" style="padding:8px;" href="{% url 'index' %}">
-
+        <img height="34" width="34"  src="{% static "media/favicon.png"%}">
       </a>
       <a class="navbar-brand" href="{% url 'index' %}">
-	DAS
+        DAS
       </a>
 
     </div>
