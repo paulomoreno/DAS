@@ -177,19 +177,30 @@ def registrar_cliente(request):
             messages.error(request, "CPF é obrigatório!")
             erro = True
 
+        if convenio is None or convenio == '':
+            messages.error(request, "Convenio é obrigatório!")
+            erro = True
+        else:
+            try:
+                convenio = Convenio.objects.get(cnpj = convenio)
+
+            except Exception, e:
+                erro = True
+                PrintException()
+                messages.error(request, "Convenio nao encontrado!")
+
         if not erro:
             #Tenta salvar o novo cliente no banco
             try:
                 #A operacao deve ser atomica
                 with transaction.atomic():
                     #Cria usuario
-                    cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha)
+                    cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, convenio=convenio)
                     
                     #Insere os campos obrigatorios
                     cliente.rg = rg
                     cliente.cpf = cpf
                     cliente.is_cliente = True
-                    #cliente.convenio = Convenio.objects.get(cnpj = convenio)
 
                     #Caso existentes, insere os campos nao obrigatorios
                     if telefone and telefone != '':
