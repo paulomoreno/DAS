@@ -1,0 +1,26 @@
+                        <div class="linha_horario">
+
+                            <div class="h_coluna_esquerda">
+                                <div class="linha_col">
+                                    <h2>{{ numero_horario }}&ordm; Horário</h2>
+                                </div>
+                                <div class="linha_col">
+                                    <h3>Início</h3></br>
+                                    <h3>Fim</h3>
+                                </div>
+                            </div>
+
+                            <div class="h_coluna_direita">
+                                <div class="excluir_horario_out" >
+                                    <div class="excluir_horario">X</div>
+                                </div>                            
+                            </div>
+
+                            <div class="h_coluna_centro">
+                                <div class="linha_col_dias">
+                                    {% for i in '1234567' %}
+                                        {% include "main/medico/horarios/horario_dia.html" with dia=i %}
+                                    {% endfor %}
+                                </div>
+                            </div>          
+                        </div>
