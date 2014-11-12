@@ -79,7 +79,7 @@ class Especializacao(models.Model):
         e = {}
         e['id'] = self.id
         e['nome'] = self.nome
-        return e
+        return e 
 
 class Horario(models.Model):
     medico = models.ForeignKey('Medico')
@@ -90,7 +90,7 @@ class Horario(models.Model):
 
     def __unicode__(self):
         return self.dia + ': ' + hora_inicio + ' - ' + hora_final
-    
+
 
 class Convenio(models.Model):
     """docstring for Convenio"""

@@ -1594,7 +1594,7 @@ def listar_horario(request):
 					PrintException()
 
 		#Pesquisa Consultas do dado medico no dado dia
-		# TODO
+		#TODO
 
 		#Retornar lista de horários disponíveis
 		return HttpResponse(json.dumps({'horarios': horarios}), content_type="application/json")

@@ -95,9 +95,9 @@ urlpatterns = patterns('',
         #URL para agendar horario de uma consulta
         url(r'^consultas/registrar_consulta_horario$','main.views.registrar_consulta_horario',name='registrar_consulta_horario'),
 
-        # ------------------------------------------------------------ #
+        # ------------------------------------------------------------- #
         #                   QrCode Scanner
-        # ------------------------------------------------------------ #
+        # ------------------------------------------------------------- #
      	#URL para leitura de QRCode
 		url(r'^qrCodeScanner$','main.views.qrCodeScan',name='qrCodeScan'),
 
