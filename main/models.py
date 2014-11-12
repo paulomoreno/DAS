@@ -90,6 +90,7 @@ class Horario(models.Model):
 
     def __unicode__(self):
         return self.dia + ': ' + hora_inicio + ' - ' + hora_final
+    
 
 class Convenio(models.Model):
     """docstring for Convenio"""

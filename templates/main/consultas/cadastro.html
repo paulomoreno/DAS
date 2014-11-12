@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css"/>
 	<script>
 		var csrftoken = "token";
-
+		var gambiarra_data = 0;
 
 
 		$(document).ready(function(){
@@ -18,6 +18,12 @@
 					var select_medico = document.getElementById("select_medico");
 					while (select_medico.firstChild) {
 					    select_medico.removeChild(select_medico.firstChild);
+					}
+
+					//Limpar lista de horário
+					var select_horario = document.getElementById("select_horario");
+					while(select_horario.firstChild){
+						select_horario.removeChild(select_horario.firstChild);
 					}
 
 					//Travar botão próximo
@@ -50,12 +56,79 @@
 
 				});
 			
-				
-				//Habilitar bõtão próximo caso um médico seja selecionado
+				//Carregar horários disponíveis para um médico
 				$('#select_medico').on('change',function(){
+
+					//Limpar lista de horário
+					var select_horario = document.getElementById("select_horario");
+					while(select_horario.firstChild){
+						select_horario.removeChild(select_horario.firstChild);
+					}
+
+					//Travar botão próximo
+					$('#btn_next').prop('disabled', true);
+					data_consulta = document.getElementById('data_consulta').value; 
+					//Carregar horários caso houve data selecionada
+					if(data_consulta!=""){
+						if(this.value != "Selecione"){
+							$.post("/consultas/listarHorario",{'medico':this.value,'data_consulta':data_consulta},
+								function(data, textStatus, xhr){
+										//listar horários disponíveis
+								  		var horario_option = document.createElement("option");
+										var horario_label = document.createTextNode("Selecione");
+										horario_option.appendChild(horario_label);
+										var horario_select = document.getElementById("select_horario");
+										horario_select.appendChild(horario_option);					
+							});
+						}
+				   }
+
+				});
+
+				$('#data_consulta').on('change',function(){
+					//Travar botão próximo
+					
+					$('#btn_next').prop('disabled', true);
+					//Verificar se médico != 'Selecione'
+					
+					gambiarra_data++;
+					if(gambiarra_data%3 == 0){
+						//Limpar lista de horário
+						var select_horario = document.getElementById("select_horario");
+						while(select_horario.firstChild){
+							select_horario.removeChild(select_horario.firstChild);
+						}
+
+						if(document.getElementById('select_medico').value !="Selecione"){
+							$.post("/consultas/listarHorario",{'medico':document.getElementById('select_medico').value,'data_consulta':this.value},
+								function(data,textStatus,xhr){
+										//listar horários disponíveis
+								  		var horario_option = document.createElement("option");
+										var horario_label = document.createTextNode("Selecione");
+										horario_option.appendChild(horario_label);
+										var horario_select = document.getElementById("select_horario");
+										horario_select.appendChild(horario_option);	
+
+								for(var i = 0; i <  data.horarios.length; i++){
+									//alert(data.response[i].nome);
+									var horario_option = document.createElement("option");
+									var horario_label = document.createTextNode(data.horarios[i]);
+									horario_option.appendChild(horario_label);
+									horario_option.setAttribute("value",data.horarios[i]);
+									var horario_select = document.getElementById("select_horario");
+									horario_select.appendChild(horario_option);
+								}
+								});
+						}
+						gambiarra_data = 0;
+					}
+				});
+
+
+				$('#select_horario').on('change',function(){
 					if(this.value !="Selecione"){
 						$('#btn_next').prop('disabled', false);
-					}
+					}						
 				});
 
 				//Recuperar cookie para evitar CSRF
@@ -149,6 +222,14 @@
 				    });
 				</script>
 	
+			</div>
+		</div>
+	</div>
+	<div class = "row">
+		<div class = "col-md-4">
+			<div class = "form-group">
+				<label for ="lhorario">Horários disponíveis</label>		
+				<select class="form-control" name="select_horario" id="select_horario"></select>		
 			</div>
 		</div>
 	</div>
