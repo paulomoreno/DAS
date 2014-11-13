@@ -846,7 +846,7 @@ def convenios(request):
 
     if request.method == 'GET':
         #Obtem todas as especialozacoes
-        convenios =  [c.json() for c in Convenio.objects.all()]
+        convenios =  [c for c in Convenio.objects.all()]
         #Retorna a página de tdas as espocializacoes
         return render_to_response('main/convenio/todos.html',{'convenios' : convenios}, context)
     else:
