@@ -123,6 +123,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
           {% endif %}
 
           {% if user.is_secretaria %}
+              <li><a href="{% url 'fila' %}"><span class="glyphicon glyphicon-align-justify"></span> Fila</a></li>
               <li><a href="{% url 'clientes' %}"><span class="glyphicon glyphicon-user"></span> Clientes</a></li>
               <li><a href="{% url 'qrCodeScan' %}"><span class="glyphicon glyphicon-qrcode"></span> Check In</a></li>
               <li><a href="{% url 'convenios' %}"><span class="glyphicon glyphicon-th"></span> Convênios</a></li>

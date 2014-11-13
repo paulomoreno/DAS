@@ -116,6 +116,7 @@ urlpatterns = patterns('',
 		#URL para alterar determinada especilizacao
 		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_especializacao',name='alterar_especializacao'),
 
+        url(r'^fila$','main.views.fila',name='fila'),
 
 
         #Retorna as informações de um salão especifico
@@ -126,4 +127,6 @@ urlpatterns = patterns('',
         #Caso o usuario digite qualquer coisa não prevista acima, retornar erro
         #para evitar que ele veja este arquivo na mensagem de erro
         url(r'.','main.views.avoid_eavesdropping',name='eavesdropping'), 
+
+
 )

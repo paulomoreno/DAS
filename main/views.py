@@ -17,6 +17,7 @@ import sys
 import json
 import datetime
 
+
 TAMANHO_MINIMO_SENHA = 6
 
 def is_admin(user): 
@@ -1669,3 +1670,17 @@ def listar_medico_espec(request):
 
 def avoid_eavesdropping(request):
     return HttpResponse('URL inválida',status=400);
+
+@login_required
+def fila(request):
+    context = RequestContext(request)
+
+    consultas = [con for con in Consulta.objects.all().order_by('data_hora')]
+
+    parametros = {}
+    parametros['consultas'] = consultas
+
+    if request.method == 'GET':
+        return render_to_response('main/fila/fila.html', parametros, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405) 

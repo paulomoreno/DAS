@@ -33,7 +33,7 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 # SSL Stuff
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 # Application definition
 
