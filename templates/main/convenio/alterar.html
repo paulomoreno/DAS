@@ -7,7 +7,7 @@
 
 {% block conteudo %}
 <h1>Cadastro de novo convênio:</h1>
-<form role="form" action="{% url 'alterar_convenio' cnpj %}" method="POST">
+<form role="form" action="{% url 'alterar_convenio' id %}" method="POST">
 {% csrf_token %}
   <div class="row">
   	<div class="form-group">

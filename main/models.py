@@ -100,7 +100,7 @@ class Horario(models.Model):
 
 class Convenio(models.Model):
     """docstring for Convenio"""
-    cnpj = models.CharField(max_length=16, primary_key=True)
+    cnpj = models.CharField(max_length=16, unique=True)
     razao_social = models.CharField(max_length=80)
 
     def __unicode__(self):

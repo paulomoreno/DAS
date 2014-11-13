@@ -846,7 +846,7 @@ def convenios(request):
 
     if request.method == 'GET':
         #Obtem todas as especialozacoes
-        convenios =  [c.json() for c in Convenio.objects.all()]
+        convenios =  [c for c in Convenio.objects.all()]
         #Retorna a página de tdas as espocializacoes
         return render_to_response('main/convenio/todos.html',{'convenios' : convenios}, context)
     else:
@@ -900,7 +900,7 @@ def registrar_convenio(request):
             try:
                 #A operacao deve ser atomica
                 with transaction.atomic():
-                    convenio = Convenio(cnpj=cnpj, razao_social=razao_social)
+                    convenio = Convenio.objects.create(cnpj=cnpj, razao_social=razao_social)
                     convenio.save()
 
                 messages.info(request, "Cadastro do convênio realizado com sucesso!")
@@ -908,7 +908,7 @@ def registrar_convenio(request):
             except Exception, e:
                 #Para qualquer problema, retorna um erro interno                
                 PrintException()
-                if 'unique' in e.message:
+                if 'unique' in e.message.lower():
                     messages.error(request, 'Convênio já existente.')
                 else:
                     messages.error(request, 'Erro desconhecido ao salvar o convênio.')
@@ -919,7 +919,7 @@ def registrar_convenio(request):
 
 @login_required
 @user_passes_test(is_admin_or_secretaria)
-def alterar_convenio(request, cnpj):
+def alterar_convenio(request, id):
     '''
     Esta funcao e responsavel por editar um convenio
 
@@ -928,9 +928,10 @@ def alterar_convenio(request, cnpj):
 
     context = RequestContext(request)
 
-    convenio = Convenio.objects.get(cnpj=cnpj)
+    convenio = Convenio.objects.get(id=id)
 
     parametros = {}
+    parametros['id'] = convenio.id
     parametros['cnpj'] = convenio.cnpj
     parametros['razao_social'] = convenio.razao_social
 
@@ -970,7 +971,7 @@ def alterar_convenio(request, cnpj):
 
 @login_required
 @user_passes_test(is_admin_or_secretaria)
-def remover_convenio(request, cnpj):
+def remover_convenio(request, id):
     '''
     Esta função e responsável remover um convenio
 
@@ -982,14 +983,14 @@ def remover_convenio(request, cnpj):
     if request.method == 'POST':
 
         error = False
-        if cnpj is None or cnpj =='':
+        if id is None or id =='':
             messages.error(request, 'CNPJ Inválido!')
             error = True
 
         if not error:
             try:
                 with transaction.atomic():
-                    Convenio.objects.filter(cnpj=cnpj).delete()
+                    Convenio.objects.filter(id=id).delete()
 
                 messages.info(request, 'Convênio removido com sucesso')
             except Exception, e:
@@ -1550,54 +1551,54 @@ def registrar_consulta(request):
 @login_required
 @user_passes_test(is_cliente)
 def listar_horario(request):
-	'''
-	Esta função é responável por retornar todos os horários disponíveis
-	de um médico num determinado dia
+    '''
+    Esta função é responável por retornar todos os horários disponíveis
+    de um médico num determinado dia
 
-	Esta função aceita apenas pedidos POST
+    Esta função aceita apenas pedidos POST
 
-	POST:
-		Retorna os horários disponíveis de um médico num determinado dia
-	'''
+    POST:
+        Retorna os horários disponíveis de um médico num determinado dia
+    '''
 
-	context = RequestContext(request)
-	if (request.method =='POST'):
-		medico = request.POST['medico']
-		data_consulta = request.POST['data_consulta']
+    context = RequestContext(request)
+    if (request.method =='POST'):
+        medico = request.POST['medico']
+        data_consulta = request.POST['data_consulta']
 
-		#Converter data em dia da semana
-		dia_semana = datetime.datetime.strptime(data_consulta,'%d/%m/%Y').strftime('%w')
-		#Pesquisar horário de serviço do médico no dia
-		
-		try:
-			#Transformar a duração da consulta em um objeto datetime.timedelta
-			duracao_consulta = datetime.timedelta(minutes = Medico.objects.get(id=medico).duracao_consulta)
+        #Converter data em dia da semana
+        dia_semana = datetime.datetime.strptime(data_consulta,'%d/%m/%Y').strftime('%w')
+        #Pesquisar horário de serviço do médico no dia
+        
+        try:
+            #Transformar a duração da consulta em um objeto datetime.timedelta
+            duracao_consulta = datetime.timedelta(minutes = Medico.objects.get(id=medico).duracao_consulta)
 
-			#Recuperar os horários de inicio e fim de trabalho do médico no dia em questão (podem haver vários turnos ao longo do dia)
-			horarios_ini_fim = [[h.hora_inicio,h.hora_final] for h in Horario.objects.filter(medico=medico,dia=dia_semana)]
-			horarios = []
+            #Recuperar os horários de inicio e fim de trabalho do médico no dia em questão (podem haver vários turnos ao longo do dia)
+            horarios_ini_fim = [[h.hora_inicio,h.hora_final] for h in Horario.objects.filter(medico=medico,dia=dia_semana)]
+            horarios = []
 
-			#Criar lista de horários de consultas(Hora_inicio - Hora_Fim)
-			for hi, hf in horarios_ini_fim:
-				hora = hi
-				while hora < hf:
-					#hora_nova =  hora_atual+delta
-					hora_nova = (datetime.datetime.combine(datetime.date.today(), hora) + duracao_consulta).time()
-					
-					#anexar intervalo na lista de horários
-					horarios.append(hora.strftime("%H:%M") + ' - '  + hora_nova.strftime("%H:%M"))
-					
-					#atualizar hora
-					hora = hora_nova
+            #Criar lista de horários de consultas(Hora_inicio - Hora_Fim)
+            for hi, hf in horarios_ini_fim:
+                hora = hi
+                while hora < hf:
+                    #hora_nova =  hora_atual+delta
+                    hora_nova = (datetime.datetime.combine(datetime.date.today(), hora) + duracao_consulta).time()
+                    
+                    #anexar intervalo na lista de horários
+                    horarios.append(hora.strftime("%H:%M") + ' - '  + hora_nova.strftime("%H:%M"))
+                    
+                    #atualizar hora
+                    hora = hora_nova
 
-		except Exception, e:
-					PrintException()
+        except Exception, e:
+                    PrintException()
 
-		#Pesquisa Consultas do dado medico no dado dia
-		#TODO
+        #Pesquisa Consultas do dado medico no dado dia
+        #TODO
 
-		#Retornar lista de horários disponíveis
-		return HttpResponse(json.dumps({'horarios': horarios}), content_type="application/json")
+        #Retornar lista de horários disponíveis
+        return HttpResponse(json.dumps({'horarios': horarios}), content_type="application/json")
 
 @login_required
 @user_passes_test(is_cliente)
