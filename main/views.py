@@ -16,6 +16,7 @@ import linecache, datetime
 import sys
 import json
 import datetime
+from datetime import datetime, time, date
 
 
 TAMANHO_MINIMO_SENHA = 6
@@ -196,11 +197,10 @@ def registrar_cliente(request):
                 #A operacao deve ser atomica
                 with transaction.atomic():
                     #Cria usuario
-                    cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, convenio=convenio)
+                    cliente = Cliente.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, convenio=convenio, cpf=cpf)
                     
                     #Insere os campos obrigatorios
                     cliente.rg = rg
-                    cliente.cpf = cpf
                     cliente.is_cliente = True
 
                     #Caso existentes, insere os campos nao obrigatorios
@@ -491,11 +491,11 @@ def registrar_medico(request):
                 #A operacao deve ser atomica
                 with transaction.atomic():
                     #Cria usuario
-                    medico = Medico.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, duracao_consulta=duracao_consulta, especializacao=espec)
+                    medico = Medico.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, duracao_consulta=duracao_consulta, especializacao=espec, cpf=cpf)
                   
                     #Insere os campos obrigatorios
                     medico.rg = rg
-                    medico.cpf = cpf
+                  
                     medico.crm = crm
                     medico.is_medico = True
 
@@ -1358,11 +1358,10 @@ def registrar_secretaria(request):
                 #A operacao deve ser atomica
                 with transaction.atomic():
                     #Cria usuario
-                    secretaria = Secretaria.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha)
+                    secretaria = Secretaria.objects.create_user(username=email, first_name=nome, last_name=sobrenome, password=senha, cpf=cpf)
                   
                     #Insere os campos obrigatorios
                     secretaria.rg = rg
-                    secretaria.cpf = cpf
                     secretaria.is_secretaria = True
 
                     #Caso existentes, insere os campos nao obrigatorios
@@ -1676,8 +1675,19 @@ def avoid_eavesdropping(request):
 def fila(request):
     context = RequestContext(request)
 
-    consultas = [con for con in Consulta.objects.all().order_by('data_hora')]
+    data = date.today()
 
+    try:
+        consultas = [con for con in Consulta.objects.all().filter(data_hora__range=(datetime.combine(data, time.min),datetime.combine(data, time.max))).order_by('data_hora')]
+        
+    except Exception, e:
+        PrintException()
+
+
+    for c in consultas:
+        print c.data_hora
+        c.data_hora = c.data_hora.strftime("%d/%m - %H:%M")
+        
     parametros = {}
     parametros['consultas'] = consultas
 
