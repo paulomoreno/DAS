@@ -17,7 +17,7 @@ class Usuario(AbstractUser):
 
     #Informacoes comuns
     rg = models.CharField(max_length=15)
-    cpf = models.CharField(max_length=15)
+    cpf = models.CharField(max_length=15, unique=True)
 
     telefone = models.CharField(max_length=20)
     endereco = models.CharField(max_length=120)
@@ -40,6 +40,9 @@ class Cliente(Usuario):
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
 
+    def __unicode__(self):
+        return self.first_name
+
 class Secretaria(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
     
@@ -49,7 +52,7 @@ class Secretaria(Usuario):
 
 class Medico(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
-    crm = models.CharField(max_length=16)
+    crm = models.CharField(max_length=16, unique=True)
     duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
     especializacao = models.ForeignKey('Especializacao')
 
@@ -67,6 +70,9 @@ class Medico(Usuario):
     class Meta:
         verbose_name = "Medico"
         verbose_name_plural = "Medicos"
+
+    def __unicode__(self):
+        return self.first_name
 
 
 class Especializacao(models.Model):
@@ -116,4 +122,4 @@ class Consulta(models.Model):
     checkin = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.cliente + ' ' + self.medico 
+        return self.id
