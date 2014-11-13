@@ -896,9 +896,6 @@ def registrar_convenio(request):
             erro = True
 
         if not erro:
-            #Remove coisas estranhas do cnpj
-            cnpj = cnpj.replace('/','').replace('.','').replace('-','')
-
             #Tenta salvar a especializacao no banco
             try:
                 #A operacao deve ser atomica
@@ -922,7 +919,7 @@ def registrar_convenio(request):
 
 @login_required
 @user_passes_test(is_admin_or_secretaria)
-def alterar_convenio(request, cnpj):
+def alterar_convenio(request, id):
     '''
     Esta funcao e responsavel por editar um convenio
 
@@ -931,9 +928,10 @@ def alterar_convenio(request, cnpj):
 
     context = RequestContext(request)
 
-    convenio = Convenio.objects.get(cnpj=cnpj)
+    convenio = Convenio.objects.get(id=id)
 
     parametros = {}
+    parametros['id'] = convenio.id
     parametros['cnpj'] = convenio.cnpj
     parametros['razao_social'] = convenio.razao_social
 
@@ -973,7 +971,7 @@ def alterar_convenio(request, cnpj):
 
 @login_required
 @user_passes_test(is_admin_or_secretaria)
-def remover_convenio(request, cnpj):
+def remover_convenio(request, id):
     '''
     Esta função e responsável remover um convenio
 
@@ -985,14 +983,14 @@ def remover_convenio(request, cnpj):
     if request.method == 'POST':
 
         error = False
-        if cnpj is None or cnpj =='':
+        if id is None or id =='':
             messages.error(request, 'CNPJ Inválido!')
             error = True
 
         if not error:
             try:
                 with transaction.atomic():
-                    Convenio.objects.filter(cnpj=cnpj).delete()
+                    Convenio.objects.filter(id=id).delete()
 
                 messages.info(request, 'Convênio removido com sucesso')
             except Exception, e:
