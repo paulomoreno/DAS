@@ -18,28 +18,10 @@
 {% endblock %}
 
 {% block conteudo %}
+<h1 class="header_registro">Nova Secretaria</h1>
 <form role="form" action="{% url 'registrar_secretaria' %}" method="post">
   {% csrf_token %}
 
-
-            
-    <div class="row">
-
-        <div class="col-md-1">
-        </div>
-
-        <div class="col-md-6">
-        <h2 class="form-signin-heading center-text">Nova Secretaria</h2>
-        </div>
-
-        <div class="col-md-4">
-        </div>
-
-        <div class="col-md-1">
-        </div>
-
-
-    </div>
 
     <div class="row">
 
@@ -73,7 +55,7 @@
               
           </div>
 
-           <div class="col-md-6 linha_direita">
+           <div class="col-md-6 ">
               
             <div class="col-md-2">
             </div>

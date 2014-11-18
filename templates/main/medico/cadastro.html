@@ -19,126 +19,116 @@
 {% endblock %}
 
 {% block conteudo %}
-<h1>Cadastro de novo Médico:</h1>
+<h1 class="header_registro">Novo Médico</h1>
+
 <form role="form" action="{% url 'registrar_medico' %}" method="post">
   {% csrf_token %}
-  <div class="row">
-  	<div class="form-group">
-		<div class="col-md-2" >
-	    	<label for="firstNameInput">Primeiro Nome</label>
-	 	    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome" value="{{ nome }}">
-	 	</div>
-	  	<div class="col-md-2">
-	  		<label for="lastName"> Sobrenome</label>
-	  		<input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">	
-		</div>  	  		
-  	</div>
-  </div>
-
-  <div class="row">
- 	 <div class="form-group">
- 		<div class ="col-md-4">
-		    <label for="emailInput">E-mail</label>
-   		    <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}"> 		
- 		</div>
- 	 </div>
-  </div>
-
-  <div class="row">
-   <div class="form-group">
-    <div class ="col-md-4">
-        <label for="espec">Especializacao</label>
-        <select id="espec" class="form-control" name="especializacao">
-          {% for e in especializacoes %}
-            <option value="{{ e.id }}" {% if e.id == especializacao %}selected{% endif %}>{{ e.nome }}</option>
-          {% endfor %}
-        </select>
-    </div>
-   </div>
-  </div>
-
-  <div class="row">
-  	<div class="form-group">
- 		<div class ="col-md-4">
-   		 	<label for="userPassword">Senha</label>
-   		 	<input type="password" class="form-control"id="passwordInput" placeholder="Senha" name="senha">
-   			 <p class="help-block">Sua senha deve ter no minimo 6 caracteres</p> 		
- 		</div>
-  	</div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Confirmar Senha</label>
-        <input type="password" class="form-control"id="passwordInput" placeholder="Confirmar Senha" name="confirmar_senha">
-    </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Endereço</label>
-        <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
-    </div>
-    </div>
-  </div>
 
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Telefone</label>
-        <input type="text" class="form-control telefone"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
-    </div>
-    </div>
-  </div>
+    <div class="row form_registro">
 
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">RG</label>
-        <input type="text" class="form-control rg"id="" placeholder="RG" name="rg" value="{{ rg }}">
-    </div>
-    </div>
-  </div>
+        <div class="col-md-6 linha_direita">
+              
+            <div class="col-md-2">
+            </div>
+
+              <div class="col-md-8">
+
+                    <label for="firstNameInput">Primeiro Nome</label>
+                    <input type="text" class="form-control" id="firstNameInput" placeholder="Primeiro Nome" name="nome" value="{{ nome }}">
+
+                    <label for="lastName"> Sobrenome</label>
+                    <input type="text" class="form-control" id="lastNameInput" placeholder="Sobrenome" name="sobrenome" value="{{ sobrenome }}">  
 
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">CPF</label>
-        <input type="text" class="form-control cpf"id="" placeholder="CPF" name="cpf" value="{{ cpf }}">
-    </div>
-    </div>
-  </div>
+                    <label for="emailInput">E-mail</label>
+                      <input type="email" class="form-control" id="emailInput" placeholder="E-mail" name="email" value="{{ email }}">     
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">CRM</label>
-        <input type="text" class="form-control crm"id="" placeholder="CRM" name="crm" value="{{ crm }}">
-    </div>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="form-group">
-    <div class ="col-md-4">
-        <label for="userPassword">Duração da Consulta (minutos)</label>
-        <input type="text" class="form-control duracao"id="" placeholder="Duração da Consulta(minutos)" name="duracao_consulta" value="{{ duracao_consulta }}">
-    </div>
-    </div>
-  </div>
-  &nbsp;
-  <div class="form-group">
-      <div class="row">
-        <div class="col-xs-2">
-          <button type="submit" class="btn btn-success"  >Cadastrar!</button>
+
+                    <label for="espec">Especializacao</label>
+                    <select id="espec" class="form-control" name="especializacao">
+                      {% for e in especializacoes %}
+                        <option value="{{ e.id }}" {% if e.id == especializacao %}selected{% endif %}>{{ e.nome }}</option>
+                      {% endfor %}
+                    </select>
+
+
+                    <label for="userPassword">Senha</label>
+                    <input type="password" class="form-control"id="passwordInput" placeholder="Senha" name="senha">
+                     <p class="help-block">Sua senha deve ter no minimo 6 caracteres</p>    
+
+                    <label for="userPassword">Confirmar Senha</label>
+                    <input type="password" class="form-control"id="passwordInput" placeholder="Confirmar Senha" name="confirmar_senha">
+
+            </div>
+            <div class="col-md-2">
+            </div>
+
+              
+          </div>
+
+           <div class="col-md-6">
+              
+            <div class="col-md-2">
+            </div>
+
+              <div class="col-md-8">
+
+
+                    <label for="userPassword">Endereço</label>
+                    <input type="text" class="form-control"id="" placeholder="Endereço" name="endereco" value="{{ endereco }}">
+
+                    <label for="userPassword">Telefone</label>
+                    <input type="text" class="form-control telefone"id="" placeholder="Telefone" name="telefone" value="{{ telefone }}">
+
+                    <label for="userPassword">RG</label>
+                    <input type="text" class="form-control rg"id="" placeholder="RG" name="rg" value="{{ rg }}">
+
+                    <label for="userPassword">CPF</label>
+                    <input type="text" class="form-control cpf"id="" placeholder="CPF" name="cpf" value="{{ cpf }}">
+
+                    <label for="userPassword">CRM</label>
+                    <input type="text" class="form-control crm"id="" placeholder="CRM" name="crm" value="{{ crm }}">
+
+                    <label for="userPassword">Duração da Consulta (minutos)</label>
+                    <input type="text" class="form-control duracao"id="" placeholder="Duração da Consulta(minutos)" name="duracao_consulta" value="{{ duracao_consulta }}">
+
+            </div>
+            <div class="col-md-2">
+            </div>
+
         </div>  
-      </div>  	
-  </div>
+
+    </div>  
+
+
+
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+          <div class="col-md-2">
+          </div>
+
+          <div class="col-md-8">
+                          &nbsp;
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom:20px">Salvar</button> 
+          </div>
+
+          <div class="col-md-2">
+          </div>
+
+        </div>
+
+        <div class="col-md-6">
+        </div>
+
+
+    </div>
+
 </form>
 {%  endblock %}

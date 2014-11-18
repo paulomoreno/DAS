@@ -123,3 +123,8 @@ background-image: linear-gradient(to bottom, #EDF7F5 0%, #75EBAC 100%);
 .linha_direita{
 	border-right: 1px solid #cccccc;
 }
+
+.header_registro{
+	padding-left: 20px;
+	padding-bottom: 40px;
+}
