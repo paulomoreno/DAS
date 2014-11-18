@@ -89,7 +89,7 @@
             
             <form role="form" action="showHide">
                 <div class="showHideDiv" style="display:block">
-                    <h2 class="form-signin-heading">{% if user.is_secretaria or user.is_staff or user.is_admin %}Novo Cliente{% else %}Cadastrar{% endif %}</h2>
+                    <h2 class="form-signin-heading text-center">{% if user.is_secretaria or user.is_staff or user.is_admin %}Novo Cliente{% else %}Cadastrar{% endif %}</h2>
 
                     <label for="emailInput">E-mail</label>
                     <input type="email" class="form-control" id="emailInput" placeholder="email" name="email" value="{{ form.email }}"> 

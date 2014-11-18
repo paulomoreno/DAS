@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/cadastro.css"%}"/>
+{% endblock %}
 
 {% block title %}Novo convênio{% endblock %}
 
@@ -14,34 +16,24 @@
   </script>
 {% endblock %}
 
+
 {% block conteudo %}
-<h1>Cadastro de novo convênio:</h1>
-<form role="form" action="{% url 'registrar_convenio' %}" method="POST">
+
+<form role="form" action="{% url 'registrar_especializacao' %}" method="POST">
 {% csrf_token %}
-  <div class="row">
-  	<div class="form-group">
-		<div class="col-md-4" >
-	    	<label for="especializacao">CNPJ</label>
-	 	    <input type="text" class="form-control cnpj" id="razao_social" placeholder="CNPJ" name="cnpj">
-	 	</div>
-  	</div>
-  </div>
 
-  <div class="row">
-    <div class="form-group">
-    <div class="col-md-4" >
-        <label for="especializacao">Razão Social</label>
-        <input type="text" class="form-control" id="razao_social" placeholder="Razão Social" name="razao_social">
-    </div>
-    </div>
-  </div>
+ <div class="row text-center">
+        <div class="col-md-4 col-md-offset-4" style="background-color: white;"> 
+   
+            <h2>Novo Convênio</h1>
+            &nbsp;
+            <input type="text" class="form-control cnpj text-center" id="razao_social" placeholder="CNPJ" name="cnpj">
+            &nbsp;
+            <input type="text" class="form-control text-center" id="razao_social" placeholder="Razão Social" name="razao_social">
+            &nbsp;
+            <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom:20px">Salvar</button> 
+          </div>
 
-  &nbsp;
-  <div class="row">
-    <div class="form-group">
-    	<div class="col-xs-2">
-    		<button type="submit" class="btn btn-default">Cadastrar!</button>
     </div>
-  </div>
 </form>
 {%  endblock %}
