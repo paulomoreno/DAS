@@ -119,3 +119,7 @@ background-image: linear-gradient(to bottom, #EDF7F5 0%, #75EBAC 100%);
 .warning{
 	border-color: red;
 }
+
+.linha_direita{
+	border-right: 1px solid #cccccc;
+}
