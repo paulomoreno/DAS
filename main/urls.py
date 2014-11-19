@@ -38,7 +38,7 @@ urlpatterns = patterns('',
 		#URL para cadastro de novos médicos
         url(r'^medicos/novo$','main.views.registrar_medico',name='registrar_medico'),
         #URL para remover medico
-        url(r'^medicos/(?P<crm>[a-zA-Z0-9\-]+)/remover$','main.views.remover_medico',name='remover_medico'),
+        url(r'^medicos/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_medico',name='remover_medico'),
         #URL para alterar medicos
         url(r'^medicos/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_medico',name='alterar_medico'),
 
