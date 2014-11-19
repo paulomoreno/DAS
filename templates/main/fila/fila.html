@@ -1,10 +1,42 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/cadastro.css"%}"/>
+{% endblock %}
 
 {% block title %}Cadastro{% endblock %}
 {% block javascript %}
+<script type="text/javascript" src="{% static "js/jquery.cookie.js"%}"></script>
+<script type="text/javascript">
+    
+    function atualizaTabela(){
+        $.get("/filaTabela", function(data){
+            $('#tabela').html(data);
+        });
+    };
+
+
+    $(document).ready(function(){
+        setInterval(function(){atualizaTabela();},5000);
+
+        csrftoken = $.cookie('csrftoken');
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+    });
+
+</script>
 {% endblock %}
 {% block conteudo %}
 
@@ -15,17 +47,15 @@
                 <th style="text-align:center"> Nome</th>
                 <th style="text-align:center"> Horario</th>
                 <th style="text-align:center"> Medico</th>
+                <th style="text-align:center"> Check in</th>
+
             </tr>
         </thead>
-        <tbody>
-        {% for c in consultas %}
-            <tr>
-                <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
-                <td>{{ c.data_hora }}</td>
-                <td>{{ c.medico.first_name }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
+
+        <tbody id="tabela">
+        {% include "main/fila/fila_tabela.html" %}
+        </tbody>        
+
     </table>
     </div>
 

@@ -1,0 +1,17 @@
+{% for c in consultas %}
+    {% if c.checkin %}
+    <tr class="success">
+        <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
+        <td>{{ c.data_hora }}</td>
+        <td>{{ c.medico.first_name }}</td>
+        <td>{{ c.checkin }}</td>
+    </tr>
+    {% else %}
+    <tr class="warning">
+        <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
+        <td>{{ c.data_hora }}</td>
+        <td>{{ c.medico.first_name }}</td>
+        <td>{{ c.checkin }}</td>
+    </tr>
+    {% endif %}
+{% endfor %}

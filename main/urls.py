@@ -115,7 +115,14 @@ urlpatterns = patterns('',
 		#URL para alterar determinada especilizacao
 		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_especializacao',name='alterar_especializacao'),
 
+
+        # ------------------------------------------------------------ #
+        #                   Fila
+        # ------------------------------------------------------------ #
+        #URL para a fila de espera
         url(r'^fila$','main.views.fila',name='fila'),
+        #URL para tabela da fila
+        url(r'^filaTabela$','main.views.fila_tabela',name='fila_tabela'),
 
 
         #Retorna as informações de um salão especifico
