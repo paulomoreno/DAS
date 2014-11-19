@@ -17,6 +17,7 @@ import sys
 import json
 import datetime
 from datetime import datetime, time, date,timedelta
+from django.core.paginator import Paginator
 
 
 TAMANHO_MINIMO_SENHA = 6
@@ -1509,6 +1510,53 @@ def remover_secretaria(request, id):
 
     return HttpResponse('Método Não Permitido',status=405)
 
+@login_required
+@user_passes_test(is_admin_or_secretaria)
+def listar_consultas_secretaria(request,pageN):
+    '''
+        Método responsável por listar consultas por ordem decrecente de data_hora
+
+        Este método só aceita pedidos GET
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        consultas = [c.json() for c in Consulta.objects.all().order_by('-data_hora')] 
+        
+        try:
+            pages = Paginator(consultas,20)
+        except Exception, e:
+            PrintException()
+
+        try:
+            consultas = pages.page(pageN)
+        except (EmptyPage, InvalidPage):
+            consultas = pages.page(pages.num_pages)
+
+        return render_to_response('main/secretaria/consultas.html',{'consultas':consultas,'pageN':pageN},context);
+    else:
+        return HttpResponse('Método Não Permitido',status=405)
+
+@login_required
+@user_passes_test(is_admin_or_secretaria)
+def checkin_secretaria(request,id,pageN):
+    '''
+        Método responsável por realizar o checkin de uma consulta
+
+        Este método só aceita pedidos GET
+    '''
+
+    context = RequestContext(request)
+
+    if request.method == 'GET':
+        c = Consulta.objects.get(id=id)
+        c.checkin = not c.checkin
+        c.save()
+        return listar_consultas_secretaria(request,pageN)
+    else:
+
+        return HttpResponse('Método Não Permitido',status=405)
 
 # ----------------------------------------------------------------------------------- #
 #                                 Consultas

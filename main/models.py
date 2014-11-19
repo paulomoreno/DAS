@@ -128,6 +128,7 @@ class Consulta(models.Model):
         consulta['medico']    = self.medico.first_name+' '+self.medico.last_name
         consulta['data_hora'] = self.data_hora.strftime('%d/%m/%Y  -  %H:%M')
         consulta['especializacao'] = self.medico.especializacao.nome
+        consulta['checkin'] = self.checkin
         return consulta
 
     def __unicode__(self):

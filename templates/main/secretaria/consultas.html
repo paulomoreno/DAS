@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Consultas{% endblock %}
+
+{% block conteudo %}
+
+	<a href="{% url 'registrar_consulta' %}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Marcar Nova Consulta </button> </a>
+
+	<h1 class="lead">Consultas</h1>
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
+        <thead  class="tabela_cabecalho">
+            <tr>
+                <th style="text-align:center"> Data</th>
+                <th style="text-align:center"> Paciente</th>
+                <th style="text-align:center"> Médico</th>
+                <th style="text-align:center"> Especialização</th>
+                <th style="text-align:center"> Check-in </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in consultas %}
+            
+                <tr>
+                    <td style="text-align:center">{{c.data_hora}}</td>
+                    <td style="text-align:center">{{c.cliente}}</td>
+                    <td style="text-align:center">{{c.medico}}</td>
+                    <td style="text-align:center">{{c.especializacao}}</td>
+                    
+                    {% if c.checkin %}
+                    <td style="text-align:center" class = "success">
+                          <a href="/secretarias/{{c.id}}/{{pageN}}/check">  Realizado </a>
+                    {% else %}
+                    <td style="text-align:center" class = "warning">
+                          <a href="/secretarias/{{c.id}}/{{pageN}}/check">  Não Realizado </a>
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+	
+
+{% endblock %}

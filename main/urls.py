@@ -53,6 +53,10 @@ urlpatterns = patterns('',
         url(r'^secretarias/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_secretaria',name='remover_secretaria'),
         #URL para alterar secretaria
         url(r'^secretarias/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_secretaria',name='alterar_secretaria'),
+        #URL para listar as consultas sob visao de uma secretaria
+        url(r'^secretarias/(?P<pageN>[0-9\-]+)/consultas$','main.views.listar_consultas_secretaria',name='listar_consultas_secretaria'),
+        #URL para realizar o check-in de uma consulta
+        url(r'^secretarias/(?P<id>[a-zA-Z0-9\-]+)/(?P<pageN>[0-9\-]+)/check$','main.views.checkin_secretaria',name='checkin_secretaria'),
 
         # ------------------------------------------------------------ #
         #                   Convenios
