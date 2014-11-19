@@ -20,3 +20,6 @@
 
 # BD
 *.sqlite3
+
+# migrations do banco de dados
+main/migrations/*

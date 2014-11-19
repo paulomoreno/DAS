@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block css %}{% endblock %}
+{% block css %}  
+<link rel="stylesheet" href="{% static "css/cadastro.css"%}"/>
+{% endblock %}
 
 {% block title %}Cadastro{% endblock %}
 {% block javascript %} 
@@ -83,11 +85,11 @@
 
     <div class="row">
 
-        <div class="col-md-4 col-md-offset-4" style="background-color: #eee;"> 
+        <div class="col-md-4 col-md-offset-4" style="background-color: white;"> 
             
             <form role="form" action="showHide">
                 <div class="showHideDiv" style="display:block">
-                    <h2 class="form-signin-heading">Cadastrar</h2>
+                    <h2 class="form-signin-heading text-center">{% if user.is_secretaria or user.is_staff or user.is_admin %}Novo Cliente{% else %}Cadastrar{% endif %}</h2>
 
                     <label for="emailInput">E-mail</label>
                     <input type="email" class="form-control" id="emailInput" placeholder="email" name="email" value="{{ form.email }}"> 
@@ -142,7 +144,8 @@
                             <option value="{{conv.cnpj}}">{{conv.razao_social}}</option>
                             {% endfor %}
                         </select> 
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">Completar Registro!</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" style="margin-top: 20px; margin-bottom: 20px">{% if user.is_secretaria or user.is_staff or user.is_admin %}Salvar{% else %}Completar Registro!{% endif %}</button>
+                    
                 </div> 
             </form>
                  

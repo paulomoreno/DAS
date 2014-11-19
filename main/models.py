@@ -17,7 +17,7 @@ class Usuario(AbstractUser):
 
     #Informacoes comuns
     rg = models.CharField(max_length=15)
-    cpf = models.CharField(max_length=15)
+    cpf = models.CharField(max_length=15, unique=True)
 
     telefone = models.CharField(max_length=20)
     endereco = models.CharField(max_length=120)
@@ -41,7 +41,11 @@ class Cliente(Usuario):
         verbose_name_plural = "Clientes"
 
     def __unicode__(self):
+<<<<<<< HEAD
         return self.first_name+' '+self.last_name
+=======
+        return self.first_name
+>>>>>>> a8298ec2ff22b7c3364f50cae0ced8afebc53424
 
 class Secretaria(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
@@ -52,7 +56,7 @@ class Secretaria(Usuario):
 
 class Medico(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
-    crm = models.CharField(max_length=16)
+    crm = models.CharField(max_length=16, unique=True)
     duracao_consulta = models.PositiveSmallIntegerField(max_length=15)
     especializacao = models.ForeignKey('Especializacao')
 
@@ -71,6 +75,9 @@ class Medico(Usuario):
     class Meta:
         verbose_name = "Medico"
         verbose_name_plural = "Medicos"
+
+    def __unicode__(self):
+        return self.first_name
 
 
 class Especializacao(models.Model):
@@ -98,7 +105,7 @@ class Horario(models.Model):
 
 class Convenio(models.Model):
     """docstring for Convenio"""
-    cnpj = models.CharField(max_length=16, primary_key=True)
+    cnpj = models.CharField(max_length=16, unique=True)
     razao_social = models.CharField(max_length=80)
 
     def __unicode__(self):
@@ -127,5 +134,4 @@ class Consulta(models.Model):
         return consulta
 
     def __unicode__(self):
-        cliente = Cliente.objects.get(pk=self.cliente)
-        return cliente.first_name + ' ' + self.medico 
+        return self.id

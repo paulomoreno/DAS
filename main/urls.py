@@ -61,9 +61,9 @@ urlpatterns = patterns('',
 		#URL para cadastro de novos convenios
         url(r'^convenios/novo$','main.views.registrar_convenio',name='registrar_convenio'),
         #URL para remover convenio
-        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/remover$','main.views.remover_convenio',name='remover_convenio'),
+        url(r'^convenio/(?P<id>[a-zA-Z0-9\-]+)/remover$','main.views.remover_convenio',name='remover_convenio'),
         #URL para editar convenio
-        url(r'^convenio/(?P<cnpj>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_convenio',name='alterar_convenio'),
+        url(r'^convenio/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_convenio',name='alterar_convenio'),
 
         # ------------------------------------------------------------ #
         #                   Horarios
@@ -117,6 +117,7 @@ urlpatterns = patterns('',
 		#URL para alterar determinada especilizacao
 		url(r'^especializacoes/(?P<id>[a-zA-Z0-9\-]+)/alterar$','main.views.alterar_especializacao',name='alterar_especializacao'),
 
+        url(r'^fila$','main.views.fila',name='fila'),
 
 
         #Retorna as informações de um salão especifico
@@ -127,4 +128,6 @@ urlpatterns = patterns('',
         #Caso o usuario digite qualquer coisa não prevista acima, retornar erro
         #para evitar que ele veja este arquivo na mensagem de erro
         url(r'.','main.views.avoid_eavesdropping',name='eavesdropping'), 
+
+
 )

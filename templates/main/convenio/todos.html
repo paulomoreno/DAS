@@ -23,12 +23,12 @@
             <tr>
                 <td>{{ c.cnpj }}</td>
                 <td>{{ c.razao_social }}</td>
-                <td align="center"><a href="/convenio/{{ c.cnpj }}/alterar"> <button type="button" class="btn btn-success"> Editar </button> </a>
+                <td align="center"><a href="{% url 'alterar_convenio' c.id %}"> <button type="button" class="btn btn-success"> Editar </button> </a>
                 </td>
                 <td align="center">
-                    <form role="form" action="/convenio/{{ c.cnpj }}/remover" method="post">
+                    <form role="form" action="{% url 'remover_convenio' c.id %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="remover" value="{{c.cnpj}}">Remover</button>    
+                        <button type="submit" class="btn btn-danger" name="remover">Remover</button>    
                     </form>
                 </td>
             </tr>
