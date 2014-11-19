@@ -86,14 +86,15 @@ urlpatterns = patterns('',
         #URL para cadastro de novas consultas
         url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
         
+        #URL para agendar horario de uma consulta
+        url(r'^consultas/registrar_consulta_resumo$','main.views.registrar_consulta_resumo',name='registrar_consulta_resumo'),
+
         #URL para listar médicos de uma dada especialização
         url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
 
         #URL para lista horários disponíveis de um médio
         url(r'^consultas/listarHorario$','main.views.listar_horario',name='listar_horario'),
 
-        #URL para agendar horario de uma consulta
-        url(r'^consultas/registrar_consulta_horario$','main.views.registrar_consulta_horario',name='registrar_consulta_horario'),
 
         # ------------------------------------------------------------- #
         #                   QrCode Scanner

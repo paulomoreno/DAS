@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block css %}{% endblock %}
+
+{% block title %}DAS - Visualização de Consulta{% endblock %}
+
+{% block conteudo %}
+	
+	<div class="form-group" >
+
+		<table class="table">
+			<thead>
+				<th style="text-align:center"><h2>Consulta Marcada com Sucesso !</h2></th>
+			</thead>
+			<tbody>
+				<tr><td><h3>Guarde este QRCode para check-in no dia da consulta</h3></td></tr>
+				<tr><td><img src="https://api.qrserver.com/v1/create-qr-code/?data={{consulta}}" /></td></tr>
+			</tbody>
+
+		</table>
+
+	</div>
+
+{% endblock %}

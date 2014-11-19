@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}Consultas{% endblock %}
+
+{% block conteudo %}
+
+	<a href="{% url 'registrar_consulta' %}"> <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Marcar Nova Consulta </button> </a>
+
+	<h1 class="lead">Consultas</h1>
+    <div class="panel panel-default">
+	<table class="table table-striped table-hover">
+        <thead  class="tabela_cabecalho">
+            <tr>
+                <th style="text-align:center"> Data</th>
+                <th style="text-align:center"> Médico</th>
+                <th style="text-align:center"> Especialização</th>
+                <th style="text-align:center"> QR Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in consultas %}
+            
+                <tr>
+                    <td style="text-align:center">{{c.data_hora}}</td>
+                    <td style="text-align:center">{{c.medico}}</td>
+                    <td style="text-align:center">{{c.especializacao}}</td>
+                    <td style="text-align:center">
+                      <a href = "/consultas/{{c.id}}/ver"><span  class="glyphicon glyphicon-qrcode"></span></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+	
+
+{% endblock %}

@@ -26,21 +26,26 @@
 						select_horario.removeChild(select_horario.firstChild);
 					}
 
+					//Limpar campo duração da consulta
+					document.getElementById("duracao").setAttribute("value","")
+
 					//Travar botão próximo
 					$('#btn_next').prop('disabled', true);
 
 					//Carregar médicos
 					if(this.value != "Selecione"){
-					  $.post( "/consultas/listarMedicosEspec",
+					  	$.post( "/consultas/listarMedicosEspec",
 	    					{'especId' : this.value},
 	    					function(data, textStatus, xhr){
+	    						//Carregar Opção Selecionar médico
+								var med_nome_option = document.createElement("option");
+								var med_nome_label = document.createTextNode("Selecione");
+								med_nome_option.appendChild(med_nome_label);
+								med_nome_option.setAttribute("value","NAOVALIDO")
+								var med_select = document.getElementById("select_medico");
+								med_select.appendChild(med_nome_option);
+							  	
 							  	//listar médicos
-							  		var med_nome_option = document.createElement("option");
-									var med_nome_label = document.createTextNode("Selecione");
-									med_nome_option.appendChild(med_nome_label);
-									var med_select = document.getElementById("select_medico");
-									med_select.appendChild(med_nome_option);
-
 								for(var i = 0; i <   data.response.length; i++){
 									//alert(data.response[i].nome);
 									var med_nome_option = document.createElement("option");
@@ -50,8 +55,17 @@
 									var med_select = document.getElementById("select_medico");
 									med_select.appendChild(med_nome_option);
 								}
+								
 							}
 	    				); 
+					}else{
+						//Carregar Opção Selecionar médico
+						var med_nome_option = document.createElement("option");
+						var med_nome_label = document.createTextNode("Selecione uma especialização");
+						med_nome_option.appendChild(med_nome_label);
+						med_nome_option.setAttribute("value","NAOVALIDO")
+						var med_select = document.getElementById("select_medico");
+						med_select.appendChild(med_nome_option);
 					}
 
 				});
@@ -65,59 +79,40 @@
 						select_horario.removeChild(select_horario.firstChild);
 					}
 
+					//Limpar campo duração da consulta
+					document.getElementById("duracao").setAttribute("value","")
+
 					//Travar botão próximo
 					$('#btn_next').prop('disabled', true);
 					data_consulta = document.getElementById('data_consulta').value; 
 					//Carregar horários caso houve data selecionada
 					if(data_consulta!=""){
-						if(this.value != "Selecione"){
 							$.post("/consultas/listarHorario",{'medico':this.value,'data_consulta':data_consulta},
 								function(data, textStatus, xhr){
-										//listar horários disponíveis
-								  		var horario_option = document.createElement("option");
-										var horario_label = document.createTextNode("Selecione");
-										horario_option.appendChild(horario_label);
-										var horario_select = document.getElementById("select_horario");
-										horario_select.appendChild(horario_option);					
+									popularHorario(data);
 							});
 						}
-				   }
+				   
 
 				}); 
 
 				$('#data_consulta').on('change',function(){
-					//Travar botão próximo
-					
-					$('#btn_next').prop('disabled', true);
-					//Verificar se médico != 'Selecione'
 					
 					gambiarra_data++;
 					if(gambiarra_data%3 == 0){
+						//Travar botão próximo
+						$('#btn_next').prop('disabled', true);
+
 						//Limpar lista de horário
 						var select_horario = document.getElementById("select_horario");
 						while(select_horario.firstChild){
 							select_horario.removeChild(select_horario.firstChild);
 						}
-
-						if(document.getElementById('select_medico').value !="Selecione"){
+			
+						if(document.getElementById('select_medico').value !="NAOVALIDO" ){
 							$.post("/consultas/listarHorario",{'medico':document.getElementById('select_medico').value,'data_consulta':this.value},
 								function(data,textStatus,xhr){
-										//listar horários disponíveis
-								  		var horario_option = document.createElement("option");
-										var horario_label = document.createTextNode("Selecione");
-										horario_option.appendChild(horario_label);
-										var horario_select = document.getElementById("select_horario");
-										horario_select.appendChild(horario_option);	
-
-								for(var i = 0; i <  data.horarios.length; i++){
-									//alert(data.response[i].nome);
-									var horario_option = document.createElement("option");
-									var horario_label = document.createTextNode(data.horarios[i]);
-									horario_option.appendChild(horario_label);
-									horario_option.setAttribute("value",data.horarios[i]);
-									var horario_select = document.getElementById("select_horario");
-									horario_select.appendChild(horario_option);
-								}
+									popularHorario(data);
 								});
 						}
 						gambiarra_data = 0;
@@ -128,7 +123,9 @@
 				$('#select_horario').on('change',function(){
 					if(this.value !="Selecione"){
 						$('#btn_next').prop('disabled', false);
-					}						
+					}else{
+						$('#btn_next').prop('disabled',true);
+					}				
 				});
 
 				//Recuperar cookie para evitar CSRF
@@ -137,6 +134,35 @@
 				function csrfSafeMethod(method) {
 			        // these HTTP methods do not require CSRF protection
 			        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			    }
+
+			    function popularHorario(data){
+			    	if(data.horarios[0]!="SH"){
+						//listar horários disponíveis
+				  		var horario_option = document.createElement("option");
+						var horario_label = document.createTextNode("Selecione");
+						horario_option.appendChild(horario_label);
+						var horario_select = document.getElementById("select_horario");
+						horario_select.appendChild(horario_option);	
+
+						for(var i = 0; i <  data.horarios.length; i++){
+							//alert(data.response[i].nome);
+							var horario_option = document.createElement("option");
+							var horario_label = document.createTextNode(data.horarios[i]);
+							horario_option.appendChild(horario_label);
+							horario_option.setAttribute("value",data.horarios[i]);
+							var horario_select = document.getElementById("select_horario");
+							horario_select.appendChild(horario_option);
+						}
+						document.getElementById("duracao").setAttribute("value",data.duracao)
+					}else{
+						var horario_option = document.createElement("option");
+						var horario_label = document.createTextNode("Não há horario disponível neste dia");
+						horario_option.appendChild(horario_label);
+						horario_option.setAttribute("value","NAOVALIDO")
+						var horario_select = document.getElementById("select_horario");
+						horario_select.appendChild(horario_option);	
+					}
 			    }
 			    
 			    $.ajaxSetup({
@@ -159,7 +185,7 @@
 
 {% block conteudo %}
 <h1>Marcar consulta</h1>
-<form role="form" action="{% url 'registrar_consulta_horario' %}" method="post">
+<form role="form" action="{% url 'registrar_consulta_resumo' %}" method="post">
 	{% csrf_token %}
 	<div class="row">
 		<div class="form-group">
@@ -181,13 +207,15 @@
 		<div class="form-group">
 			<div class = "col-md-4">
 				<label for="lmedico">Médico</label>
-				<select class="form-control" name="select_medico" id="select_medico"></select>
+				<select class="form-control" name="select_medico" id="select_medico">
+						<option value="NAOVALIDO">Selecione uma especialização</option> 
+				</select>
 			</div>
 		</div>
 	</div>
 	
 	<div class = "row">
-		<div class="col-md-3">
+		<div class="col-md-2">
 			<div class="form-group">
 				<label for="ldata">Data desejada</label>
 				
@@ -226,11 +254,15 @@
 		</div>
 	</div>
 	<div class = "row">
-		<div class = "col-md-4">
+		<div class = "col-md-2">
 			<div class = "form-group">
 				<label for ="lhorario">Horários disponíveis</label>		
 				<select class="form-control" name="select_horario" id="select_horario"></select>		
 			</div>
+		</div>
+		<div class = "col-md-2">
+			<label for="lduracao">Duração média em minutos</label>
+			<input class="form-control" type="text" id="duracao" name="duracao" readonly="true">
 		</div>
 	</div>
 	&nbsp;

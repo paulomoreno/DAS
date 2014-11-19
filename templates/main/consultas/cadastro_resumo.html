@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block css %}{% endblock %}
+
+{% block title %}DAS - Cadastro de Consulta{% endblock %}
+
+{% block conteudo %}
+
+<h1>Marcar consulta - Resumo</h1>
+<form role="form" action="{% url 'registrar_consulta' %}" method="post">
+{% csrf_token %}
+	<div class="form-group">
+		<div class = "row">
+			<div class="col-md-2">
+				<h3>Especialização</h3>
+				<h4> {{ especializacao.nome }} </h4>
+				<input type="hidden" value="{{especializacao.id}}" id="especializacao" name="especializacao">
+			</div>
+
+			<div class="col-md-2">
+				<h3>Médico</h3>
+				<h4>{{ medico.nome }} {{medico.sobrenome}}</h4>
+				<input type="hidden" value="{{medico.id}}" id="medico" name="medico">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<h3>Data</h3>
+				<h4>{{ data_consulta }}</h4>
+				<input type="hidden" value="{{data_consulta}}" id="data_consulta" name = "data_consulta">
+			</div>
+			<div class="col-md-2">
+				<h3>Horário</h3>
+				<h4>{{ hora_consulta }}</h4>
+				<input type="hidden" value ="{{hora_consulta}}" id = "hora_consulta" name="hora_consulta">
+			</div>
+		</div>
+		&nbsp;
+		<div class = "row">
+			<div class="form-group">
+				<div class="col-md-8">
+					<button class="btn btn-default" type="submit" id="btn_next">Confirmar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

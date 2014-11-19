@@ -40,6 +40,9 @@ class Cliente(Usuario):
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
 
+    def __unicode__(self):
+        return self.first_name+' '+self.last_name
+
 class Secretaria(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
     
@@ -61,7 +64,8 @@ class Medico(Usuario):
         medico['email'] = self.username
         medico['crm'] = self.crm
         medico['duracao_consulta'] = self.duracao_consulta
-
+        #espec = Especializacao.objects.get(id=self.especializacao)
+        medico['especializacao'] = self.especializacao.json()
         return medico
 
     class Meta:
@@ -115,5 +119,13 @@ class Consulta(models.Model):
     data_hora = models.DateTimeField(blank=False)
     checkin = models.BooleanField(default=False)
 
+    def json(self):
+        consulta = {}
+        consulta['cliente']   = cliente.first_name
+        consulta['medico']    = self.medico
+        consulta['data_hora'] = self.data_hora
+        return consulta
+
     def __unicode__(self):
-        return self.cliente + ' ' + self.medico 
+        cliente = Cliente.objects.get(pk=self.cliente)
+        return cliente.first_name + ' ' + self.medico 
