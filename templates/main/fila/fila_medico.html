@@ -18,10 +18,12 @@
         </thead>
         <tbody>
         {% for c in consultas %}
+        {% if coc%}
             <tr>
-                <td>{{ consultas.data_hora }}</td>
-                <td>{{ consultas.cliente.first_name }} {{ consultas.cliente.last_name }}</td>
+                <td>{{ c.data_hora }}</td>
+                <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
             </tr>
+        {% endif %}
         {% endfor %}
         </tbody>
     </table>

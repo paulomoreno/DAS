@@ -637,15 +637,14 @@ def get_medico_parametros(medico):
 
 @login_required
 @user_passes_test(is_admin)
-def remover_medico(request, crm):
+def remover_medico(request, id):
 
     try:
         context = RequestContext(request)
 
-        print crm
-
         if request.method == 'POST':
-            Medico.objects.filter(crm=crm).delete()
+            Medico.objects.filter(id=id).delete()
+
             #Retorna a página de todos os medicos
             messages.info(request, 'Medico removido com sucesso')
             return redirect('/medicos')
@@ -654,8 +653,7 @@ def remover_medico(request, crm):
     except Exception, e:
         #Para qualquer problema, retorna um erro interno                
         PrintException()
-
-
+        
     return HttpResponse('Método Não Permitido',status=405)
 
 # ----------------------------------------------------------------------------------- #
@@ -1819,5 +1817,30 @@ def fila(request):
 
     if request.method == 'GET':
         return render_to_response('main/fila/fila.html', parametros, context)
+    else:
+        return HttpResponse('Método Não Permitido',status=405) 
+
+@login_required
+def fila_tabela(request):
+    context = RequestContext(request)
+
+    data = date.today()
+
+    try:
+        consultas = [con for con in Consulta.objects.all().filter(data_hora__range=(datetime.combine(data, time.min),datetime.combine(data, time.max))).order_by('data_hora')]
+        
+    except Exception, e:
+        PrintException()
+
+
+    for c in consultas:
+        print c.data_hora
+        c.data_hora = c.data_hora.strftime("%d/%m - %H:%M")
+        
+    parametros = {}
+    parametros['consultas'] = consultas
+
+    if request.method == 'GET':
+        return render_to_response('main/fila/fila_tabela.html', parametros, context)
     else:
         return HttpResponse('Método Não Permitido',status=405) 

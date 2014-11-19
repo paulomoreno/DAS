@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block css %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static "css/cadastro.css"%}"/>
+{% endblock %}
 
 {% block title %}Editar Perfil{% endblock %}
 {% block javascript %} 
@@ -20,12 +22,8 @@
   {% csrf_token %}
 
 
-
-
-
-
   <div class="row">
-          <div class="col-md-4 col-md-offset-4" style="background-color: #eee;">
+          <div class="col-md-4 col-md-offset-4" style="background-color: white;">
                    
             <h1>Edição de Perfil</h1>
             <label for="firstNameInput" style="margin-top: 10px">Primeiro Nome</label>
