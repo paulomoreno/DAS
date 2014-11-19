@@ -41,12 +41,7 @@ class Cliente(Usuario):
         verbose_name_plural = "Clientes"
 
     def __unicode__(self):
-<<<<<<< HEAD
         return self.first_name+' '+self.last_name
-=======
-        return self.first_name
->>>>>>> a8298ec2ff22b7c3364f50cae0ced8afebc53424
-
 class Secretaria(Usuario):
     #usuario = models.OneToOneField(Usuario, null=True)
     
