@@ -42,7 +42,9 @@
                 $.post( "/qrCodeScanner/scancode",
     					{'qrCode' : content},
     					function(data, textStatus, xhr){
-    						criaMensagemErro("Usuario: "+data.response, "success");
+    						if(data.response == "S")criaMensagemErro("Check-in realizado com sucesso!","success");
+    						if(data.response == "C")criaMensagemErro("Atenção: Já foi realizado o check-in para esta consulta!","warning");
+    						if(data.response == "E")criaMensagemErro("Erro na leitura do qrCode!","error");
     						sleep(5000,function(){removeMensagemErro()});
 					} 
     			); 

@@ -1696,7 +1696,10 @@ def qrCodeScan(request):
     qrCode scanner
     '''
     context = RequestContext(request)
-    return render_to_response('main/qrCodeScanner/index.html', context)
+    if request.method == 'GET':
+        return render_to_response('main/qrCodeScanner/index.html', context)
+    else:
+        return HttpResponse('Método não permitido',status=405)
 
 @login_required
 @user_passes_test(is_admin_or_secretaria)
@@ -1707,17 +1710,22 @@ def searchCode(request):
         entrada = request.POST['qrCode']
         try:
 
-            #Testar entrada
-            print(entrada)
+            c = Consulta.objects.get(id=entrada)
+            if (c.checkin==False):
+                c.checkin = True
+                c.save()
+                #Retornar S(sucesso)
+                return HttpResponse(json.dumps({'response':'S'}),content_type="application/json")
+            else:
+                #Retornar C(checkin já realizado)
+                return HttpResponse(json.dumps({'response':'C'}),content_type="application/json")
+  
             
-            #Buscar no banco
-            #u = Usuario.objects.get(nome=entrada)    
-            return api_monta_json({'response':entrada})
-          
         except Exception, e:
-            return api_monta_json({'response':'Erro na leitura'})
+            #Retornar E(Erro na leitura)
+            return HttpResponse(json.dumps({'response':'E'}),content_type="application/json")
     else:
-        return api_monta_json({'response':'Método não permitido'})
+        return HttpResponse(json.dumps({'response':'Método não permitido'}),content_type="application/json")
 
 @login_required
 def listar_medico_espec(request):
