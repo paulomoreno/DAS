@@ -636,15 +636,14 @@ def get_medico_parametros(medico):
 
 @login_required
 @user_passes_test(is_admin)
-def remover_medico(request, crm):
+def remover_medico(request, id):
 
     try:
         context = RequestContext(request)
 
-        print crm
-
         if request.method == 'POST':
-            Medico.objects.filter(crm=crm).delete()
+            Medico.objects.filter(id=id).delete()
+
             #Retorna a página de todos os medicos
             messages.info(request, 'Medico removido com sucesso')
             return redirect('/medicos')
@@ -653,8 +652,7 @@ def remover_medico(request, crm):
     except Exception, e:
         #Para qualquer problema, retorna um erro interno                
         PrintException()
-
-
+        
     return HttpResponse('Método Não Permitido',status=405)
 
 # ----------------------------------------------------------------------------------- #
