@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static "css/cadastro.css"%}"/>
 {% endblock %}
 
-{% block title %}Novo convênio{% endblock %}
+{% block title %}Editar Convênio{% endblock %}
 
 {% block conteudo %}
 <form role="form" action="{% url 'alterar_convenio' id %}" method="POST">
@@ -14,7 +14,7 @@
    <div class="row text-center">
           <div class="col-md-4 col-md-offset-4" style="background-color: white;"> 
      
-              <h2>Novo Convênio</h1>
+              <h2>Editar Convênio</h1>
               &nbsp;
               <input type="text" class="form-control cnpj text-center" id="CNPJ" placeholder="CNPJ" name="cnpj" value="{{ cnpj }}" disabled = "true">
               &nbsp;
