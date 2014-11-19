@@ -9,12 +9,14 @@
 	<div class="form-group" >
 
 		<table class="table">
+		{% if cadastro %}
 			<thead>
 				<th style="text-align:center"><h2>Consulta Marcada com Sucesso !</h2></th>
 			</thead>
+		{% endif%}
 			<tbody>
 				<tr><td><h3>Guarde este QRCode para check-in no dia da consulta</h3></td></tr>
-				<tr><td><img src="https://api.qrserver.com/v1/create-qr-code/?data={{consulta}}" /></td></tr>
+				<tr><td><img src="https://api.qrserver.com/v1/create-qr-code/?data={{idConsulta}}" /></td></tr>
 			</tbody>
 
 		</table>

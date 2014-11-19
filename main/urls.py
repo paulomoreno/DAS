@@ -82,18 +82,16 @@ urlpatterns = patterns('',
         # ------------------------------------------------------------ #
   		#Todas as consultas de um medico, ou de um cliente (de acordo com o tipo de usuario logado)
         url(r'^consultas$','main.views.consultas',name='consultas'),        
-		
         #URL para cadastro de novas consultas
         url(r'^consultas/cadastro$','main.views.registrar_consulta',name='registrar_consulta'),
-        
         #URL para agendar horario de uma consulta
         url(r'^consultas/registrar_consulta_resumo$','main.views.registrar_consulta_resumo',name='registrar_consulta_resumo'),
-
         #URL para listar médicos de uma dada especialização
         url(r'^consultas/listarMedicosEspec$','main.views.listar_medico_espec',name='listar_medico_espec'),
-
         #URL para lista horários disponíveis de um médio
         url(r'^consultas/listarHorario$','main.views.listar_horario',name='listar_horario'),
+        #URL para mostrar um QR Code de uma dada consulta
+        url(r'^consultas/(?P<id>[^/]+)/ver$','main.views.mostrar_qr_code',name='mostrar_qr_code'),
 
 
         # ------------------------------------------------------------- #

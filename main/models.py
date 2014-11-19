@@ -123,9 +123,11 @@ class Consulta(models.Model):
 
     def json(self):
         consulta = {}
-        consulta['cliente']   = cliente.first_name
-        consulta['medico']    = self.medico
-        consulta['data_hora'] = self.data_hora
+        consulta['id'] = self.id
+        consulta['cliente']   = self.cliente.first_name+' '+self.cliente.last_name
+        consulta['medico']    = self.medico.first_name+' '+self.medico.last_name
+        consulta['data_hora'] = self.data_hora.strftime('%d/%m/%Y  -  %H:%M')
+        consulta['especializacao'] = self.medico.especializacao.nome
         return consulta
 
     def __unicode__(self):

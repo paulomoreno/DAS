@@ -16,7 +16,7 @@ import linecache, datetime
 import sys
 import json
 import datetime
-from datetime import datetime, time, date
+from datetime import datetime, time, date,timedelta
 
 
 TAMANHO_MINIMO_SENHA = 6
@@ -1079,8 +1079,8 @@ def registrar_horario(request):
 
         #Tenta converter os horarios
         try:
-            hora_inicio = datetime.datetime.strptime(hora_inicio, '%H:%M').time()
-            hora_final = datetime.datetime.strptime(hora_final, '%H:%M').time()
+            hora_inicio = datetime.strptime(hora_inicio, '%H:%M').time()
+            hora_final = datetime.strptime(hora_final, '%H:%M').time()
         except Exception, e:
             PrintException()
             messages.error(request, 'Horário de início e fim devem estar no formato hh:mm')
@@ -1526,19 +1526,9 @@ def consultas(request):
     context = RequestContext(request)
     if request.method == "GET":
         cliente = Cliente.objects.get(id=request.user.id)
-        consultas = Consulta.objects.filter(cliente=cliente)
-        dados_retorno = []
-        dados_consulta = {}
-        for c in consultas:
-            medico = Medico.objects.get(id=c.medico.id)
-            dados_consulta['id'] = c.id
-            dados_consulta['data_hora']  = c.data_hora.strftime('%d/%m/%Y  -  %H:%M')
-            dados_consulta['medico'] = medico.first_name+' '+medico.last_name
-            dados_consulta['especializacao'] = medico.especializacao.nome
-            dados_retorno.append(dados_consulta)
-            
-        print(dados_retorno)
-        return render_to_response('main/consultas/todos.html',{'consultas':dados_retorno},context)
+        consultas = [c.json() for c in Consulta.objects.filter(cliente=cliente)] 
+      
+        return render_to_response('main/consultas/todos.html',{'consultas':consultas},context)
 
 
     return HttpResponse('Não Implementado',status=501)
@@ -1584,7 +1574,7 @@ def registrar_consulta(request):
 
             messages.info(request, "Consulta Marcada Com Sucesso")
 
-            return render_to_response("main/consultas/mostrarQrCode.html",{'consulta':consulta_nova.id},context)
+            return render_to_response("main/consultas/mostrarQrCode.html",{'idConsulta':consulta_nova.id,'cadastro':True},context)
         except Exception, e:
             PrintException()
 
@@ -1687,8 +1677,20 @@ def registrar_consulta_resumo(request):
     elif(request.method=='GET'):
         return HttpResponse('Método Não Permitido',status=405)
 
+@login_required
+@user_passes_test(is_cliente)
+def mostrar_qr_code(request,id):
+    '''
+        Função responsável por mostrar o qrCode de uma consulta
 
+        Esta função aceita apenas pedidos GET
 
+    '''
+    context = RequestContext(request)
+    if (request.method == 'GET'):
+        return render_to_response('main/consultas/mostrarQrCode.html',{'idConsulta':id,'cadastro':False},context)
+    else:
+        return HttpResponse('Método não permitido',status = 405)
 @login_required
 @user_passes_test(is_admin_or_secretaria)
 def qrCodeScan(request):
