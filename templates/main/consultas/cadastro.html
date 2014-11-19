@@ -12,6 +12,8 @@
 
 		$(document).ready(function(){
 
+			    $("#loading").hide();
+
 				//Listar médicos de uma dada especialisação
 				$('#select_especializacao').on('change', function() {
 					//Limpar lista de médicos
@@ -34,9 +36,13 @@
 
 					//Carregar médicos
 					if(this.value != "Selecione"){
+						$("#loading").show();
+					  	
 					  	$.post( "/consultas/listarMedicosEspec",
 	    					{'especId' : this.value},
 	    					function(data, textStatus, xhr){
+	    						$("#loading").hide();
+
 	    						//Carregar Opção Selecionar médico
 								var med_nome_option = document.createElement("option");
 								var med_nome_label = document.createTextNode("Selecione");
@@ -87,8 +93,11 @@
 					data_consulta = document.getElementById('data_consulta').value; 
 					//Carregar horários caso houve data selecionada
 					if(data_consulta!=""){
+						    $("#loading").show();
+
 							$.post("/consultas/listarHorario",{'medico':this.value,'data_consulta':data_consulta},
 								function(data, textStatus, xhr){
+									$("#loading").hide();
 									popularHorario(data);
 							});
 						}
@@ -110,8 +119,10 @@
 						}
 			
 						if(document.getElementById('select_medico').value !="NAOVALIDO" ){
+							$("#loading").show();
 							$.post("/consultas/listarHorario",{'medico':document.getElementById('select_medico').value,'data_consulta':this.value},
 								function(data,textStatus,xhr){
+									$("#loading").hide();
 									popularHorario(data);
 								});
 						}
@@ -201,6 +212,11 @@
 				
 			</div>
 		</div>
+
+		<div class="col-md-1">
+			<img id="loading" src="{% static "media/load.gif" %}" width="25">
+		</div>
+
 	</div>
 	
 	<div class="row">
