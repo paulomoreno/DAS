@@ -43,6 +43,16 @@
         </tbody>
     </table>
     </div>
+
+  
+<div class="pagination pagination-centered">
+  <ul>
+    {% if consultas.has_previous %}<li><a href="/secretarias/{{ consultas.previous_page_number }}/consultas">Prev</a></li>{% endif %}
+    <li>Página {{ consultas.number }} of {{ consultas.paginator.num_pages }}</li>
+    {% if consultas.has_next %}<li><a href="/secretarias/{{ consultas.next_page_number }}/consultas">Next</a></li>{% endif %}
+ 
+  </ul>
+</div>
 	
 
 {% endblock %}
