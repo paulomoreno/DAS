@@ -13,7 +13,7 @@
 {%endblock%}
 
 {% block conteudo %}
-<h1>Cadastro de horario de atendimento:</h1>
+<h1>Cadastro de horário de atendimento:</h1>
 <form role="form" action="{% url 'registrar_horario' %}" method="post">
   {% csrf_token %}
   <div class="row">

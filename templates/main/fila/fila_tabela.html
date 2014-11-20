@@ -4,14 +4,14 @@
         <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
         <td>{{ c.data_hora }}</td>
         <td>{{ c.medico.first_name }}</td>
-        <td>{{ c.checkin }}</td>
+        <td>Realizado</td>
     </tr>
     {% else %}
     <tr class="warning">
         <td>{{ c.cliente.first_name }} {{ c.cliente.last_name }}</td>
         <td>{{ c.data_hora }}</td>
         <td>{{ c.medico.first_name }}</td>
-        <td>{{ c.checkin }}</td>
+        <td>Não realizado</td>
     </tr>
     {% endif %}
 {% endfor %}
