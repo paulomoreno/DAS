@@ -1,4 +1,4 @@
-Django==1.8
+Django==1.11.23
 django-extensions==1.4.0
 gunicorn==19.9.0
 pathlib==1.0.1

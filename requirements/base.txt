@@ -1,5 +1,5 @@
 #Todas os requirements neste arquivo são necessários
-Django==1.7 #Django obviously
+Django==1.11.23 #Django obviously
 django-extensions==1.4.0
 pathlib==1.0.1
 # Outros pacotes adicionar aqui
